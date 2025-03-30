@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IgestShop - One Life Graphic T-Shirt</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="../../css/product_details.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Layout CSS -->
+  <link href="../../css/layout.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">IgestShop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="./page_list.html">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./page_list.html">On Sale</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./page_list.html">New Collections</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control search-bar me-2" type="search" placeholder="Search products..." aria-label="Search">
+          </form>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="../order/cart.html"><i class="bi bi-cart"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../auth/profile.html"><i class="bi bi-person"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="./page_list.html">Shop</a></li>
+        <li class="breadcrumb-item"><a href="./page_list.html">Men</a></li>
+        <li class="breadcrumb-item active" aria-current="page">T-Shirts</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <!-- Product Gallery Section -->
+      <section class="col-lg-6 col-md-6 mb-4">
+        <div class="row">
+          <div class="col-12 product-gallery">
+            <div class="product-gallery-track" id="productGalleryTrack">
+              <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Product Image 1">
+              <img src="../../../images/tshirt-noback/tshirt-logo-2.png" alt="Product Image 2">
+              <img src="../../../images/tshirt-noback/1.png" alt="Product Image 3">
+            </div>
+            <button class="product-gallery-btn prev" id="productPrevBtn">←</button>
+            <button class="product-gallery-btn next" id="productNextBtn">→</button>
+          </div>
+          <!-- Thumbnail Gallery -->
+          <div class="col-12 mt-3">
+            <div class="thumbnail-gallery d-flex justify-content-center gap-2">
+              <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Thumbnail 1">
+              <img src="../../../images/tshirt-noback/tshirt-logo-2.png" alt="Thumbnail 2">
+              <img src="../../../images/tshirt-noback/1.png" alt="Thumbnail 3">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Product Details Article -->
+      <article class="col-lg-5 col-md-5 product-details">
+        <h1>One Life Graphic T-Shirt</h1>
+        <div class="product-id">Product ID: 12345</div>
+        <div class="d-flex align-items-center mb-2">
+          <div class="star-rating d-flex justify-content-center" data-rating="3.5">
+            <!-- Stars will be dynamically generated -->
+          </div>
+        </div>
+        <div class="mb-3">
+          <span class="price">€260</span>
+          <span class="discount">€300</span>
+          <span class="discount-badge">-40%</span>
+        </div>
+        <p class="mb-3">This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric.</p>
+        <div class="mb-3">
+          <h6>Select Color</h6>
+          <div class="color-option selected" style="background-color: #000;"></div>
+          <div class="color-option" style="background-color: #1a2a44;"></div>
+          <div class="color-option" style="background-color: #4a1c24;"></div>
+        </div>
+        <div class="mb-3">
+          <h6>Choose Size</h6>
+          <div class="d-flex flex-wrap">
+            <button class="size-btn">S</button>
+            <button class="size-btn">M</button>
+            <button class="size-btn active">L</button>
+            <button class="size-btn">XL</button>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mb-3">
+          <div class="quantity-selector me-3">
+            <button>-</button>
+            <input type="text" value="1" readonly>
+            <button>+</button>
+          </div>
+          <button class="add-to-cart">Add to Cart</button>
+        </div>
+      </article>
+    </div>
+
+    <!-- Tabs Section for Product Details, Size Metrics, and Reviews -->
+    <section class="row mt-4">
+      <div class="col-lg-8 col-md-7">
+        <ul class="nav nav-tabs" id="productTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="true">
+              Product Details
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="size-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="size" aria-selected="false">
+              Size Metrics
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">
+              Reviews
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="productTabsContent">
+          <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, eros a facilisis tincidunt, lacus risus pharetra justo, eget interdum nisl elit nec sapien. Suspendisse potenti. Proin sit scripti, nibh non luctus facilisis, urna tortor tincidunt neque, ac vehicula justo augue nec dolor.</p>
+            <p>Designed with high-quality materials, this backpack ensures durability and comfort for everyday use. Curabitur vehicula ligula nec lorem faucibus, vel laoreet justo semper. Multiple compartments provide ample storage, while ergonomic straps enhance carrying comfort. Ideal for outdoor adventures, tactical missions, and everyday carry.</p>
+            <p>Shop now and experience superior functionality and reliability. Fast shipping available!</p>
+          </div>
+          <figure class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="size-tab">
+            <img src="../../../images/sizes.png" alt="Hoodie Sizing Chart">
+          </figure>
+          <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+            <section class="review-section">
+              <h6>Write a Review</h6>
+              <form id="reviewForm">
+                <div class="mb-3">
+                  <label for="reviewRating" class="form-label">Rating (0-5)</label>
+                  <select class="form-select" id="reviewRating" required>
+                    <option value="" disabled selected>Select a rating</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="reviewDescription" class="form-label">Your Review</label>
+                  <textarea class="form-control" id="reviewDescription" rows="4" placeholder="Write your review here..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-submit">Submit Review</button>
+              </form>
+            </section>
+            <section id="reviewsList">
+              <!-- Reviews will be dynamically added here -->
+            </section>
+          </div>
+        </div>
+      </div>
+      <!-- Similar Models Sidebar -->
+      <aside class="col-lg-4 col-md-5">
+        <h3>Similar Models</h3>
+        <a href="./product_details.html" class="product-card-link">
+          <div class="product-card">
+            <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Gradient Graphic T-Shirt">
+            <h6>Gradient Graphic T-Shirt</h6>
+            <div class="star-rating d-flex justify-content-center" data-rating="3.5">
+              <!-- Stars will be dynamically generated -->
+            </div>
+            <p class="price">€145</p>
+          </div>
+        </a>
+        <a href="./product_details.html" class="product-card-link">
+          <div class="product-card">
+            <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Gradient Graphic T-Shirt">
+            <h6>Gradient Graphic T-Shirt</h6>
+            <div class="star-rating d-flex justify-content-center" data-rating="3.5">
+              <!-- Stars will be dynamically generated -->
+            </div>
+            <p class="price">€145</p>
+          </div>
+        </a>
+        <div class="text-center mt-3">
+          <a href="./page_list.html"><button class="show-more">Show More</button></a>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <!-- Banner Section -->
+  <section class="banner">
+    ENJOY EVERY MOMENT!
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="social-icons">
+        <a href="#"><i class="bi bi-twitter"></i></a>
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+        <a href="#"><i class="bi bi-youtube"></i></a>
+      </div>
+      <p>IgestShop © 2025, All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- JavaScript for Size Toggle, Color Selection, Quantity, Product Gallery Slider, Star Rating, and Reviews -->
+  <script>
+    // Size Button Toggle
+    document.querySelectorAll('.size-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
+
+    // Color Selection
+    document.querySelectorAll('.color-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+      });
+    });
+
+    // Quantity Selector
+    const quantityInput = document.querySelector('.quantity-selector input');
+    document.querySelector('.quantity-selector button:first-child').addEventListener('click', () => {
+      let value = parseInt(quantityInput.value);
+      if (value > 1) quantityInput.value = value - 1;
+    });
+    document.querySelector('.quantity-selector button:last-child').addEventListener('click', () => {
+      let value = parseInt(quantityInput.value);
+      quantityInput.value = value + 1;
+    });
+
+    // Product Gallery Slider
+    const productGalleryTrack = document.getElementById('productGalleryTrack');
+    const productPrevBtn = document.getElementById('productPrevBtn');
+    const productNextBtn = document.getElementById('productNextBtn');
+    const productImages = productGalleryTrack.getElementsByTagName('img');
+    const thumbnails = document.querySelectorAll('.thumbnail-gallery img');
+    let productCurrentIndex = 0;
+
+    function updateProductGallery() {
+      if (productCurrentIndex < 0) productCurrentIndex = 0;
+      if (productCurrentIndex >= productImages.length) productCurrentIndex = productImages.length - 1;
+      productGalleryTrack.style.transform = `translateX(-${productCurrentIndex * 100}%)`;
+
+      // Update active thumbnail
+      thumbnails.forEach(thumb => thumb.classList.remove('active'));
+      if (thumbnails[productCurrentIndex]) {
+        thumbnails[productCurrentIndex].classList.add('active');
+      }
+    }
+
+    productPrevBtn.addEventListener('click', () => {
+      productCurrentIndex--;
+      updateProductGallery();
+    });
+
+    productNextBtn.addEventListener('click', () => {
+      productCurrentIndex++;
+      updateProductGallery();
+    });
+
+    // Thumbnail Click to Switch Image
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', () => {
+        productCurrentIndex = index;
+        updateProductGallery();
+      });
+    });
+
+    // Initialize the first thumbnail as active if thumbnails exist
+    if (thumbnails.length > 0) {
+      thumbnails[0].classList.add('active');
+    }
+
+    // Star Rating Generator
+    function generateStarRating(rating) {
+      let starsHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+          starsHTML += '<i class="bi bi-star-fill"></i>';
+        } else if (rating >= i - 0.5) {
+          starsHTML += '<i class="bi bi-star-half"></i>';
+        } else {
+          starsHTML += '<i class="bi bi-star"></i>';
+        }
+      }
+      return starsHTML;
+    }
+
+    // Apply star ratings to existing elements
+    document.querySelectorAll('.star-rating').forEach(ratingElement => {
+      const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+      let starsHTML = '';
+
+      for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+          starsHTML += '<i class="bi bi-star-fill"></i>';
+        } else if (rating >= i - 0.5) {
+          starsHTML += '<i class="bi bi-star-half"></i>';
+        } else {
+          starsHTML += '<i class="bi bi-star"></i>';
+        }
+      }
+
+      starsHTML += `<span class="ms-2">${rating}</span>`;
+      ratingElement.innerHTML = starsHTML;
+    });
+
+    // Review Submission
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewsList = document.getElementById('reviewsList');
+    let reviews = [];
+
+    reviewForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const rating = parseInt(document.getElementById('reviewRating').value);
+      const description = document.getElementById('reviewDescription').value.trim();
+
+      if (isNaN(rating) || description === '') {
+        alert('Please provide a rating and a description.');
+        return;
+      }
+
+      const review = {
+        rating: rating,
+        description: description,
+        date: new Date().toLocaleDateString()
+      };
+      reviews.push(review);
+
+      reviewForm.reset();
+      renderReviews();
+    });
+
+    function renderReviews() {
+      reviewsList.innerHTML = '';
+      if (reviews.length === 0) {
+        reviewsList.innerHTML = '<p>No reviews yet. Be the first to write one!</p>';
+        return;
+      }
+
+      reviews.forEach(review => {
+        const reviewItem = document.createElement('div');
+        reviewItem.classList.add('review-item');
+        reviewItem.innerHTML = `
+          <div class="star-rating">${generateStarRating(review.rating)}</div>
+          <p>${review.description}</p>
+          <small>Posted on ${review.date}</small>
+        `;
+        reviewsList.appendChild(reviewItem);
+      });
+    }
+
+    // Initial render of reviews
+    renderReviews();
+  </script>
+</body>
+</html>

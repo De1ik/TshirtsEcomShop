@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IgestShop - Your Cart</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="../../css/cart.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!--Layout CSS  -->
+  <link href="../../css/layout.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">IgestShop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="../product/page_list.html">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../product/page_list.html">On Sale</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../product/page_list.html">New Collections</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control search-bar me-2" type="search" placeholder="Search products..." aria-label="Search">
+          </form>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="../order/cart.html">
+                <i class="bi bi-cart"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../auth/profile.html">
+                <i class="bi bi-person"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Cart</li>
+      </ol>
+    </nav>
+
+    <h2 class="mb-4">Your Cart</h2>
+    <div class="row">
+      <!-- Cart Items Section -->
+      <section class="col-lg-8 col-md-7 mb-4">
+        <!-- Cart Item 1 -->
+        <article class="cart-item d-flex align-items-center mb-3">
+          <a href="../product/product_details.html">
+            <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Top T-shirt">
+          </a>
+          <div class="flex-grow-1 ms-3">
+            <h6>Top Hoodie</h6>
+            <p class="product-id">ID: <span class="product-id-value">12345</span></p>
+            <p>Size: S</p>
+            <p>Color: <span style="display: inline-block; width: 15px; height: 15px; background-color: #000; border-radius: 50%; vertical-align: middle;"></span></p>
+            <p>€60</p>
+          </div>
+          <div class="quantity-selector me-3">
+            <button type="button">-</button>
+            <input type="text" value="1" readonly>
+            <button type="button">+</button>
+          </div>
+          <button class="remove-btn btn btn-link" type="button">
+            <i class="bi bi-trash"></i>
+          </button>
+        </article>
+        <!-- Cart Item 2 -->
+        <article class="cart-item d-flex align-items-center mb-3">
+          <a href="../product/product_details.html">
+            <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Top T-shirt">
+          </a>
+          <div class="flex-grow-1 ms-3">
+            <h6>Top Hoodie</h6>
+            <p class="product-id">ID: <span class="product-id-value">12345</span></p>
+            <p>Size: M</p>
+            <p>Color: <span style="display: inline-block; width: 15px; height: 15px; background-color: #000; border-radius: 50%; vertical-align: middle;"></span></p>
+            <p>€40</p>
+          </div>
+          <div class="quantity-selector me-3">
+            <button type="button">-</button>
+            <input type="text" value="1" readonly>
+            <button type="button">+</button>
+          </div>
+          <button class="remove-btn btn btn-link" type="button">
+            <i class="bi bi-trash"></i>
+          </button>
+        </article>
+      </section>
+      <!-- Order Summary Section -->
+      <aside class="col-lg-4 col-md-5">
+        <div class="order-summary p-3 border">
+          <h5>Order Summary</h5>
+          <div class="d-flex justify-content-between mb-2">
+            <p>Subtotal</p>
+            <p>€100</p>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <p>Discount (-30%)</p>
+            <p>-€30</p>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <p>Delivery Fee</p>
+            <p>€5</p>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between mb-3">
+            <p class="total">Total</p>
+            <p class="total">€75</p>
+          </div>
+          <a href="./shipping.html" class="go-to-shipping btn btn-primary d-block text-center">Go to Shipping</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Banner Section -->
+  <section class="banner text-center py-4">
+    <p>ENJOY EVERY MOMENT!</p>
+  </section>
+
+  <footer class="footer">
+    <div class="container text-center">
+      <div class="social-icons mb-2">
+        <a href="#"><i class="bi bi-twitter"></i></a>
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+        <a href="#"><i class="bi bi-youtube"></i></a>
+      </div>
+      <p>IgestShop © 2025, All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- JavaScript for Quantity Selector -->
+  <script>
+    document.querySelectorAll('.quantity-selector').forEach(selector => {
+      const input = selector.querySelector('input');
+      const minusButton = selector.querySelector('button:first-of-type');
+      const plusButton = selector.querySelector('button:last-of-type');
+      
+      minusButton.addEventListener('click', () => {
+        let value = parseInt(input.value);
+        if (value > 1) input.value = value - 1;
+      });
+      
+      plusButton.addEventListener('click', () => {
+        let value = parseInt(input.value);
+        input.value = value + 1;
+      });
+    });
+  </script>
+</body>
+</html>

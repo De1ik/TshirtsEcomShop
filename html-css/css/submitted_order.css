@@ -1,0 +1,128 @@
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+}
+.breadcrumb-item a {
+    color: #53403C;
+    text-decoration: none;
+}
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #7a5c58;
+}
+/* Order Items with Scroller */
+.order-items-container {
+    max-height: 400px; /* Fixed height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding-right: 10px; /* Space for scrollbar */
+}
+.order-items-container::-webkit-scrollbar {
+    width: 8px;
+}
+.order-items-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+.order-items-container::-webkit-scrollbar-thumb {
+    background: #53403C;
+    border-radius: 10px;
+}
+.order-items-container::-webkit-scrollbar-thumb:hover {
+    background: #7a5c58;
+}
+.order-item {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+.order-item img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+.order-item h6 {
+    font-weight: 500;
+    color: #53403C;
+    margin-bottom: 5px;
+}
+.order-item .product-id {
+    font-size: 0.85rem;
+    color: #53403C;
+    margin-bottom: 5px;
+}
+.order-item p {
+    margin: 0;
+    color: #53403C;
+}
+/* Shipping Details */
+.shipping-details {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    height: 100%; /* Ensure it matches the height of other columns */
+}
+.shipping-details h5 {
+    font-weight: 600;
+    color: #53403C;
+}
+.shipping-details .form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    color: #53403C;
+    background-color: #f9f9f9; /* Light background for disabled fields */
+    margin-bottom: 10px;
+}
+.shipping-details .form-control:disabled {
+    opacity: 1; /* Ensure the text is fully visible */
+    color: #53403C;
+}
+/* Order Summary */
+.order-summary {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    height: 100%; /* Ensure it matches the height of other columns */
+}
+.order-summary h5 {
+    font-weight: 600;
+    color: #53403C;
+}
+.order-summary p {
+    color: #53403C;
+    margin: 0;
+}
+.order-summary .total {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+.order-summary .payment-method {
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    color: #53403C;
+    font-weight: 500;
+}
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+    .order-items-container, .shipping-details, .order-summary {
+        margin-bottom: 20px;
+    }
+    .order-items-container {
+        max-height: 300px; /* Adjust height for smaller screens */
+    }
+}
+@media (max-width: 767px) {
+    .order-items-container {
+        max-height: 200px; /* Further adjust height for very small screens */
+    }
+}

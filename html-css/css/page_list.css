@@ -1,0 +1,184 @@
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+}
+.breadcrumb-item a {
+    color: #53403C;
+    text-decoration: none;
+}
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #7a5c58;
+}
+/* Filter Sidebar */
+.filter-sidebar {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.filter-sidebar h5 {
+    font-weight: 600;
+    color: #53403C;
+}
+.filter-sidebar h6 {
+    font-weight: 500;
+    color: #53403C;
+}
+.filter-sidebar .form-check-label {
+    color: #53403C;
+    font-weight: 400;
+}
+.filter-sidebar .form-check-input:checked {
+    background-color: #53403C;
+    border-color: #53403C;
+}
+.filter-sidebar .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    color: #53403C;
+    transition: all 0.3s ease;
+}
+.filter-sidebar .form-select:focus {
+    border-color: #53403C;
+    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
+}
+.filter-sidebar .form-range::-webkit-slider-thumb {
+    background: #53403C;
+}
+.filter-sidebar .form-range::-moz-range-thumb {
+    background: #53403C;
+}
+.filter-sidebar .btn {
+    background-color: #53403C;
+    color: #fff;
+    border-radius: 25px;
+    width: 100%;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+.filter-sidebar .btn:hover {
+    background-color: #7a5c58;
+}
+/* Updated Size Filter */
+.filter-sidebar .size-btn {
+    background-color: #fff;
+    border: 1px solid #53403C;
+    color: #53403C;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+.filter-sidebar .size-btn:hover,
+.filter-sidebar .size-btn.active {
+    background-color: #53403C;
+    color: #fff;
+    border-color: #53403C;
+}
+/* Product Grid */
+.product-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+.product-card-link {
+    text-decoration: none; /* Remove underline from link */
+    color: inherit; /* Inherit text color */
+    display: block; /* Ensure the link takes up the full card area */
+    cursor: pointer; /* Indicate clickability */
+}
+.product-card-link:hover .product-card {
+    /* transform: translateY(-5px); */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    opacity: 0.95; /* Subtle opacity change on hover */
+}
+.product-card img {
+    max-width: 100%;
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.product-card h6 {
+    font-weight: 500;
+    color: #53403C;
+    margin-top: 10px;
+}
+.product-card .price {
+    color: #53403C;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.product-card .discount {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+.discount-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #ff6f61;
+    color: #fff;
+    border-radius: 50%;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+/* Star Rating */
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+}
+.star-rating i {
+    font-size: 1rem;
+    margin-right: 2px;
+}
+.star-rating .bi-star-fill,
+.star-rating .bi-star-half {
+    color: #f5c518; /* Gold color for filled stars */
+}
+.star-rating .bi-star {
+    color: #d3d3d3; /* Gray color for empty stars */
+}
+/* Sort Dropdown */
+.sort-select .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    color: #53403C;
+    transition: all 0.3s ease;
+}
+.sort-select .form-select:focus {
+    border-color: #53403C;
+    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
+}
+/* Pagination */
+.pagination .page-link {
+    color: #53403C;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin: 0 3px;
+    transition: all 0.3s ease;
+}
+.pagination .page-link:hover {
+    background-color: #53403C;
+    color: #fff;
+    border-color: #53403C;
+}
+.pagination .page-item.active .page-link {
+    background-color: #53403C;
+    border-color: #53403C;
+    color: #fff;
+}
