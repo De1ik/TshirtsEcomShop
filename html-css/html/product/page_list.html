@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IgestShop - T-Shirts</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="../../css/page_list.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Layout CSS -->
+  <link href="../../css/layout.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">IgestShop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="./page_list.html">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./page_list.html">On Sale</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./page_list.html">New Collections</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control search-bar me-2" type="search" placeholder="Search products..." aria-label="Search">
+          </form>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="../order/cart.html"><i class="bi bi-cart"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../auth/profile.html"><i class="bi bi-person"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container my-5">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Products</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <!-- Filter Sidebar -->
+      <aside class="col-lg-3 col-md-4 mb-4">
+        <div class="filter-sidebar">
+          <h5>FILTERS</h5>
+          <hr>
+          <div class="mb-4">
+            <h6>SEX</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sex" id="men">
+              <label class="form-check-label" for="men">Men</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sex" id="women">
+              <label class="form-check-label" for="women">Women</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="sex" id="unisex">
+              <label class="form-check-label" for="unisex">Unisex</label>
+            </div>
+          </div>
+          <div class="mb-4">
+            <h6>CATEGORY</h6>
+            <select class="form-select">
+              <option>Hoodie</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <h6>STYLE</h6>
+            <select class="form-select">
+              <option>Line name 1</option>
+              <option>Line name 2</option>
+              <option>Line name 3</option>
+              <option>Line name 4</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <h6>PRICE</h6>
+            <div>
+              <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€0</span></label>
+              <input type="range" class="form-range" id="minPrice" min="0" max="500" value="0">
+            </div>
+            <div>
+              <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€100</span></label>
+              <input type="range" class="form-range" id="maxPrice" min="0" max="500" value="300">
+            </div>
+            <div class="price-range-labels">
+              <p>Range from €0 to €500</p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <h6>SIZE</h6>
+            <div class="d-flex flex-wrap">
+              <button class="size-btn">XXS</button>
+              <button class="size-btn">XS</button>
+              <button class="size-btn active">S</button>
+              <button class="size-btn">M</button>
+              <button class="size-btn">L</button>
+              <button class="size-btn">XL</button>
+              <button class="size-btn">XXL</button>
+              <button class="size-btn">3XL</button>
+              <button class="size-btn">4XL</button>
+            </div>
+          </div>
+          <button class="btn">APPLY FILTER</button>
+        </div>
+      </aside>
+
+      <!-- Product Grid Section -->
+      <section class="col-lg-9 col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3>Our T-Shirts</h3>
+          <div class="sort-select">
+            <span id="showingText">Showing 1-9 of 43 products</span>
+            <select class="form-select d-inline-block w-auto ms-2">
+              <option>Sort by: Lower Price</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Product 1 -->
+          <article  class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="145">
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Gradient Graphic T-Shirt">
+                <h6>Gradient Graphic T-Shirt</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="3.5">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€145</p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 2 -->
+          <article  class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="180">
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Polo with Tipping Details">
+                <h6>Polo with Tipping Details</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="4.5">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€180</p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 3 -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="220">
+                <div class="discount-badge">-30%</div>
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Black Striped T-Shirt">
+                <h6>Black Striped T-Shirt</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="5.0">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€220 <span class="discount">€250</span></p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 4 -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="240">
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Gradient Graphic T-Shirt">
+                <h6>Gradient Graphic T-Shirt</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="3.5">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€240</p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 5 -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="230">
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Polo with Tipping Details">
+                <h6>Polo with Tipping Details</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="4.5">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€230</p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 6 -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="220">
+                <div class="discount-badge">-30%</div>
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Black Striped T-Shirt">
+                <h6>Black Striped T-Shirt</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="5.0">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€220 <span class="discount">€250</span></p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 7 (New) -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="160">
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Vintage Print T-Shirt">
+                <h6>Vintage Print T-Shirt</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="2.5">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€160</p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 8 (New) -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="200">
+                <div class="discount-badge">-20%</div>
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Minimalist Logo Tee">
+                <h6>Minimalist Logo Tee</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="4.0">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€200 <span class="discount">€250</span></p>
+              </div>
+            </a>
+          </article>
+          <!-- Product 9 (New) -->
+          <article class="col-lg-4 col-md-6 mb-4">
+            <a href="./product_details.html" class="product-card-link">
+              <div class="product-card position-relative" data-price="175">
+                <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Color Block T-Shirt">
+                <h6>Color Block T-Shirt</h6>
+                <div class="star-rating d-flex justify-content-center" data-rating="3.0">
+                  <!-- Stars will be dynamically generated -->
+                </div>
+                <p class="price">€175</p>
+              </div>
+            </a>
+          </article>
+        </div>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">« Previous</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">Next »</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </section>
+    </div>
+  </main>
+
+  <!-- Banner Section -->
+  <section class="banner">
+    <div>
+      <p>ENJOY EVERY MOMENT!</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container text-center">
+      <div class="social-icons mb-2">
+        <a href="#"><i class="bi bi-twitter"></i></a>
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+        <a href="#"><i class="bi bi-youtube"></i></a>
+      </div>
+      <p>IgestShop © 2025, All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- JavaScript for Size Button Toggle, Star Rating, and Price Range Filter -->
+  <script>
+    // Size Button Toggle
+    document.querySelectorAll('.size-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+      });
+    });
+
+    // Star Rating Generator
+    document.querySelectorAll('.star-rating').forEach(ratingElement => {
+      const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+      let starsHTML = '';
+
+      // Loop through 5 stars
+      for (let i = 1; i <= 5; i++) {
+        if (rating >= i) {
+          // Full star
+          starsHTML += '<i class="bi bi-star-fill"></i>';
+        } else if (rating >= i - 0.5) {
+          // Half star
+          starsHTML += '<i class="bi bi-star-half"></i>';
+        } else {
+          // Empty star
+          starsHTML += '<i class="bi bi-star"></i>';
+        }
+      }
+
+      // Add the rating text
+      starsHTML += `<span class="ms-2">${rating}</span>`;
+      ratingElement.innerHTML = starsHTML;
+    });
+
+    // Price Range Filter
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const minPriceValue = document.getElementById('minPriceValue');
+    const maxPriceValue = document.getElementById('maxPriceValue');
+    const productCards = document.querySelectorAll('.product-card');
+    const showingText = document.getElementById('showingText');
+
+    // Update displayed values and ensure min <= max
+    function updatePriceRange() {
+      let minPrice = parseInt(minPriceInput.value);
+      let maxPrice = parseInt(maxPriceInput.value);
+
+      // Ensure minPrice is not greater than maxPrice
+      if (minPrice > maxPrice) {
+        minPriceInput.value = maxPrice;
+        minPrice = maxPrice;
+      }
+      // Ensure maxPrice is not less than minPrice
+      if (maxPrice < minPrice) {
+        maxPriceInput.value = minPrice;
+        maxPrice = minPrice;
+      }
+
+      // Update displayed values
+      minPriceValue.textContent = `€${minPrice}`;
+      maxPriceValue.textContent = `€${maxPrice}`;
+    }
+
+    // Apply filters based on price range
+    function applyFilters() {
+      const minPrice = parseInt(minPriceInput.value);
+      const maxPrice = parseInt(maxPriceInput.value);
+      let visibleProducts = 0;
+
+      productCards.forEach(card => {
+        const price = parseInt(card.getAttribute('data-price'));
+        if (price >= minPrice && price <= maxPrice) {
+          card.style.display = 'flex';
+          visibleProducts++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (showingText) {
+        showingText.textContent = `Showing 1-${visibleProducts} of 5 Products`;
+      }
+    }
+
+    // Initialize price range values
+    updatePriceRange();
+
+    // Add event listeners for price range inputs
+    minPriceInput.addEventListener('input', () => {
+      updatePriceRange();
+    });
+
+    maxPriceInput.addEventListener('input', () => {
+      updatePriceRange();
+    });
+  </script>
+</body>
+</html>

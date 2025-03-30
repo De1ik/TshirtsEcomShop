@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IgestShop - Main Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/index.css" rel="stylesheet">
+    <!-- Layout CSS -->
+    <link href="../css/layout.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="./index.html">IgestShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="./product/page_list.html">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./product/page_list.html">On Sale</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./product/page_list.html">New Collections</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./admin/admin_products_list.html">Admin Products List</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control search-bar me-2" type="search" placeholder="Search products..." aria-label="Search">
+                    </form>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="./order/cart.html" aria-label="Cart"><i class="bi bi-cart"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./auth/login.html">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="container my-5">
+            <div class="hero-section">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <p>Discover timeless style and quality you can trust. Explore our curated collection of premium essentials, made to elevate your everyday.</p>
+                        <div class="stats">
+                            <div>
+                                <h3>Unique</h3>
+                                <p>Luxury Collections</p>
+                            </div>
+                            <div>
+                                <h3>Only</h3>
+                                <p>High-Quality Products</p>
+                            </div>
+                            <div>
+                                <h3>Every</h3>
+                                <p>Customer is Happy</p>
+                            </div>
+                        </div>
+                        <a href="./product/page_list.html" class="btn btn-shop-now">Shop Now</a>
+                    </div>
+                    <div class="col-lg-6 text-end">
+                        <img src="../../images/tshirt-noback/brand-tshirt.png" alt="Brand T-Shirt" class="main-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Choose Yourself Section -->
+        <section class="container choose-yourself-section">
+            <h2>Choose Yourself</h2>
+            <div class="horizontal-carousel">
+                <div class="carousel-track" id="carouselTrack">
+                    <a href="./product/product_details.html">
+                        <img src="../../images/tshirt-noback/tshirt-logo-1.png" alt="Hoodie 1">
+                    </a>
+                    <a href="./product/product_details.html">
+                        <img src="../../images/tshirt-noback/tshirt-logo-2.png" alt="T-Shirt 1">
+                    </a>
+                    <a href="./product/product_details.html">
+                        <img src="../../images/tshirt-noback/1.png" alt="Hoodie 2">
+                    </a>
+                    <a href="./product/product_details.html">
+                        <img src="../../images/tshirt-noback/brand-tshirt.png" alt="T-Shirt 2">
+                    </a>
+                </div>
+                <button class="carousel-btn prev" id="prevBtn" aria-label="Previous">←</button>
+                <button class="carousel-btn next" id="nextBtn" aria-label="Next">→</button>
+            </div>
+        </section>
+
+        <!-- New Collection Section -->
+        <section class="container new-collection-section">
+            <h2>New Collection</h2>
+            <div class="row">
+                <!-- Product 1 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="./product/product_details.html" class="product-card-link">
+                        <article class="product-card position-relative">
+                            <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Gradient Graphic T-Shirt">
+                            <h6>Gradient Graphic T-Shirt</h6>
+                            <div class="star-rating d-flex justify-content-center" data-rating="3.5">
+                                <!-- Stars will be dynamically generated -->
+                            </div>
+                            <p class="price">€145</p>
+                        </article>
+                    </a>
+                </div>
+                <!-- Product 2 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="./product/product_details.html" class="product-card-link">
+                        <article class="product-card position-relative">
+                            <img src="../../../images/tshirt-noback/tshirt-logo-1.png" alt="Polo with Tipping Details">
+                            <h6>Polo with Tipping Details</h6>
+                            <div class="star-rating d-flex justify-content-center" data-rating="4.5">
+                                <!-- Stars will be dynamically generated -->
+                            </div>
+                            <p class="price">€180</p>
+                        </article>
+                    </a>
+                </div>
+                <!-- Product 3 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="./product/product_details.html" class="product-card-link">
+                        <article class="product-card position-relative">
+                            <div class="discount-badge">-30%</div>
+                            <img src="../../../images/tshirt-noback/tshirt-logo-2.png" alt="Black Striped T-Shirt">
+                            <h6>Black Striped T-Shirt</h6>
+                            <div class="star-rating d-flex justify-content-center" data-rating="5.0">
+                                <!-- Stars will be dynamically generated -->
+                            </div>
+                            <p class="price">€220 <span class="discount">€250</span></p>
+                        </article>
+                    </a>
+                </div>
+                <!-- Product 4 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="./product/product_details.html" class="product-card-link">
+                        <article class="product-card position-relative">
+                            <div class="discount-badge">-30%</div>
+                            <img src="../../images/tshirt-noback/tshirt-logo-2.png" alt="Black Striped T-Shirt">
+                            <h6>Black Striped T-Shirt</h6>
+                            <div class="star-rating d-flex justify-content-center" data-rating="5.0">
+                                <!-- Stars will be dynamically generated -->
+                            </div>
+                            <p class="price">€220 <span class="discount">€250</span></p>
+                        </article>
+                    </a>
+                </div>
+            </div>
+            <a href="./product/page_list.html" class="view-all-btn mt-4">View All</a>
+        </section>
+
+        <!-- Banner -->
+        <div class="banner" role="banner">
+            ENJOY EVERY MOMENT!
+        </div>
+    </main>
+
+    <!-- Minimalistic Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="social-icons">
+                <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+            </div>
+            <p>IgestShop © 2025, All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- JavaScript for Horizontal Carousel and Dynamic Star Ratings -->
+    <script>
+        // Horizontal Carousel
+        const carouselTrack = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const links = carouselTrack.getElementsByTagName('a');
+        let imageWidth = window.innerWidth <= 767 ? 100 : 50; // 100% for small screens, 50% for larger screens
+        let visibleImages = window.innerWidth <= 767 ? 1 : 2; // 1 image for small screens, 2 for larger screens
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            const maxIndex = links.length - visibleImages;
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex > maxIndex) currentIndex = maxIndex;
+            carouselTrack.style.transform = `translateX(-${currentIndex * imageWidth}%)`;
+        }
+
+        window.addEventListener('resize', () => {
+            imageWidth = window.innerWidth <= 767 ? 100 : 50;
+            visibleImages = window.innerWidth <= 767 ? 1 : 2;
+            updateCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex--;
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex++;
+            updateCarousel();
+        });
+
+        // Star Rating Generator
+        document.querySelectorAll('.star-rating').forEach(ratingElement => {
+            const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+            let starsHTML = '';
+
+            for (let i = 1; i <= 5; i++) {
+                if (rating >= i) {
+                    starsHTML += '<i class="bi bi-star-fill"></i>';
+                } else if (rating >= i - 0.5) {
+                    starsHTML += '<i class="bi bi-star-half"></i>';
+                } else {
+                    starsHTML += '<i class="bi bi-star"></i>';
+                }
+            }
+
+            starsHTML += `<span class="ms-2">${rating}</span>`;
+            ratingElement.innerHTML = starsHTML;
+        });
+    </script>
+</body>
+</html>
