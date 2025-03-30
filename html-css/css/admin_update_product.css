@@ -1,0 +1,191 @@
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+}
+.breadcrumb-item a {
+    color: #53403C;
+    text-decoration: none;
+}
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #7a5c58;
+}
+/* Form Styles */
+.update-product-form {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
+.update-product-form h2 {
+    font-weight: 600;
+    color: #53403C;
+    margin-bottom: 15px;
+}
+.update-product-form .form-label {
+    color: #53403C;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+.update-product-form .form-control,
+.update-product-form .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    color: #53403C;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+}
+.update-product-form .form-control:focus,
+.update-product-form .form-select:focus {
+    border-color: #53403C;
+    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
+}
+.update-product-form .form-check-input:checked {
+    background-color: #53403C;
+    border-color: #53403C;
+}
+.update-product-form .form-check-label {
+    color: #53403C;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+.update-product-form .btn-update {
+    background-color: #53403C;
+    color: #fff;
+    border-radius: 25px;
+    padding: 8px 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+.update-product-form .btn-update:hover {
+    background-color: #7a5c58;
+}
+.update-product-form .btn-delete {
+    background-color: #ff6f61;
+    color: #fff;
+    border-radius: 25px;
+    padding: 8px 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+.update-product-form .btn-delete:hover {
+    background-color: #e65b50;
+}
+/* Product Images with Scroller */
+.product-images {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+.product-images::-webkit-scrollbar {
+    width: 6px;
+}
+.product-images::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+.product-images::-webkit-scrollbar-thumb {
+    background: #53403C;
+    border-radius: 10px;
+}
+.product-images::-webkit-scrollbar-thumb:hover {
+    background: #7a5c58;
+}
+.product-images .image-wrapper {
+    position: relative;
+    margin-bottom: 8px;
+}
+.product-images img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+.product-images .delete-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #ff6f61;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.product-images .delete-image-btn:hover {
+    background-color: #e65b50;
+}
+/* Delete Confirmation Modal */
+.modal-content {
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.modal-title {
+    font-weight: 600;
+    color: #53403C;
+}
+.modal-body {
+    color: #53403C;
+    font-size: 1.1rem;
+    text-align: center;
+}
+.modal-footer {
+    border-top: none;
+    justify-content: center;
+    padding-top: 0;
+}
+.modal-footer .btn-no {
+    background-color: #53403C;
+    color: #fff;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+.modal-footer .btn-no:hover {
+    background-color: #7a5c58;
+}
+.modal-footer .btn-confirm-delete {
+    background-color: #ff6f61;
+    color: #fff;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+.modal-footer .btn-confirm-delete:hover {
+    background-color: #e65b50;
+}
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+    .update-product-form .col-md-2 {
+        margin-top: 20px;
+    }
+}
