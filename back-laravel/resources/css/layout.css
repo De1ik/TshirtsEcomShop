@@ -1,0 +1,91 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    color: #53403C;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1 0 auto;
+    /* remove min-height here */
+}
+/* Navbar */
+.navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+.navbar-brand {
+    color: #53403C;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+.navbar-brand:hover {
+    color: #53403C;
+}
+.nav-link {
+    color: #53403C;
+    font-weight: 500;
+}
+.nav-link:hover {
+    color: #7a5c58;
+}
+.search-bar {
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    padding: 8px 15px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+.search-bar:focus {
+    border-color: #53403C;
+    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
+}
+.navbar .bi {
+    color: #53403C;
+    font-size: 1.2rem;
+}
+
+/* Banner */
+.banner {
+    background-color: #53403C;
+    color: #fff;
+    text-align: center;
+    padding: 25px;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Minimalistic Footer */
+.footer {
+    background-color: #fff;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    flex-shrink: 0;
+}
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #53403C;
+}
+.footer .social-icons {
+    margin: 10px 0;
+}
+.footer .social-icons a {
+    color: #53403C;
+    margin: 0 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+.footer .social-icons a:hover {
+    color: #7a5c58;
+}
+.footer img {
+    margin: 0 5px;
+    height: 20px;
+}
