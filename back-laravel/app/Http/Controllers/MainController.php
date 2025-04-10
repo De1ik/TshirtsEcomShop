@@ -8,6 +8,7 @@ class MainController extends Controller
 {
 
     public function index() {
+//         $request->file('image')->store('products', 'public');
         return view('index');
     }
 }

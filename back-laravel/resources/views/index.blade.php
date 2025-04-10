@@ -26,10 +26,10 @@
                                 <p>Customer is Happy</p>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-shop-now">Shop Now</a>
+                        <a href="{{ route('default_catalogue') }}" class="btn btn-shop-now">Shop Now</a>
                     </div>
                     <div class="col-lg-6 text-end">
-                        <img src="{{ asset('storage/product_image/tshirt-noback/brand-tshirt.png' ) }}" alt="Brand T-Shirt" class="main-image">
+                        <img src="{{ asset('images/products/brand-tshirt.png' ) }}" alt="Brand T-Shirt" class="main-image">
                     </div>
                 </div>
             </div>
@@ -41,16 +41,16 @@
             <div class="horizontal-carousel">
                 <div class="carousel-track" id="carouselTrack">
                     <a href="#">
-                        <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-1.png' ) }}" alt="Hoodie 1">
+                        <img src="{{ asset('images/products/tshirt-logo-1.png' ) }}" alt="Hoodie 1">
                     </a>
                     <a href="#">
-                        <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-2.png' ) }}" alt="T-Shirt 1">
+                        <img src="{{ asset('images/products/tshirt-logo-2.png' ) }}" alt="T-Shirt 1">
                     </a>
                     <a href="#">
-                        <img src="{{ asset('storage/product_image/tshirt-noback/1.png' ) }}" alt="Hoodie 2">
+                        <img src="{{ asset('images/products/1.png' ) }}" alt="Hoodie 2">
                     </a>
                     <a href="#">
-                        <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-1.png' ) }}" alt="T-Shirt 2">
+                        <img src="{{ asset('images/products/tshirt-logo-1.png' ) }}" alt="T-Shirt 2">
                     </a>
                 </div>
                 <button class="carousel-btn prev" id="prevBtn" aria-label="Previous">←</button>
@@ -66,7 +66,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <a href="#" class="product-card-link">
                         <article class="product-card position-relative">
-                            <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-1.png' ) }}" alt="Gradient Graphic T-Shirt">
+                            <img src="{{ asset('images/products/tshirt-logo-1.png' ) }}" alt="Gradient Graphic T-Shirt">
                             <h6>Gradient Graphic T-Shirt</h6>
                             <div class="star-rating d-flex justify-content-center" data-rating="3.5">
                                 <!-- Stars will be dynamically generated -->
@@ -79,7 +79,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <a href="#" class="product-card-link">
                         <article class="product-card position-relative">
-                            <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-1.png' ) }}" alt="Polo with Tipping Details">
+                            <img src="{{ asset('images/products/tshirt-logo-1.png' ) }}" alt="Polo with Tipping Details">
                             <h6>Polo with Tipping Details</h6>
                             <div class="star-rating d-flex justify-content-center" data-rating="4.5">
                                 <!-- Stars will be dynamically generated -->
@@ -93,7 +93,7 @@
                     <a href="#" class="product-card-link">
                         <article class="product-card position-relative">
                             <div class="discount-badge">-30%</div>
-                            <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-1.png' ) }}" alt="Black Striped T-Shirt">
+                            <img src="{{ asset('images/products/tshirt-logo-1.png' ) }}" alt="Black Striped T-Shirt">
                             <h6>Black Striped T-Shirt</h6>
                             <div class="star-rating d-flex justify-content-center" data-rating="5.0">
                                 <!-- Stars will be dynamically generated -->
@@ -107,7 +107,7 @@
                     <a href="#" class="product-card-link">
                         <article class="product-card position-relative">
                             <div class="discount-badge">-30%</div>
-                            <img src="{{ asset('storage/product_image/tshirt-noback/tshirt-logo-1.png' ) }}" alt="Black Striped T-Shirt">
+                            <img src="{{ asset('images/products/tshirt-logo-1.png' ) }}" alt="Black Striped T-Shirt">
                             <h6>Black Striped T-Shirt</h6>
                             <div class="star-rating d-flex justify-content-center" data-rating="5.0">
                                 <!-- Stars will be dynamically generated -->
