@@ -44,7 +44,25 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'gender' => Gender::class,
-        'role' => Role::class
+        'gender' => \App\Enums\Gender::class,
+        'role' => \App\Enums\Role::class
     ];
+
+
+//     relationships
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function shippingInfo()
+    {
+        return $this->hasOne(ShippingInfo::class);
+    }
 }
+

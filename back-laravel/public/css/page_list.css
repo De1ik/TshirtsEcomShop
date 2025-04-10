@@ -90,6 +90,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
+    flex-direction: column;
     transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 .product-card-link {
@@ -165,20 +166,62 @@
     box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
 }
 /* Pagination */
+.pagination-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+/* Text "Showing X–Y of Z" */
+.pagination-info {
+    font-size: 0.95rem;
+    color: #53403C;
+    margin-bottom: 0.75rem;
+}
+
+/* Pagination buttons */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
 .pagination .page-link {
     color: #53403C;
+    background-color: #fff;
     border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    margin: 0 3px;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    padding: 0.45rem 0.9rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease-in-out;
 }
+
 .pagination .page-link:hover {
     background-color: #53403C;
     color: #fff;
     border-color: #53403C;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
+
 .pagination .page-item.active .page-link {
     background-color: #53403C;
     border-color: #53403C;
     color: #fff;
+    font-weight: 600;
+    pointer-events: none;
 }
+
+.pagination .page-item.disabled .page-link {
+    color: #bbb;
+    background-color: #f8f8f8;
+    border-color: #e0e0e0;
+    pointer-events: none;
+}
+
+
+
