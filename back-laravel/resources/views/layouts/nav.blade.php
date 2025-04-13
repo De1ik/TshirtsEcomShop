@@ -9,13 +9,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="./product/page_list.html">Shop</a>
+                        <a class="nav-link" href="{{ route('default_catalogue') }}">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./product/page_list.html">On Sale</a>
+                        <a class="nav-link" href="{{ route('default_catalogue', ['discount' => 1]) }}">On Sale</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./product/page_list.html">New Collections</a>
+                        <a class="nav-link" href="{{ route('default_catalogue', ['collection' => $latestCollection->id]) }}">New Collections</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./admin/admin_products_list.html">Admin Products List</a>

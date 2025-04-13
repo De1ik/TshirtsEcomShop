@@ -38,6 +38,10 @@ class PageCatalogueController extends Controller
             $query->whereBetween('final_price', [$min, $max]);
         }
 
+        if ($request->filled('discount') && $request->input('discount') == 1) {
+            $query->where('is_discount', true);
+        }
+
         // Sorting
         $sort = $request->input('sort');
         if ($sort === 'price_asc') {
@@ -63,8 +67,6 @@ class PageCatalogueController extends Controller
             'collections',
             'genders',
             'sort',
-            'min',
-            'max'
         ));
     }
 }
