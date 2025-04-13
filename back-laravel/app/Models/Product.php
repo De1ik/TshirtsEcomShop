@@ -14,6 +14,7 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'final_price',
         'is_discount',
         'category',
         'gender',
@@ -52,6 +53,13 @@ class Product extends Model
     public function mainImage()
     {
         return $this->hasOne(ProductImage::class)->where('is_main', true);
+    }
+
+    public function activeDiscount()
+    {
+        return $this->hasOne(DiscountProduct::class)
+                    ->whereDate('date_start', '<=', now())
+                    ->whereDate('date_end', '>=', now());
     }
 }
 

@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-// @section('title', 'IgestShop - T-Shirts')
+@section('title', 'IgestShop - T-Shirts')
 
 @section('styles')
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,79 +21,111 @@
 
     <div class="row">
       <aside class="col-lg-3 col-md-4 mb-4">
-        <div class="filter-sidebar">
-          <h5>FILTERS</h5>
-          <hr>
-          <div class="mb-4">
-            <h6>SEX</h6>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="men">
-              <label class="form-check-label" for="men">Men</label>
+        <form method="GET" action="{{ route('default_catalogue') }}">
+          <div class="filter-sidebar">
+            <h5>FILTERS</h5>
+            <hr>
+
+            {{-- Gender --}}
+            <div class="mb-4">
+              <h6>Gender</h6>
+              @foreach ($genders as $gender)
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gender"
+                    id="gender-{{ $gender }}"
+                    value="{{ $gender }}"
+                    {{ request('gender') == $gender ? 'checked' : '' }}
+                  >
+                  <label class="form-check-label" for="gender-{{ $gender }}">{{ ucfirst($gender) }}</label>
+                </div>
+              @endforeach
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="women">
-              <label class="form-check-label" for="women">Women</label>
+
+            {{-- Category --}}
+            <div class="mb-4">
+              <h6>Category</h6>
+              <select class="form-select" name="category">
+                <option value="">All Categories</option>
+                @foreach ($categories as $category)
+                  <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
+                    {{ ucfirst($category) }}
+                  </option>
+                @endforeach
+              </select>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="sex" id="unisex">
-              <label class="form-check-label" for="unisex">Unisex</label>
+
+            {{-- Collection --}}
+            <div class="mb-4">
+              <h6>STYLE</h6>
+              <select class="form-select" name="collection">
+                <option value="">All Collections</option>
+                @foreach ($collections as $id => $name)
+                    <option value="{{ $id }}" {{ request('collection') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+              </select>
             </div>
+
+            {{-- Price --}}
+            <div class="mb-4">
+              <h6>PRICE</h6>
+              <div>
+                <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€{{ request('min_price', $minPrice) }}</span></label>
+                <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}">
+              </div>
+              <div>
+                <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€{{ request('max_price', $maxPrice) }}</span></label>
+                <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}">
+              </div>
+              <div class="price-range-labels">
+                <p>Range from €{{ $minPrice }} to €{{ $maxPrice }}</p>
+              </div>
+            </div>
+
+            {{-- Size — пока без name --}}
+            <div class="mb-4">
+              <h6>SIZE</h6>
+              <div class="d-flex flex-wrap">
+                <button class="size-btn" type="button">XXS</button>
+                <button class="size-btn" type="button">XS</button>
+                <button class="size-btn active" type="button">S</button>
+                <button class="size-btn" type="button">M</button>
+                <button class="size-btn" type="button">L</button>
+                <button class="size-btn" type="button">XL</button>
+                <button class="size-btn" type="button">XXL</button>
+                <button class="size-btn" type="button">3XL</button>
+                <button class="size-btn" type="button">4XL</button>
+              </div>
+            </div>
+
+            {{-- Submit --}}
+            <button type="submit" class="btn btn-dark">APPLY FILTER</button>
           </div>
-          <div class="mb-4">
-            <h6>CATEGORY</h6>
-            <select class="form-select">
-              <option>Hoodie</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <h6>STYLE</h6>
-            <select class="form-select">
-              <option>Line name 1</option>
-              <option>Line name 2</option>
-              <option>Line name 3</option>
-              <option>Line name 4</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <h6>PRICE</h6>
-            <div>
-              <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€0</span></label>
-              <input type="range" class="form-range" id="minPrice" min="0" max="500" value="0">
-            </div>
-            <div>
-              <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€100</span></label>
-              <input type="range" class="form-range" id="maxPrice" min="0" max="500" value="300">
-            </div>
-            <div class="price-range-labels">
-              <p>Range from €0 to €500</p>
-            </div>
-          </div>
-          <div class="mb-4">
-            <h6>SIZE</h6>
-            <div class="d-flex flex-wrap">
-              <button class="size-btn">XXS</button>
-              <button class="size-btn">XS</button>
-              <button class="size-btn active">S</button>
-              <button class="size-btn">M</button>
-              <button class="size-btn">L</button>
-              <button class="size-btn">XL</button>
-              <button class="size-btn">XXL</button>
-              <button class="size-btn">3XL</button>
-              <button class="size-btn">4XL</button>
-            </div>
-          </div>
-          <button class="btn">APPLY FILTER</button>
-        </div>
+        </form>
       </aside>
+
 
       <section class="col-lg-9 col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h3>Our T-Shirts</h3>
           <div class="sort-select">
-              <span id="showingText"> Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results </span>
-            <select class="form-select d-inline-block w-auto ms-2">
-              <option>Sort by: Lower Price</option>
-            </select>
+            <span id="showingText"> Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results </span>
+            <form method="GET" action="{{ route('default_catalogue') }}" id="sortForm">
+              <select name="sort" class="form-select d-inline-block w-auto ms-2" onchange="document.getElementById('sortForm').submit()">
+                <option value="">Sort by</option>
+                <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+              </select>
+
+              {{-- Сохраняем текущие фильтры, чтобы не сбрасывались при сортировке --}}
+              <input type="hidden" name="category" value="{{ request('category') }}">
+              <input type="hidden" name="gender" value="{{ request('gender') }}">
+              <input type="hidden" name="collection" value="{{ request('collection') }}">
+              <input type="hidden" name="minPrice" value="{{ request('minPrice') }}">
+              <input type="hidden" name="maxPrice" value="{{ request('maxPrice') }}">
+            </form>
           </div>
         </div>
 
@@ -102,18 +134,26 @@
             <article class="col-lg-4 col-md-6 mb-4">
               <a href="" class="product-card-link">
                 <div class="product-card position-relative" data-price="{{ $product->price }}">
-                  @if ($product->is_discount)
-                    <div class="discount-badge">-{{ $product->discount_percent }}%</div>
-                  @endif
-                  <img src="{{ asset(optional($product->mainImage)->image_url ? 'images/products/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->main_image_url }}">
+                    @php
+                      $original = $product->price;
+                      $discounted = $product->activeDiscount?->new_price;
+                      $discountPercent = $discounted ? round(100 - ($discounted / $original * 100)) : null;
+                    @endphp
+
+                    @if ($discounted)
+                      <div class="discount-badge">-{{ $discountPercent }}%</div>
+                    @endif
+                  <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->main_image_url }}">
                   <h6>{{ $product->name }}</h6>
                   <div class="star-rating d-flex justify-content-center" data-rating="{{ round($product->reviews_avg_rating ?? 0, 1) }}" data-amount="{{ $product->reviews_count }}">
                     <!-- Stars will be dynamically generated -->
                   </div>
                   <p class="price">
-                    €{{ $product->price }}
                     @if ($product->is_discount)
-                      <span class="discount">€{{ $product->original_price }}</span>
+                        €{{ $discounted }}
+                      <span class="discount">€{{ $product->price }}</span>
+                    @else
+                        €{{ $product->price }}
                     @endif
                   </p>
                 </div>
@@ -199,15 +239,15 @@
         const maxPrice = parseInt(maxPriceInput.value);
         let visibleProducts = 0;
 
-        productCards.forEach(card => {
-          const price = parseInt(card.getAttribute('data-price'));
-          if (price >= minPrice && price <= maxPrice) {
-            card.style.display = 'flex';
-            visibleProducts++;
-          } else {
-            card.style.display = 'none';
-          }
-        });
+//         productCards.forEach(card => {
+//           const price = parseInt(card.getAttribute('data-price'));
+//           if (price >= minPrice && price <= maxPrice) {
+//             card.style.display = 'flex';
+//             visibleProducts++;
+//           } else {
+//             card.style.display = 'none';
+//           }
+//         });
 
 //         if (showingText) {
 //           showingText.textContent = `Showing 1-${visibleProducts} products`;

@@ -19,6 +19,16 @@
     </ol>
   </nav>
 
+  @if(session('success'))
+      <div class="alert alert-success">
+          {{ session('success') }}
+      </div>
+  @elseif(session('error'))
+      <div class="alert alert-danger">
+          {{ session('error') }}
+      </div>
+  @endif
+
   <section class="row create-product-form">
     <h2>Create</h2>
     <form method="POST" action="{{ route('save_new_product') }}" enctype="multipart/form-data">
@@ -27,7 +37,7 @@
         <article class="col-md-3 mb-4">
           <div class="form-group mb-4">
             <label for="productPhoto" class="form-label">Select photo</label>
-            <input type="file" name="image" class="form-control" id="productPhoto" accept="image/*" multiple>
+            <input type="file" name="productPhoto[]" class="form-control" id="productPhoto" accept="image/*" multiple>
           </div>
           <div class="product-images" id="productImages"></div>
         </article>
@@ -41,10 +51,10 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="category" class="form-label">Category</label>
-              <select class="form-select" id="category">
+              <select name="category" class="form-select" id="category">
                 <option value="" disabled selected>Select category</option>
                 <option value="hoodie">Hoodie</option>
-                <option value="t-shirt">T-Shirt</option>
+                <option value="tshirt">T-Shirt</option>
               </select>
             </div>
             <div class="col-md-6 mb-3">
@@ -56,7 +66,7 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="collection" class="form-label">Collection</label>
-              <select class="form-select" id="collection">
+              <select name="collection" class="form-select" id="collection">
                 <option value="" disabled selected>Select collection</option>
                 @foreach($collections as $collection)
                     <option value="{{ $collection->id }}" {{ old('collection') == $collection->id ? 'selected' : '' }}>{{ $collection->name }}</option>
@@ -71,7 +81,7 @@
 
           <div class="mb-3">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="enableDiscount" onchange="toggleDiscountFields()">
+              <input class="form-check-input" type="checkbox" name="enableDiscount" id="enableDiscount" onchange="toggleDiscountFields()">
               <label class="form-check-label" for="enableDiscount">Enable Discount</label>
             </div>
           </div>
@@ -80,7 +90,7 @@
             <div class="row">
               <div class="col-md-4 mb-3">
                 <label for="discountPrice" class="form-label">Discount Price (€)</label>
-                <input type="number" name="discount" class="form-control" id="discountPrice" min="0" step="0.01">
+                <input type="number" name="discount-price" class="form-control" id="discountPrice" min="0" step="0.01">
               </div>
               <div class="col-md-4 mb-3">
                 <label for="discountStartDate" class="form-label">Start Date</label>
@@ -97,15 +107,15 @@
             <label class="form-label">Gender</label>
             <div class="d-flex">
               <div class="form-check me-4">
-                <input class="form-check-input" type="radio" name="sex" id="sex-men" value="men">
-                <label class="form-check-label" for="sex-men">Men</label>
+                <input class="form-check-input" type="radio" name="gender" id="sex-men" value="male">
+                <label class="form-check-label" for="sex-men">Male</label>
               </div>
               <div class="form-check me-4">
-                <input class="form-check-input" type="radio" name="sex" id="sex-women" value="women">
-                <label class="form-check-label" for="sex-women">Women</label>
+                <input class="form-check-input" type="radio" name="gender" id="sex-women" value="female">
+                <label class="form-check-label" for="sex-women">Female</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="sex" id="sex-unisex" value="unisex">
+                <input class="form-check-input" type="radio" name="gender" id="sex-unisex" value="unisex">
                 <label class="form-check-label" for="sex-unisex">Unisex</label>
               </div>
             </div>
@@ -113,7 +123,7 @@
 
           <div class="form-group mb-3">
             <label for="description" class="form-label">Product Description</label>
-            <textarea class="form-control" id="description" rows="4" placeholder="Enter product description"></textarea>
+            <textarea class="form-control" name="description" id="description" rows="4" placeholder="Enter product description"></textarea>
           </div>
         </article>
 
