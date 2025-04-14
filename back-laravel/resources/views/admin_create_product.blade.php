@@ -44,8 +44,28 @@
 
         <article class="col-md-7 mb-4">
           <div class="form-group mb-3">
+            <label class="form-label">Product Type</label>
+            <div class="switcher">
+              <input type="radio" name="product_type" id="new_product" value="new" checked onchange="toggleProductType()">
+              <label for="new_product" class="switcher-label">New Product</label>
+              <input type="radio" name="product_type" id="variant" value="variant" onchange="toggleProductType()">
+              <label for="variant" class="switcher-label">Add Variant</label>
+            </div>
+          </div>
+
+          <div class="form-group mb-3" id="variant_product_field" style="display: none;">
+            <label for="parent_product" class="form-label">Select Parent Product</label>
+            <select name="parent_product_id" class="form-select" id="parent_product">
+              <option value="" disabled selected>Select product</option>
+              @foreach($products as $product)
+                <option value="{{ $product->id }}">{{ $product->name }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="form-group mb-3" id="product_name_field">
             <label for="productName" class="form-label">Name of Product</label>
-            <input type="text" name="name" class="form-control" id="productName" placeholder="Enter product name">
+            <input type="text" name="name" class="form-control" id="productName" value="Test product" placeholder="Enter product name">
           </div>
 
           <div class="row">
@@ -59,7 +79,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="price" class="form-label">Price</label>
-              <input type="number" name="price" class="form-control" id="price" placeholder="Enter price">
+              <input type="number" name="price" class="form-control" id="price" value="100" placeholder="Enter price">
             </div>
           </div>
 
@@ -75,7 +95,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="amount" class="form-label">Amount</label>
-              <input type="number" name="amount" class="form-control" id="amount" placeholder="Enter amount">
+              <input type="number" name="amount" class="form-control" id="amount" value="5" placeholder="Enter amount">
             </div>
           </div>
 
@@ -122,8 +142,45 @@
           </div>
 
           <div class="form-group mb-3">
+            <label for="sizes" class="form-label">Sizes</label>
+            <div class="size-selector">
+              @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $size)
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="sizes[]" id="size-{{ $size }}" value="{{ $size }}">
+                  <label class="form-check-label size-label" for="size-{{ $size }}">{{ $size }}</label>
+                </div>
+              @endforeach
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="color" class="form-label">Color</label>
+            <select name="color-id" class="form-select" id="color" onchange="toggleNewColorField()">
+              <option value="" disabled selected>Select color</option>
+              @foreach($colors as $color)
+                <option value="{{ $color->id }}">{{ $color->name }}</option>
+              @endforeach
+              <option value="new">Create New Color</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-3" id="new_color_name_field" style="display: none;">
+            <label for="colorName" class="form-label">Name of Color</label>
+            <input type="text" name="new_color_name" class="form-control" id="colorName" placeholder="Enter color name">
+          </div>
+
+
+          <div class="form-group mb-3" id="new_color_field" style="display: none;">
+            <label for="new_color" class="form-label">New Color</label>
+            <div class="color-picker-container">
+              <input type="color" class="form-control color-picker" id="new_color" value="#53403C">
+              <input type="text" name="new_color_hex" class="form-control color-hex" id="new_color_hex" placeholder="#53403C" value="#53403C" pattern="#[0-9A-Fa-f]{6}" maxlength="7">
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
             <label for="description" class="form-label">Product Description</label>
-            <textarea class="form-control" name="description" id="description" rows="4" placeholder="Enter product description"></textarea>
+            <textarea class="form-control" name="description" id="description" rows="4" placeholder="Enter product description" value="Test Description"></textarea>
           </div>
         </article>
 
@@ -144,6 +201,8 @@
 <script>
   const productPhotoInput = document.getElementById('productPhoto');
   const productImagesContainer = document.getElementById('productImages');
+  const newColorPicker = document.getElementById('new_color');
+  const newColorHex = document.getElementById('new_color_hex');
 
   productPhotoInput.addEventListener('change', (event) => {
     const files = event.target.files;
@@ -183,41 +242,47 @@
     }
   }
 
-  const updateProductForm = document.getElementById('createProductForm');
-  updateProductForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const enableDiscount = document.getElementById('enableDiscount').checked;
-    if (enableDiscount) {
-      const price = parseFloat(document.getElementById('price').value);
-      const discountPrice = parseFloat(document.getElementById('discountPrice').value);
-      const startDate = document.getElementById('discountStartDate').value;
-      const endDate = document.getElementById('discountEndDate').value;
-      const currentDate = new Date('2025-03-28');
+  function toggleProductType() {
+    const isVariant = document.getElementById('variant').checked;
+    document.getElementById('variant_product_field').style.display = isVariant ? 'block' : 'none';
+    document.getElementById('product_name_field').style.display = isVariant ? 'none' : 'block';
+    document.getElementById('category').disabled = isVariant;
+    document.getElementById('collection').disabled = isVariant;
+    document.getElementById('price').disabled = isVariant;
+    document.getElementById('enableDiscount').disabled = isVariant;
+    document.getElementById('description').disabled = isVariant;
+    document.getElementById('sex-men').disabled = isVariant;
+    document.getElementById('sex-women').disabled = isVariant;
+    document.getElementById('sex-unisex').disabled = isVariant;
+  }
 
-      if (isNaN(discountPrice) || discountPrice <= 0) {
-        alert('Please enter a valid discount price.');
-        return;
+  function toggleNewColorField() {
+    const colorSelect = document.getElementById('color');
+    const newColorField = document.getElementById('new_color_field');
+    const newColorNameField = document.getElementById('new_color_name_field');
+    newColorField.style.display = colorSelect.value === 'new' ? 'block' : 'none';
+    newColorNameField.style.display = colorSelect.value === 'new' ? 'block' : 'none';
+//     if (colorSelect.value !== 'new') {
+//       if (newColorPicker) newColorPicker.value = '#53403C';
+//       if (newColorHex) newColorHex.value = '#53403C';
+//     }
+  }
+
+  // Sync new color picker and hex input
+  if (newColorPicker && newColorHex) {
+    newColorPicker.addEventListener('input', () => {
+      newColorHex.value = newColorPicker.value.toUpperCase();
+    });
+
+    newColorHex.addEventListener('input', () => {
+      const hex = newColorHex.value.toUpperCase();
+      if (/^#[0-9A-F]{6}$/i.test(hex)) {
+        newColorPicker.value = hex;
       }
-      if (discountPrice >= price) {
-        alert('Discount price must be less than the original price.');
-        return;
-      }
-      if (!startDate || !endDate) {
-        alert('Please provide both start and end dates for the discount.');
-        return;
-      }
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      if (start > end) {
-        alert('Start date cannot be after the end date.');
-        return;
-      }
-      if (start < currentDate) {
-        alert('Start date cannot be in the past.');
-        return;
-      }
-    }
-    alert('Product updated successfully!');
-  });
+    });
+  }
+
+  // Initialize form state
+  toggleProductType();
 </script>
 @endsection

@@ -13,6 +13,7 @@ class ProductImage extends Model
         'product_id',
         'image_url',
         'is_main',
+        'color_id',
     ];
 
     protected $casts = [
