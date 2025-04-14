@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\PageCatalogueController;
 use App\Http\Controllers\AdminCreateProductController;
+use App\Http\Controllers\AdminProductsCatalogueController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +27,5 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/admin/create-product', [AdminCreateProductController::class, 'create_product'])->name('create_product');
 Route::post('/admin/create-product', [AdminCreateProductController::class, 'save_new_product'])->name('save_new_product');
+
+Route::get('/admin/products-catalogue', [AdminProductsCatalogueController::class, 'default'])->name('admin_default_catalogue');
