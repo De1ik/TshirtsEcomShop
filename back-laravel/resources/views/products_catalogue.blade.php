@@ -22,6 +22,9 @@
     <div class="row">
       <aside class="col-lg-3 col-md-4 mb-4">
         <form method="GET" action="{{ route('default_catalogue') }}">
+          @if(request('discount') == 1)
+             <input type="hidden" name="discount" value="1">
+          @endif
           <div class="filter-sidebar">
             <h5>FILTERS</h5>
             <hr>
@@ -88,17 +91,28 @@
             <div class="mb-4">
               <h6>SIZE</h6>
               <div class="d-flex flex-wrap">
-                <button class="size-btn" type="button">XXS</button>
-                <button class="size-btn" type="button">XS</button>
-                <button class="size-btn active" type="button">S</button>
-                <button class="size-btn" type="button">M</button>
-                <button class="size-btn" type="button">L</button>
-                <button class="size-btn" type="button">XL</button>
-                <button class="size-btn" type="button">XXL</button>
-                <button class="size-btn" type="button">3XL</button>
-                <button class="size-btn" type="button">4XL</button>
+                <div class="form-group mb-3">
+                  <div class="size-selector">
+                    @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $size)
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="sizes[]"
+                          id="size-{{ $size }}"
+                          value="{{ $size }}"
+                          {{ in_array($size, request()->get('sizes', [])) ? 'checked' : '' }}
+                        >
+                        <label class="form-check-label size-label" for="size-{{ $size }}">{{ $size }}</label>
+                      </div>
+                    @endforeach
+                  </div>
+                </div>
               </div>
             </div>
+
+
+
 
             {{-- Submit --}}
             <button type="submit" class="btn btn-dark">APPLY FILTER</button>
@@ -117,6 +131,8 @@
                 <option value="">Sort by</option>
                 <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
                 <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                <option value="release_desc" {{ request('sort') === 'release_desc' ? 'selected' : '' }}>Release: Newest to Oldest</option>
+                <option value="release_asc" {{ request('sort') === 'release_asc' ? 'selected' : '' }}>Release: Oldest to Newest</option>
               </select>
 
               {{-- Сохраняем текущие фильтры, чтобы не сбрасывались при сортировке --}}
@@ -125,6 +141,12 @@
               <input type="hidden" name="collection" value="{{ request('collection') }}">
               <input type="hidden" name="minPrice" value="{{ request('minPrice') }}">
               <input type="hidden" name="maxPrice" value="{{ request('maxPrice') }}">
+              @foreach (request('sizes', []) as $size)
+                <input type="hidden" name="sizes[]" value="{{ $size }}">
+              @endforeach
+              @if(request('discount') == 1)
+                  <input type="hidden" name="discount" value="1">
+              @endif
             </form>
           </div>
         </div>

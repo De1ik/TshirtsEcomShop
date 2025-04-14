@@ -9,6 +9,8 @@ use App\Models\Collection;
 class PageCatalogueController extends Controller
 {
     public function default(Request $request) {
+//         dd($request->query());
+        $sizes = $request->query('sizes', []);
         $query = Product::with('mainImage', 'activeDiscount')
                         ->withAvg('reviews', 'rating')
                         ->withCount('reviews');
@@ -38,6 +40,12 @@ class PageCatalogueController extends Controller
             $query->whereBetween('final_price', [$min, $max]);
         }
 
+        if (!empty($sizes)) {
+            $query->whereHas('variants', function ($q) use ($sizes) {
+                $q->whereIn('size', $sizes);
+            });
+        }
+
         if ($request->filled('discount') && $request->input('discount') == 1) {
             $query->where('is_discount', true);
         }
@@ -48,6 +56,10 @@ class PageCatalogueController extends Controller
             $query->orderBy('final_price', 'asc');
         } elseif ($sort === 'price_desc') {
             $query->orderBy('final_price', 'desc');
+        } elseif ($sort === 'release_asc') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'release_desc') {
+            $query->orderBy('created_at', 'desc');
         }
 
 
