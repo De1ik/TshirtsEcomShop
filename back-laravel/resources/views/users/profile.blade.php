@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
 @extends('layouts.layout')
 
 @section('styles')
@@ -10,7 +11,6 @@
             <h2>Profile</h2>
 
             @php
-                $isEditing = request()->query('edit') === 'true';
                 $user = Auth::user();
                 $shipping = $user->shippingInfo;
             @endphp
@@ -24,76 +24,104 @@
                 <div class="row g-3">
                     {{-- First Name --}}
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="first_name"
-                               placeholder="First Name"
-                               value="{{ old('first_name', $user->first_name) }}"
-                            {{ $isEditing ? '' : 'readonly' }}>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name"
+                                   value="{{ old('first_name', $user->first_name) }}" readonly>
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleEdit('first_name')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Last Name --}}
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="last_name"
-                               placeholder="Last Name"
-                               value="{{ old('last_name', $user->last_name) }}"
-                            {{ $isEditing ? '' : 'readonly' }}>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name"
+                                   value="{{ old('last_name', $user->last_name) }}" readonly>
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleEdit('last_name')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    {{-- Email --}}
+                    {{-- Email (Read-only) --}}
                     <div class="col-md-6">
-                        <input type="email" placeholder="Email" class="form-control" name="email"
-                               value="{{ $user->email }}" readonly>
+                        <input type="email" class="form-control" value="{{ $user->email }}" readonly>
+                        <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                onclick="toggleEdit('email')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
                     </div>
 
                     {{-- Phone --}}
                     <div class="col-md-6">
-                        <input type="text" class="form-control" placeholder="Phone Number" name="phone"
-                               value="{{ old('phone', $shipping?->phone) }}"
-                            {{ $isEditing ? '' : 'readonly' }}>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number"
+                                   value="{{ old('phone', $shipping?->phone) }}" readonly>
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleEdit('phone')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Gender --}}
                     <div class="col-md-6">
-                        @if($isEditing)
-                            <select name="gender" class="form-control">
+                        <div class="form-group position-relative">
+                            <select name="gender" id="gender" class="form-control" disabled>
                                 <option value="">Select Gender</option>
                                 <option value="male" {{ $user->gender === 'male' ? 'selected' : '' }}>Male</option>
                                 <option value="female" {{ $user->gender === 'female' ? 'selected' : '' }}>Female</option>
                             </select>
-                        @else
-                            <input type="text" class="form-control" value="{{ ucfirst($user->gender) }}" readonly placeholder="Gender">
-                        @endif
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleSelect('gender')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Country --}}
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="country" placeholder="Country"
-                               value="{{ old('country', $shipping?->country) }}"
-                            {{ $isEditing ? '' : 'readonly' }}>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="country" name="country" placeholder="Country"
+                                   value="{{ old('country', $shipping?->country) }}" readonly>
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleEdit('country')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- City --}}
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="city" placeholder="City"
-                               value="{{ old('city', $shipping?->city) }}"
-                            {{ $isEditing ? '' : 'readonly' }}>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="city" name="city" placeholder="City"
+                                   value="{{ old('city', $shipping?->city) }}" readonly>
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleEdit('city')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Zip Code --}}
                     <div class="col-md-6">
-                        <input type="text" class="form-control" name="zip_code" placeholder="Zip Code"
-                               value="{{ old('zip_code', $shipping?->zip_code) }}"
-                            {{ $isEditing ? '' : 'readonly' }}>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="zip_code" name="zip_code"
+                                   value="{{ old('zip_code', $shipping?->zip_code) }}" placeholder="Zip Code" readonly>
+                            <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
+                                    onclick="toggleEdit('zip_code')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {{-- Action Buttons --}}
+                {{-- Save Button --}}
                 <div class="mt-4">
-                    @if($isEditing)
-                        <button type="submit" class="btn btn-success">Save Changes</button>
-                        <a href="{{ route('profile') }}" class="btn btn-secondary">Cancel</a>
-                    @else
-                        <a href="{{ route('profile', ['edit' => 'true']) }}" class="btn btn-primary">Edit Profile</a>
-                    @endif
+                    <button type="submit" class="btn btn-success">Save Changes</button>
 
                     <a href="{{ route('logout') }}" class="btn btn-danger ms-3"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -111,7 +139,7 @@
         <section class="orders-section container my-4">
             <h2>All Orders</h2>
             <div class="order-list">
-                <article  class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
+                <article class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
                     <div class="order-details">
                         <p><strong>Order #100</strong></p>
                         <p>Status: Not Delivered</p>
@@ -125,7 +153,7 @@
                         </a>
                     </div>
                 </article>
-                <article  class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
+                <article class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
                     <div class="order-details">
                         <p><strong>Order #101</strong></p>
                         <p>Status: Not Delivered</p>
@@ -146,4 +174,38 @@
             ENJOY EVERY MOMENT!
         </div>
     </main>
+@endsection
+
+@section('scripts')
+    <script>
+        function toggleEdit(fieldId) {
+            const input = document.getElementById(fieldId);
+            const button = input.nextElementSibling;
+
+            if (input.readOnly) {
+                input.readOnly = false;
+                input.style.backgroundColor = '#fff';
+                button.innerHTML = '<i class="bi bi-check-circle confirm-btn"></i>';
+            } else {
+                input.readOnly = true;
+                input.style.backgroundColor = '#f9f9f9';
+                button.innerHTML = '<i class="bi bi-pencil edit-btn"></i>';
+            }
+        }
+
+        function toggleSelect(selectId) {
+            const select = document.getElementById(selectId);
+            const button = select.nextElementSibling;
+
+            if (select.disabled) {
+                select.disabled = false;
+                select.style.backgroundColor = '#fff';
+                button.innerHTML = '<i class="bi bi-check-circle confirm-btn"></i>';
+            } else {
+                select.disabled = true;
+                select.style.backgroundColor = '#f9f9f9';
+                button.innerHTML = '<i class="bi bi-pencil edit-btn"></i>';
+            }
+        }
+    </script>
 @endsection
