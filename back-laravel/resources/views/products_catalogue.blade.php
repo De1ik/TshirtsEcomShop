@@ -116,6 +116,7 @@
 
             {{-- Submit --}}
             <button type="submit" class="btn btn-dark">APPLY FILTER</button>
+            <a href="{{ route('default_catalogue') }}" class="btn btn-dark clear-filter">CLEAR FILTERS</a>
           </div>
         </form>
       </aside>

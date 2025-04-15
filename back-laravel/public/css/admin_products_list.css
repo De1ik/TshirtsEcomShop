@@ -48,6 +48,19 @@
 .filter-sidebar .btn:hover {
     background-color: #7a5c58;
 }
+.filter-sidebar .clear-filter {
+    margin-top: 1em;
+    background-color: #e14523;
+    color: #fff;
+    border-radius: 25px;
+    width: 100%;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    border-color: #fd0202;
+}
+.filter-sidebar .clear-filter:hover {
+    background-color: #cd6b59;
+}
 .filter-sidebar .size-btn {
     background-color: #fff;
     border: 1px solid #53403C;
@@ -74,6 +87,11 @@
     font-size: 0.9rem;
     color: #53403C;
 }
+/*.clear-filter {*/
+/*    color: #cf4a2c;*/
+/*    margin-top: 2em;*/
+/*}*/
+
 .search-sort-bar .form-check-input:checked {
     background-color: #53403C;
     border-color: #53403C;
