@@ -21,9 +21,10 @@
                         <a class="nav-link" href="./admin/admin_products_list.html">Admin Products List</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control search-bar me-2" type="search" placeholder="Search products..." aria-label="Search">
-                </form>
+                        <form method="GET" action="{{ route('admin_default_catalogue') }}" id="searchForm" class="d-flex align-items-center">
+                            <input class="form-control search-bar me-2" type="search" id="searchInput" name="search" placeholder="Search for products..." value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-search">Search</button>
+                        </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="./order/cart.html" aria-label="Cart"><i class="bi bi-cart"></i></a>

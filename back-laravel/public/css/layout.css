@@ -45,6 +45,19 @@ main {
     border-color: #53403C;
     box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
 }
+.btn-search {
+    background-color: #53403C;
+    color: #fff;
+    border-radius: 10px;
+    padding: 6px 15px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: #7a5c58;
+}
 .navbar .bi {
     color: #53403C;
     font-size: 1.2rem;

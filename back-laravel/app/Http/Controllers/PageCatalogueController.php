@@ -16,6 +16,17 @@ class PageCatalogueController extends Controller
                         ->withCount('reviews');
 
 
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            if ($request->boolean('search_by_id') && is_numeric($search)) {
+                $query->where('id', $search);
+            } else {
+                $query->where('name', 'ILIKE', '%' . $search . '%');
+            }
+        }
+
+
         // Min/Max price for slider
         $minPrice = (clone $query)->min('final_price');
         $maxPrice = (clone $query)->max('final_price');
