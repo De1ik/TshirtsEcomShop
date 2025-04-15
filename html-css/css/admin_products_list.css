@@ -48,19 +48,6 @@
 .filter-sidebar .btn:hover {
     background-color: #7a5c58;
 }
-.filter-sidebar .clear-filter {
-    margin-top: 1em;
-    background-color: #e14523;
-    color: #fff;
-    border-radius: 25px;
-    width: 100%;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-    border-color: #fd0202;
-}
-.filter-sidebar .clear-filter:hover {
-    background-color: #cd6b59;
-}
 .filter-sidebar .size-btn {
     background-color: #fff;
     border: 1px solid #53403C;
@@ -87,11 +74,6 @@
     font-size: 0.9rem;
     color: #53403C;
 }
-/*.clear-filter {*/
-/*    color: #cf4a2c;*/
-/*    margin-top: 2em;*/
-/*}*/
-
 .search-sort-bar .form-check-input:checked {
     background-color: #53403C;
     border-color: #53403C;
@@ -153,112 +135,24 @@
     color: #e65b50;
 }
 /* Search and Sort */
-/* Search Sort Bar Styles */
 .search-sort-bar {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 15px 20px;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 15px;
 }
-
+.search-sort-bar .search-bar {
+    width: 200px;
+}
+.search-sort-bar .sort-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 5px 10px;
+    color: #53403C;
+}
 .search-sort-bar .form-check-label {
     color: #53403C;
-    font-weight: 400;
     font-size: 0.9rem;
-}
-
-.search-sort-bar .form-check-input:checked {
-    background-color: #53403C;
-    border-color: #53403C;
-}
-
-.search-sort-bar .search-bar {
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    color: #53403C;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    padding: 6px 12px;
-}
-
-.search-sort-bar .search-bar:focus {
-    border-color: #53403C;
-    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
-}
-
-.search-sort-bar .btn-search {
-    background-color: #53403C;
-    color: #fff;
-    border-radius: 10px;
-    padding: 6px 15px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-}
-
-.search-sort-bar .btn-search:hover {
-    background-color: #7a5c58;
-}
-
-.search-sort-bar #showingText {
-    color: #53403C;
-    font-size: 0.9rem;
-    margin-left: 30px; /* Added to increase space between button and text */
-}
-
-.search-sort-bar .form-select {
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    color: #53403C;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    padding: 6px 12px;
-}
-
-.search-sort-bar .form-select:focus {
-    border-color: #53403C;
-    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 767px) {
-    .search-sort-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .search-sort-bar .d-flex {
-        width: 100%;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .search-sort-bar .form-check {
-        margin-bottom: 10px;
-    }
-
-    .search-sort-bar .search-bar {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .search-sort-bar .btn-search {
-        width: 100%;
-    }
-
-    .search-sort-bar #showingText {
-        margin: 10px 0;
-        margin-left: 0; /* Reset margin for mobile */
-    }
-
-    .search-sort-bar .form-select {
-        width: 100%;
-    }
 }
 .create-product-btn {
     background-color: #53403C;

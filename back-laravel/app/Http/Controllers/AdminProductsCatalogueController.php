@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Collection;
 
-class PageCatalogueController extends Controller
+class AdminProductsCatalogueController extends Controller
 {
     public function default(Request $request) {
 //         dd($request->query());
@@ -82,7 +82,7 @@ class PageCatalogueController extends Controller
         $collections = Collection::whereIn('id', Product::select('collection_id'))->pluck('name', 'id');
         $genders = Product::select('gender')->distinct()->pluck('gender');
 
-        return view('products_catalogue', compact(
+        return view('admin_products_catalogue', compact(
             'products',
             'minPrice',
             'maxPrice',
@@ -92,5 +92,19 @@ class PageCatalogueController extends Controller
             'sort',
         ));
     }
-}
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $searchById = $request->boolean('searchById');
 
+        $products = Product::with('mainImage')
+            ->when($searchById, fn($q) => $q->where('id', $query))
+            ->when(!$searchById, fn($q) => $q->where('name', 'ILIKE', '%' . $query . '%'))
+            ->take(10)
+            ->get();
+
+        return response()->json($products);
+    }
+
+
+}

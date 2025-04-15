@@ -62,19 +62,6 @@
 .filter-sidebar .btn:hover {
     background-color: #7a5c58;
 }
-.filter-sidebar .clear-filter {
-    margin-top: 1em;
-    background-color: #e14523;
-    color: #fff;
-    border-radius: 25px;
-    width: 100%;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-    border-color: #fd0202;
-}
-.filter-sidebar .clear-filter:hover {
-    background-color: #cd6b59;
-}
 /* Updated Size Filter */
 /*.filter-sidebar .size-inp {*/
 /*    background-color: #fff;*/
