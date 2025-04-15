@@ -29,9 +29,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="./order/cart.html" aria-label="Cart"><i class="bi bi-cart"></i></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('login')}}">Login</a>
-                    </li>
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('login')}}">Login</a>
+                        </li>
+                    @endguest
+                    @auth()
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="{{ route('profile') }}">
+                                {{ Auth::user()->getFullName() ?: Auth::user()->email }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button class="nav-link btn-danger btn-sm" type="submit"> Logout </button>
+                            </form>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>

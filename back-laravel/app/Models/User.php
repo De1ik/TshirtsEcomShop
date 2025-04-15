@@ -64,5 +64,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(ShippingInfo::class);
     }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function getFullName() {
+
+        if ($this->first_name || $this->last_name) {
+            return trim("{$this->first_name} {$this->last_name}");
+        }
+
+        return null;
+    }
 }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password_hash');
             $table->enum('gender', ['male', 'female']);
-            $table->enum('role', ['user', 'admin']);
+            $table->enum('role', ['users', 'admin']);
             $table->timestamps();
         });
     }
