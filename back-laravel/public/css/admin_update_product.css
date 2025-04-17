@@ -1,191 +1,321 @@
+body {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-family: 'Poppins', sans-serif;
+}
+
 /* Breadcrumb */
 .breadcrumb {
-    background-color: transparent;
+    background: transparent;
+    padding: 0.5rem 0;
 }
 .breadcrumb-item a {
     color: #53403C;
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 .breadcrumb-item a:hover {
-    text-decoration: underline;
+    color: #7a5c58;
 }
 .breadcrumb-item.active {
     color: #7a5c58;
 }
-/* Form Styles */
-.update-product-form {
-    background-color: #fff;
+
+/* Form Container */
+.create-product-form {
+    background: #fff;
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 25px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
-.update-product-form h2 {
-    font-weight: 600;
-    color: #53403C;
-    margin-bottom: 15px;
+.create-product-form:hover {
+    transform: translateY(-5px);
 }
-.update-product-form .form-label {
+.card-header.bg-gradient-primary {
+    background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
+    border-radius: 15px 15px 0 0;
+    padding: 1.5rem;
+}
+.card-body {
+    padding: 2rem;
+}
+
+/* Form Elements */
+.form-label {
     color: #53403C;
     font-weight: 500;
     font-size: 0.9rem;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
 }
-.update-product-form .form-control,
-.update-product-form .form-select {
+.form-control, .form-select {
     border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
     color: #53403C;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
-    padding: 6px 12px;
 }
-.update-product-form .form-control:focus,
-.update-product-form .form-select:focus {
+.form-control:focus, .form-select:focus {
     border-color: #53403C;
-    box-shadow: 0 0 5px rgba(83, 64, 60, 0.3);
+    box-shadow: 0 0 8px rgba(83, 64, 60, 0.2);
 }
-.update-product-form .form-check-input:checked {
+.form-check-input:checked {
     background-color: #53403C;
     border-color: #53403C;
 }
-.update-product-form .form-check-label {
+.form-check-label {
     color: #53403C;
-    font-weight: 400;
     font-size: 0.9rem;
 }
-.update-product-form .btn-update {
-    background-color: #53403C;
+
+/* Photo Upload Group */
+.photo-upload-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.photo-upload-group .form-control,
+.photo-upload-group .form-select {
+    width: 100%;
+}
+
+/* Buttons */
+.btn-update, .btn-add-variant, .btn-save-variants, .btn-confirm {
+    background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
     color: #fff;
+    border: none;
     border-radius: 25px;
-    padding: 8px 10px;
+    padding: 0.75rem 1.5rem;
     font-weight: 500;
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
+    transition: all 0.3s ease;
 }
-.update-product-form .btn-update:hover {
-    background-color: #7a5c58;
+.btn-update:hover, .btn-add-variant:hover, .btn-save-variants:hover, .btn-confirm:hover {
+    background: linear-gradient(90deg, #7a5c58 0%, #53403C 100%);
+    transform: translateY(-2px);
 }
-.update-product-form .btn-delete {
-    background-color: #ff6f61;
+.btn-delete, .btn-delete-variant {
+    background: linear-gradient(90deg, #ff6f61 0%, #e65b50 100%);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+.btn-delete:hover, .btn-delete-variant:hover {
+    background: linear-gradient(90deg, #e65b50 0%, #ff6f61 100%);
+    transform: translateY(-2px);
+}
+.btn-no {
+    background: #6c757d;
     color: #fff;
     border-radius: 25px;
-    padding: 8px 10px;
+    padding: 0.75rem 1.5rem;
     font-weight: 500;
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
+    transition: all 0.3s ease;
 }
-.update-product-form .btn-delete:hover {
-    background-color: #e65b50;
+.btn-no:hover {
+    background: #5a6268;
 }
-/* Product Images with Scroller */
+
+/* Product Images */
 .product-images {
-    max-height: 300px;
-    overflow-y: auto;
-    padding-right: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
 }
-.product-images::-webkit-scrollbar {
-    width: 6px;
-}
-.product-images::-webkit-scrollbar-track {
-    background: #f5f5f5;
-    border-radius: 10px;
-}
-.product-images::-webkit-scrollbar-thumb {
-    background: #53403C;
-    border-radius: 10px;
-}
-.product-images::-webkit-scrollbar-thumb:hover {
-    background: #7a5c58;
-}
-.product-images .image-wrapper {
+.image-wrapper {
     position: relative;
-    margin-bottom: 8px;
-}
-.product-images img {
-    max-width: 100%;
-    height: auto;
     border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
-.product-images .delete-image-btn {
+.image-wrapper:hover {
+    transform: scale(1.05);
+}
+.image-wrapper img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.color-badge {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: #ff6f61;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(83, 64, 60, 0.8);
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.delete-image-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff6f61;
     color: #fff;
     border: none;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+.delete-image-btn:hover {
+    background: #e65b50;
+}
+
+/* Switcher */
+.switcher .btn-outline-primary {
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+.switcher .btn-check:checked + .btn-outline-primary {
+    background: #53403C;
+    color: #fff;
+    border-color: #53403C;
+}
+
+/* Variant List */
+.variant-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: #f8f9fa;
+}
+.variant-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
-.product-images .delete-image-btn:hover {
-    background-color: #e65b50;
+.variant-item:hover {
+    background: #e9ecef;
 }
-/* Delete Confirmation Modal */
-.modal-content {
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.variant-item.selected {
+    background: #53403C;
+    color: #fff;
 }
-.modal-header {
-    border-bottom: none;
-    padding-bottom: 0;
+
+/* Size Selector */
+.size-selector .size-label {
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
 }
-.modal-title {
+.size-selector .form-check-input:checked + .size-label {
+    background: #53403C;
+    color: #fff;
+    border-color: #53403C;
+}
+
+/* Color Picker */
+.color-picker-container {
+    display: flex;
+    align-items: center;
+}
+.color-picker {
+    width: 50px;
+    height: 38px;
+    padding: 0;
+    border: none;
+}
+.color-hex {
+    flex: 1;
+}
+
+/* Variant Section */
+.variant-section {
+    margin-top: 2rem;
+}
+.variant-table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.variant-table th {
+    background: #f5f5f5;
     font-weight: 600;
     color: #53403C;
 }
-.modal-body {
+.variant-table td {
+    vertical-align: middle;
     color: #53403C;
-    font-size: 1.1rem;
-    text-align: center;
 }
-.modal-footer {
-    border-top: none;
-    justify-content: center;
-    padding-top: 0;
+.variant-table tr:nth-child(even) {
+    background: #f8f9fa;
 }
-.modal-footer .btn-no {
-    background-color: #53403C;
+.variant-table tr:hover {
+    background: #e9ecef;
+}
+.btn-edit-variant {
+    background: #53403C;
     color: #fff;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+    border-radius: 15px;
+    padding: 0.3rem 0.8rem;
+    margin-right: 0.5rem;
 }
-.modal-footer .btn-no:hover {
-    background-color: #7a5c58;
+.btn-edit-variant:hover {
+    background: #7a5c58;
 }
-.modal-footer .btn-confirm-delete {
-    background-color: #ff6f61;
-    color: #fff;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+
+/* Modal */
+.modal-content {
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
 }
-.modal-footer .btn-confirm-delete:hover {
-    background-color: #e65b50;
+.modal-header.bg-gradient-primary {
+    background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
 }
+.modal-body {
+    padding: 1.5rem;
+}
+.btn-close-white {
+    filter: invert(1);
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Banner */
+.banner {
+    background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
+    border-radius: 10px;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 991px) {
-    .update-product-form .col-md-2 {
-        margin-top: 20px;
+    .create-product-form {
+        padding: 1rem;
+    }
+    .col-md-2 {
+        margin-top: 1.5rem;
+    }
+    .product-images {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+}
+@media (max-width: 576px) {
+    .switcher .btn-outline-primary {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    .variant-table th, .variant-table td {
+        font-size: 0.8rem;
+    }
+    .photo-upload-group {
+        flex-direction: column;
     }
 }

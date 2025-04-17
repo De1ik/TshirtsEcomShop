@@ -18,7 +18,7 @@
                         <a class="nav-link" href="{{ route('default_catalogue', ['collection' => $latestCollection->id]) }}">New Collections</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./admin/admin_products_list.html">Admin Products List</a>
+                        <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin Products List</a>
                     </li>
                 </ul>
                         <form method="GET" action="{{ route('admin_default_catalogue') }}" id="searchForm" class="d-flex align-items-center">
