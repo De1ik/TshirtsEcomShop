@@ -37,8 +37,9 @@
       <h2 class="mb-0">Create New Product</h2>
     </div>
     <div class="card-body">
-      <form method="POST" action="{{ route('save_new_product') }}" enctype="multipart/form-data" id="createProductForm">
+      <form method="POST" action="{{ route('update_product', $product->id) }}" enctype="multipart/form-data" id="updateProductForm">
         @csrf
+        @method('PUT')
         <input type="hidden" name="photo_colors" id="photoColors" value="">
         <div class="row align-items-start">
           <!-- Product Images Section -->
@@ -56,17 +57,17 @@
               </div>
             </div>
             <div class="product-images" id="productImages">
-              <!-- Static Images for Demo -->
-              <div class="image-wrapper" data-color="Black">
-                <img src="/images/tshirt-noback/tshirt-logo-1.png" alt="Product Image 1">
-                <span class="color-badge">Black</span>
-                <button type="button" class="delete-image-btn" onclick="deleteImage(this)"><i class="bi bi-x"></i></button>
-              </div>
-              <div class="image-wrapper" data-color="White">
-                <img src="/images/tshirt-noback/tshirt-logo-2.png" alt="Product Image 2">
-                <span class="color-badge">White</span>
-                <button type="button" class="delete-image-btn" onclick="deleteImage(this)"><i class="bi bi-x"></i></button>
-              </div>
+              @forelse ($product->images as $image)
+                <div class="image-wrapper mb-3" data-color="{{ $image->color->name ?? 'No color' }}">
+                  <img src="{{ asset('storage/' . $image->image_url) }}" alt="Product Image" class="img-thumbnail" style="max-width: 150px;">
+                  <span class="color-badge">{{ $image->color->name ?? 'No color' }}</span>
+                  <button type="button" class="delete-image-btn btn btn-sm btn-danger mt-1" onclick="deleteImage(this)">
+                    <i class="bi bi-x"></i>
+                  </button>
+                </div>
+              @empty
+                <p>No product images uploaded.</p>
+              @endforelse
             </div>
           </article>
 
@@ -114,19 +115,22 @@
                 </select>
               </div>
               <div class="col-md-6 mb-4">
+                  @php
+                    $totalAmount = $product->variants->sum('amount');
+                  @endphp
                 <label for="amount" class="form-label">Stock Amount</label>
-                <input type="number" name="amount" class="form-control" id="amount" value="5" placeholder="Enter amount">
+                <input type="number" name="amount" class="form-control" id="amount" value={{$totalAmount}} placeholder="Enter amount" disabled>
               </div>
             </div>
 
             <div class="mb-4">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="enableDiscount" id="enableDiscount" check={{$product->is_discount}} onchange="toggleDiscountFields()">
+                <input class="form-check-input" type="checkbox" name="enableDiscount" id="enableDiscount" {{ $product->is_discount ? 'checked' : '' }} onchange="toggleDiscountFields()">
                 <label class="form-check-label" for="enableDiscount">Enable Discount</label>
               </div>
             </div>
 
-            <div id="discountFields" style="display: none;" class="card p-3 mb-4">
+            <div id="discountFields" style="{{ $product->is_discount ? '' : 'display: none;' }}" class="card p-3 mb-4">
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <label for="discountPrice" class="form-label">Discount Price (€)</label>
@@ -134,11 +138,22 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="discountStartDate" class="form-label">Start Date</label>
-                  <input type="date" name="discount-start-date" class="form-control" value{{$product->discount->startDate}} id="discountStartDate">
+                    <input
+                      type="date"
+                      name="discount-start-date"
+                      class="form-control"
+                      value="{{ optional($product->discount)->date_start ? \Carbon\Carbon::parse($product->discount->date_start)->format('Y-m-d') : '' }}"
+                      id="discountStartDate"
+                    >
                 </div>
                 <div class="col-md-4 mb-3">
                   <label for="discountEndDate" class="form-label">End Date</label>
-                  <input type="date" name="discount-end-date" class="form-control" value{{$product->discount->endDate}} id="discountEndDate">
+                    <input
+                      type="date"
+                      name="discount-end-date"
+                      class="form-control"
+                      value="{{ optional($product->discount)->date_end ? \Carbon\Carbon::parse($product->discount->date_end)->format('Y-m-d') : '' }}"
+                      id="discountEndDate">
                 </div>
               </div>
             </div>
@@ -147,15 +162,15 @@
               <label class="form-label">Gender</label>
               <div class="d-flex flex-wrap">
                 <div class="form-check me-4 mb-2">
-                  <input class="form-check-input" type="radio" name="gender" id="sex-men" value="male">
+                  <input class="form-check-input" type="radio" name="gender" id="sex-men" value="male" @checked($product->gender === 'male')>
                   <label class="form-check-label" for="sex-men">Male</label>
                 </div>
                 <div class="form-check me-4 mb-2">
-                  <input class="form-check-input" type="radio" name="gender" id="sex-women" value="female">
+                  <input class="form-check-input" type="radio" name="gender" id="sex-women" value="female" @checked($product->gender === 'female')>
                   <label class="form-check-label" for="sex-women">Female</label>
                 </div>
                 <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" name="gender" id="sex-unisex" value="unisex" checked>
+                  <input class="form-check-input" type="radio" name="gender" id="sex-unisex" value="unisex" @checked($product->gender === 'unisex')>
                   <label class="form-check-label" for="sex-unisex">Unisex</label>
                 </div>
               </div>
@@ -163,45 +178,60 @@
 
             <div class="form-group mb-4">
               <label for="description" class="form-label">Product Description</label>
-              <textarea class="form-control" name="description" id="description" rows="5" placeholder="Enter product description">Test Description</textarea>
+              <textarea class="form-control" name="description" id="description" rows="5" placeholder="Enter product description">{{$product->description}}</textarea>
             </div>
 
             <!-- Variant Section -->
             <div class="variant-section mt-5">
               <h4 class="mb-3">Product Variants</h4>
-              <button type="button" class="btn btn-add-variant mb-3" data-bs-toggle="modal" data-bs-target="#variantModal"><i class="bi bi-plus-circle me-2"></i>Add Variant</button>
+              <button
+                type="button"
+                class="btn btn-add-variant mb-3"
+                data-bs-toggle="modal"
+                data-bs-target="#variantModal"
+                onclick="createVariant(this)"
+              >
+                <i class="bi bi-plus-circle me-2">
+                    </i>Add Variant
+              </button>
               <div class="table-responsive">
                 <table class="table table-hover variant-table">
                   <thead class="table-light">
                     <tr>
+                      <th>SKU</th>
                       <th>Size</th>
                       <th>Color</th>
                       <th>Stock</th>
-                      <th>Price (€)</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody id="variantTableBody">
-                    <tr>
-                      <td>S</td>
-                      <td>Black</td>
-                      <td>10</td>
-                      <td>60.00</td>
-                      <td>
-                        <button type="button" class="btn btn-edit-variant btn-sm" onclick="editVariant(0)"><i class="bi bi-pencil"></i></button>
-                        <button type="button" class="btn btn-delete-variant btn-sm" onclick="deleteVariant(0)"><i class="bi bi-trash"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>M</td>
-                      <td>White</td>
-                      <td>15</td>
-                      <td>60.00</td>
-                      <td>
-                        <button type="button" class="btn btn-edit-variant btn-sm" onclick="editVariant(1)"><i class="bi bi-pencil"></i></button>
-                        <button type="button" class="btn btn-delete-variant btn-sm" onclick="deleteVariant(1)"><i class="bi bi-trash"></i></button>
-                      </td>
-                    </tr>
+                    @foreach ($product->variants as $variant)
+                        <tr id="variant-row-{{ $variant->id }}">
+                            <td>{{ $variant->id }}</td>
+                            <td>{{ $variant->size }}</td>
+                            <td>{{ $variant->color->name }}</td>
+                            <td>{{ $variant->amount }}</td>
+                            <td>
+                                <button type="button"
+                                    class="btn btn-edit-variant btn-sm"
+                                    data-sku="{{ $variant->id }}"
+                                    data-size="{{ $variant->size }}"
+                                    data-color="{{ $variant->color_id }}"
+                                    data-stock="{{ $variant->amount }}"
+                                    onclick="editVariant(this)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                                <button type="button"
+                                    class="btn btn-delete-variant btn-sm"
+                                    data-id="{{ $variant->id }}"
+                                    onclick="deleteVariant(this)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
                   </tbody>
                 </table>
               </div>
@@ -230,10 +260,16 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="variantForm">
+          <form method="POST" action="{{ route('update_variant', $product->id) }}" id="variantForm">
+              @csrf
+              @method('PUT')
+            <div class="mb-3">
+                <label for="variantStock" class="form-label">SKU</label>
+                <input type="number" class="form-control" id="variantSku"  disabled required>
+            </div>
             <div class="mb-3">
               <label for="variantSize" class="form-label">Size</label>
-              <select class="form-select" id="variantSize" required>
+              <select class="form-select" name="size" id="variantSize" required>
                 <option value="" disabled selected>Select size</option>
                 <option value="XS">XS</option>
                 <option value="S">S</option>
@@ -245,11 +281,11 @@
             </div>
             <div class="mb-3">
               <label for="variantStock" class="form-label">Stock</label>
-              <input type="number" class="form-control" id="variantStock" min="0" placeholder="Enter stock quantity" required>
+              <input type="number" class="form-control" id="variantStock" min="0" name="sku" placeholder="Enter stock quantity" required>
             </div>
             <div class="form-group mb-4">
               <label for="color" class="form-label">Color</label>
-              <select name="color-id" class="form-select" id="color" onchange="toggleNewColorField()">
+              <select name="color-id" class="form-select" id="variantColor" onchange="toggleNewColorField()">
                 <option value="" disabled selected>Select color</option>
                 @foreach($colors as $color)
                   <option value="{{ $color->id }}">{{ $color->name }}</option>
@@ -270,11 +306,11 @@
                 <input type="text" name="new_color_hex" class="form-control color-hex" id="new_color_hex" placeholder="#53403C" value="#53403C" pattern="#[0-9A-Fa-f]{6}" maxlength="7">
               </div>
             </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-no" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-confirm" id="saveVariantBtn">Save Variant</button>
+                </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-no" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-confirm" id="saveVariantBtn">Save Variant</button>
         </div>
       </div>
     </div>
@@ -312,20 +348,37 @@
   const productPhotoInput = document.getElementById('productPhoto');
   const photoColorSelect = document.getElementById('photoColor');
   const productImagesContainer = document.getElementById('productImages');
-  let photoColors = [
-    { src: '/images/tshirt-noback/tshirt-logo-1.png', color: 'Black' },
-    { src: '/images/tshirt-noback/tshirt-logo-2.png', color: 'White' }
-  ];
+  let photoColors = [];
 
   function updatePhotoColorsInput() {
+    console.log('photo_colors '+photoColors)
     document.getElementById('photoColors').value = JSON.stringify(photoColors);
   }
+
+document.querySelectorAll('#productImages .image-wrapper').forEach(wrapper => {
+  const img = wrapper.querySelector('img');
+  const colorName = wrapper.dataset.color;
+
+  console.log("Path " + img.src)
+  console.log("Color Name " + colorName)
+
+  photoColors.push({
+    src: img.src,
+    color: colorName // не ID, только текстовое имя
+  });
+});
+
+updatePhotoColorsInput();
+
 
   productPhotoInput.addEventListener('change', (event) => {
     const files = event.target.files;
     const selectedColor = photoColorSelect.value;
+    const selectedColorId = photoColorSelect.value;
+    const selectedColorName = photoColorSelect.options[photoColorSelect.selectedIndex].text;
 
-    if (!selectedColor) {
+
+    if (!selectedColorId) {
       alert('Please select a color for the photos.');
       productPhotoInput.value = ''; // Clear the input
       return;
@@ -336,7 +389,7 @@
       reader.onload = (e) => {
         const imageWrapper = document.createElement('div');
         imageWrapper.classList.add('image-wrapper');
-        imageWrapper.dataset.color = selectedColor;
+        imageWrapper.dataset.color = selectedColorName;
 
         const img = document.createElement('img');
         img.src = e.target.result;
@@ -344,7 +397,7 @@
 
         const colorBadge = document.createElement('span');
         colorBadge.classList.add('color-badge');
-        colorBadge.textContent = selectedColor;
+        colorBadge.textContent = selectedColorName;
 
         const deleteBtn = document.createElement('button');
         deleteBtn.type = 'button';
@@ -357,7 +410,7 @@
         imageWrapper.appendChild(deleteBtn);
         productImagesContainer.appendChild(imageWrapper);
 
-        photoColors.push({ src: e.target.result, color: selectedColor });
+        photoColors.push({ src: e.target.result, color: selectedColorId });
         updatePhotoColorsInput();
       };
       reader.readAsDataURL(file);
@@ -379,11 +432,6 @@
     const enableDiscount = document.getElementById('enableDiscount').checked;
     const discountFields = document.getElementById('discountFields');
     discountFields.style.display = enableDiscount ? 'block' : 'none';
-    if (!enableDiscount) {
-      document.getElementById('discountPrice').value = '';
-      document.getElementById('discountStartDate').value = '';
-      document.getElementById('discountEndDate').value = '';
-    }
   }
 
   // Product Type Toggle
@@ -393,18 +441,10 @@
     document.getElementById('product_name_field').style.display = isVariant ? 'none' : 'block';
   }
 
-  // Variant Selection
-  function selectVariant(id) {
-    const variantItems = document.querySelectorAll('.variant-item');
-    variantItems.forEach(item => item.classList.remove('selected'));
-    const selectedItem = document.querySelector(`#variant-${id}`).parentElement;
-    selectedItem.classList.add('selected');
-    document.getElementById(`variant-${id}`).checked = true;
-  }
 
   // Color Field Toggle
   function toggleNewColorField() {
-    const colorSelect = document.getElementById('color').value;
+    const colorSelect = document.getElementById('variantColor').value;
     const newColorNameField = document.getElementById('new_color_name_field');
     const newColorField = document.getElementById('new_color_field');
     if (colorSelect === 'new') {
@@ -416,143 +456,62 @@
     }
   }
 
-  // Variant Management
-  let editIndex = -1;
-
-  function renderVariants() {
-    const tbody = document.getElementById('variantTableBody');
-    tbody.innerHTML = '';
-    variants.forEach((variant, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${variant.size}</td>
-        <td>${variant.color}</td>
-        <td>${variant.stock}</td>
-        <td>${variant.price.toFixed(2)}</td>
-        <td>
-          <button type="button" class="btn btn-edit-variant btn-sm" onclick="editVariant(${index})"><i class="bi bi-pencil"></i></button>
-          <button type="button" class="btn btn-delete-variant btn-sm" onclick="deleteVariant(${index})"><i class="bi bi-trash"></i></button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  function resetVariantForm() {
-    document.getElementById('variantForm').reset();
-    document.getElementById('variantModalLabel').textContent = 'Add Variant';
-    editIndex = -1;
-  }
 
   document.getElementById('saveVariantBtn').addEventListener('click', () => {
+    const sku = document.getElementById('variantSku').value;
     const size = document.getElementById('variantSize').value;
     const color = document.getElementById('variantColor').value;
     const stock = parseInt(document.getElementById('variantStock').value);
     const price = parseFloat(document.getElementById('variantPrice').value);
 
-    if (!size || !color || isNaN(stock) || stock < 0 || isNaN(price) || price <= 0) {
+    if (!sku || !size || !color || isNaN(stock) || stock < 0 || isNaN(price) || price <= 0) {
       alert('Please fill in all fields correctly.');
       return;
     }
 
-    const variant = { size, color, stock, price };
+    const variant = { sku, size, color, stock, price };
     if (editIndex === -1) {
       variants.push(variant);
     } else {
       variants[editIndex] = variant;
     }
 
-    renderVariants();
-    resetVariantForm();
     bootstrap.Modal.getInstance(document.getElementById('variantModal')).hide();
   });
 
-  window.editVariant = function(index) {
-    const variant = variants[index];
-    document.getElementById('variantSize').value = variant.size;
-    document.getElementById('variantColor').value = variant.color;
-    document.getElementById('variantStock').value = variant.stock;
-    document.getElementById('variantPrice').value = variant.price;
-    document.getElementById('variantModalLabel').textContent = 'Edit Variant';
-    editIndex = index;
-    new bootstrap.Modal(document.getElementById('variantModal')).show();
-  };
+    window.editVariant = function(button) {
+      document.getElementById('variantSku').value = button.dataset.sku;
+      document.getElementById('variantSize').value = button.dataset.size;
+      document.getElementById('variantColor').value = button.dataset.color;
+      document.getElementById('variantStock').value = button.dataset.stock;
+      document.getElementById('variantModalLabel').textContent = 'Edit Variant';
+      new bootstrap.Modal(document.getElementById('variantModal')).show();
+    };
 
-  window.deleteVariant = function(index) {
-    if (confirm('Are you sure you want to delete this variant?')) {
-      variants.splice(index, 1);
-      renderVariants();
+    window.createVariant = function(button) {
+      document.getElementById('variantSku').value = button.dataset.sku;
+      document.getElementById('variantSize').value = '';
+      document.getElementById('variantColor').value ='';
+      document.getElementById('variantStock').value = '';
+      document.getElementById('variantModalLabel').textContent = 'Edit Variant';
+      new bootstrap.Modal(document.getElementById('variantModal')).show();
+    };
+
+window.deleteVariant = function(button) {
+  const variantId = button.dataset.id;
+
+  if (confirm('Are you sure you want to delete this variant?')) {
+    // Удалить строку из DOM
+    const row = document.getElementById('variant-row-' + variantId);
+    if (row) row.remove();
     }
-  };
+};
 
   document.querySelector('.btn-save-variants').addEventListener('click', () => {
     console.log('Saving variants:', variants);
     alert('Variants saved successfully!');
   });
 
-  // Form Submission
-  document.getElementById('createProductForm').addEventListener('submit', (event) => {
-    event.preventDefault();
 
-    const enableDiscount = document.getElementById('enableDiscount').checked;
-    if (enableDiscount) {
-      const price = parseFloat(document.getElementById('price').value);
-      const discountPrice = parseFloat(document.getElementById('discountPrice').value);
-      const startDate = document.getElementById('discountStartDate').value;
-      const endDate = document.getElementById('discountEndDate').value;
-      const currentDate = new Date('2025-04-17');
-
-      if (isNaN(discountPrice) || discountPrice <= 0) {
-        alert('Please enter a valid discount price.');
-        return;
-      }
-      if (discountPrice >= price) {
-        alert('Discount price must be less than the original price.');
-        return;
-      }
-      if (!startDate || !endDate) {
-        alert('Please provide both start and end dates for the discount.');
-        return;
-      }
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      if (start > end) {
-        alert('Start date cannot be after the end date.');
-        return;
-      }
-      if (start < currentDate) {
-        alert('Start date cannot be in the past.');
-        return;
-      }
-    }
-
-    const productData = {
-      name: document.getElementById('productName').value,
-      category: document.getElementById('category').value,
-      price: parseFloat(document.getElementById('price').value),
-      collection: document.getElementById('collection').value,
-      amount: parseInt(document.getElementById('amount').value),
-      discount: enableDiscount ? {
-        price: parseFloat(document.getElementById('discountPrice').value),
-        startDate: document.getElementById('discountStartDate').value,
-        endDate: document.getElementById('discountEndDate').value
-      } : null,
-      gender: document.querySelector('input[name="gender"]:checked')?.value,
-      sizes: Array.from(document.querySelectorAll('input[name="sizes[]"]:checked')).map(input => input.value),
-      colorId: document.getElementById('color').value,
-      newColorName: document.getElementById('colorName')?.value,
-      newColorHex: document.getElementById('new_color_hex')?.value,
-      description: document.getElementById('description').value,
-      variants: variants,
-      photoColors: photoColors
-    };
-
-    console.log('Product data:', productData);
-    alert('Product created successfully!');
-    // Uncomment for actual submission: document.getElementById('createProductForm').submit();
-  });
-
-  // Initialize Photo Colors
-  updatePhotoColorsInput();
 </script>
 @endsection

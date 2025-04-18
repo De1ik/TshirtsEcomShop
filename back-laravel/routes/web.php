@@ -16,7 +16,9 @@ Route::post('/catalogue', [PageCatalogueController::class, 'custom_filters'])->n
 Route::get('/admin/create-product', [AdminCreateProductController::class, 'create_product'])->name('create_product');
 Route::post('/admin/create-product', [AdminCreateProductController::class, 'save_new_product'])->name('save_new_product');
 
-Route::get('/admin/products/update/{id}', [AdminUpdateProductController::class, 'update_product'])->name('update_product');
+Route::get('/admin/products/update/{id}', [AdminUpdateProductController::class, 'index'])->name('update_product_index');
+Route::put('/admin/products/update/{id}', [AdminUpdateProductController::class, 'update_product'])->name('update_product');
+Route::put('/admin/products/update/{id}/variant', [AdminUpdateProductController::class, 'update_variant'])->name('update_variant');
 
 Route::get('/admin/products-catalogue', [AdminProductsCatalogueController::class, 'default'])->name('admin_default_catalogue');
 Route::get('profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');

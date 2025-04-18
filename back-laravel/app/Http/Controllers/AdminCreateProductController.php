@@ -12,7 +12,7 @@ use App\Models\DiscountProduct;
 use App\Models\ProductImage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;;
+use Illuminate\Support\Facades\Log;
 
 class AdminCreateProductController extends Controller
 {
