@@ -77,7 +77,7 @@ class AdminCreateProductController extends Controller
             }
         } catch (\Throwable $e) {
             Log::error('❌ Error during product basic info validation: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product basic info validation: ' . $e->getMessage());
         }
 
         try{
@@ -106,7 +106,7 @@ class AdminCreateProductController extends Controller
             $color_id = $color_el->id;
         } catch (\Throwable $e) {
             Log::error('❌ Error during color validation and saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Error during color validation and saving: ' . $e->getMessage());
         }
 
 
@@ -120,14 +120,13 @@ class AdminCreateProductController extends Controller
                 'final_price' => $finalPrice,
                 'category' => $validated['category'],
                 'collection_id' => $validated['collection'],
-                'available_amnt' => $validated['amount'],
                 'description' => $validated['description'] ?? null,
                 'gender' => $validated['gender'],
                 'is_discount' => $request->has('enableDiscount'),
             ]);
         } catch (\Throwable $e) {
             Log::error('❌ Error during product saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product saving: ' . $e->getMessage());
         }
 
         try{
@@ -144,7 +143,7 @@ class AdminCreateProductController extends Controller
             }
         } catch (\Throwable $e) {
             Log::error('❌ Error during discount for product saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during discount for product saving: ' . $e->getMessage() );
         }
 
 //             Log::info('🆗 Product was successfully created', ['id' => $product->id]);
@@ -167,7 +166,7 @@ class AdminCreateProductController extends Controller
             }
         } catch (\Throwable $e) {
             Log::error('❌ Error during product photo saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product photo saving: ' . $e->getMessage());
         }
 
 
@@ -185,7 +184,7 @@ class AdminCreateProductController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('❌ Error during product variant saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product variant saving: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Product was saved');
@@ -218,7 +217,7 @@ class AdminCreateProductController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('❌ Error during product basic info validation: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product basic info validation: ' . $e->getMessage());
         }
 
         try{
@@ -247,7 +246,7 @@ class AdminCreateProductController extends Controller
             $color_id = $color_el->id;
         } catch (\Throwable $e) {
             Log::error('❌ Error during color validation and saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Error during color validation and saving: ' . $e->getMessage());
         }
 
         try{
@@ -268,7 +267,7 @@ class AdminCreateProductController extends Controller
             }
         } catch (\Throwable $e) {
             Log::error('❌ Error during product photo saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product photo saving: ' . $e->getMessage());
         }
 
 
@@ -299,7 +298,7 @@ class AdminCreateProductController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('❌ Error during product variant saving: ' . $e->getMessage());
-            return back()->with('error', 'Something went wrong. Check logs');
+            return back()->with('error', 'Error during product variant saving: ' . $e->getMessage());
         }
 
         $message = 'Process was finished successfully!';

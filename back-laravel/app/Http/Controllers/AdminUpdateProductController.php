@@ -18,11 +18,27 @@ class AdminUpdateProductController extends Controller
 {
     public function index($id) {
         $product = Product::with([
-//             'variants.color',   // загрузка цвета для каждого варианта
-            'variants',         // сами варианты
-            'images',           // все изображения продукта
+            'variants' => function ($query) {
+                $query
+                    ->orderBy('color_id')
+                    ->orderByRaw("
+                      CASE size
+                        WHEN 'XS' THEN 1
+                        WHEN 'S' THEN 2
+                        WHEN 'M' THEN 3
+                        WHEN 'L' THEN 4
+                        WHEN 'XL' THEN 5
+                        WHEN 'XXL' THEN 6
+                        ELSE 999
+                      END
+                    ");
+            },
+            'images',
             'activeDiscount'
         ])->findOrFail($id);
+
+
+
 
         $collections = Collection::all();
         $colors = Color::all();
@@ -143,6 +159,9 @@ class AdminUpdateProductController extends Controller
                 }
             }
 
+            $hasMainImage = $product->images()->where('is_main', true)->exists();
+            $addedFirstBase64 = false;
+
             // Обрабатываем и сохраняем новые фото (base64)
             foreach ($photoColors as $photo) {
                 if (Str::startsWith($photo['src'], 'data:image')) {
@@ -162,11 +181,16 @@ class AdminUpdateProductController extends Controller
                         continue;
                     }
 
+                    $isMain = !$hasMainImage && !$addedFirstBase64;
+                    if ($isMain) {
+                        $addedFirstBase64 = true;
+                    }
+
                     // Сохраняем изображение
                     $product->images()->create([
                         'image_url' => $path,
                         'color_id' => $color->id,
-                        'is_main' => false,
+                        'is_main' => $isMain,
                     ]);
                 }
             }
@@ -178,18 +202,21 @@ class AdminUpdateProductController extends Controller
 
     public function update_variant(Request $request, $id)
     {
-        dd($request->all());
+//         dd($request->all());
         try {
             // ✅ Валидация данных
             $validated = $request->validate([
-                'amount' => 'required|integer|min:0',
-                'sizes' => 'in:XS,S,M,L,XL,XXL',
+                'stock' => 'required|integer|min:0',
+                'size' => 'in:XS,S,M,L,XL,XXL',
                 'color-id' => 'required',
+                'sku' => 'nullable',
             ]);
         } catch (\Throwable $e) {
             Log::error('❌ Error during product validation: ' . $e->getMessage());
             return back()->with('error', 'Something went wrong. Check logs');
         }
+
+        $color_id = $validated['color-id'];
 
         try{
             if ($validated['color-id'] == 'new'){
@@ -204,6 +231,8 @@ class AdminUpdateProductController extends Controller
                     'name' => $colorValidate['new_color_name'],
                     'hex_code' => $colorValidate['new_color_hex'],
                 ]);
+
+                $color_id = $color_el->id;
 
                 Log::info('✅ New color was created', $validated);
             }
@@ -220,36 +249,59 @@ class AdminUpdateProductController extends Controller
             return back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
 
-         // 1. Валидация
-         $validated = $request->validate([
-             'size' => 'required|string',
-             'sku' => 'required|integer',
-             'color-id' => 'required|exists:colors,id',
-         ]);
+        if (!empty($validated['sku'])) {
+            $variant = ProductVariant::findOrFail($validated['sku']);
+            $variant->amount = $validated['stock'];
+            $variant->save();
+            return back()->with('success', 'Variant ' . $validated['sku'] . ' was successfully updated with amount ' . $validated['stock']);
+        }
 
          // 2. Найти продукт
-         $product = Product::findOrFail($productId);
+         $product = Product::findOrFail($id);
 
          // 3. Проверить, существует ли такой вариант (по размеру и цвету)
          $existingVariant = $product->variants()
              ->where('size', $validated['size'])
-             ->where('color_id', $validated['color-id'])
+             ->where('color_id', $color_id)
              ->first();
 
          if ($existingVariant) {
-             // 4. Вариант существует — удалим его
-             $existingVariant->delete();
-
-             return back()->with('success', 'Product variant was deleted.');
+             return back()->with('error', 'Product exists.');
          } else {
-             // 5. Вариант не существует — создадим его
              $product->variants()->create([
                  'size' => $validated['size'],
-                 'color_id' => $validated['color-id'],
-                 'amount' => $validated['sku'], // 'sku' — это количество
+                 'color_id' => $color_id,
+                 'amount' => $validated['stock'], // 'sku' — это количество
              ]);
 
              return back()->with('success', 'New product variant created.');
          }
+    }
+
+
+    public function delete_variant($id)
+    {
+        try {
+            $variant = ProductVariant::findOrFail($id);
+            $variant->delete();
+
+            return redirect()->back()->with('success', 'Variant ' . $id . ' deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('❌ Error deleting variant: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to delete variant.');
+        }
+    }
+
+    public function delete_product($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+
+            return redirect()->route('admin_default_catalogue')->with('success', 'Product ' . $id . ' deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('❌ Error deleting product: ' . $e->getMessage());
+            return redirect()->route('admin_default_catalogue')->with('error', 'Failed to delete variant.');
+        }
     }
 }

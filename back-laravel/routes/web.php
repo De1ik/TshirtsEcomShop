@@ -17,8 +17,11 @@ Route::get('/admin/create-product', [AdminCreateProductController::class, 'creat
 Route::post('/admin/create-product', [AdminCreateProductController::class, 'save_new_product'])->name('save_new_product');
 
 Route::get('/admin/products/update/{id}', [AdminUpdateProductController::class, 'index'])->name('update_product_index');
-Route::put('/admin/products/update/{id}', [AdminUpdateProductController::class, 'update_product'])->name('update_product');
-Route::put('/admin/products/update/{id}/variant', [AdminUpdateProductController::class, 'update_variant'])->name('update_variant');
+Route::put('/admin/products/update/product/{id}', [AdminUpdateProductController::class, 'update_product'])->name('update_product');
+Route::put('/admin/products/update/product/{id}/variant', [AdminUpdateProductController::class, 'update_variant'])->name('update_variant');
+Route::delete('/admin/products/delete/variant/{id}', [AdminUpdateProductController::class, 'delete_variant'])->name('delete_variant');
+Route::delete('/admin/products/delete/product/{id}', [AdminUpdateProductController::class, 'delete_product'])->name('delete_product');
+
 
 Route::get('/admin/products-catalogue', [AdminProductsCatalogueController::class, 'default'])->name('admin_default_catalogue');
 Route::get('profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');

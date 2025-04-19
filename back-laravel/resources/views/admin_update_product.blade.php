@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-@section('title', 'IgestShop - Create New Product')
+@section('title', 'IgestShop - Update Product')
 
 @section('styles')
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,8 +15,8 @@
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Admin Panel Products</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Create New Product</li>
+      <li class="breadcrumb-item"><a href="{{ route('admin_default_catalogue') }}">Admin Panel Products</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Update Product</li>
     </ol>
   </nav>
 
@@ -34,7 +34,7 @@
 
   <section class="create-product-form card shadow-lg">
     <div class="card-header bg-gradient-primary text-white">
-      <h2 class="mb-0">Create New Product</h2>
+      <h2 class="mb-0">Update Product</h2>
     </div>
     <div class="card-body">
       <form method="POST" action="{{ route('update_product', $product->id) }}" enctype="multipart/form-data" id="updateProductForm">
@@ -187,9 +187,8 @@
               <button
                 type="button"
                 class="btn btn-add-variant mb-3"
-                data-bs-toggle="modal"
-                data-bs-target="#variantModal"
                 onclick="createVariant(this)"
+
               >
                 <i class="bi bi-plus-circle me-2">
                     </i>Add Variant
@@ -206,7 +205,7 @@
                     </tr>
                   </thead>
                   <tbody id="variantTableBody">
-                    @foreach ($product->variants as $variant)
+                    @forelse ($product->variants as $variant)
                         <tr id="variant-row-{{ $variant->id }}">
                             <td>{{ $variant->id }}</td>
                             <td>{{ $variant->size }}</td>
@@ -223,27 +222,43 @@
                                     <i class="bi bi-pencil"></i>
                                 </button>
 
-                                <button type="button"
-                                    class="btn btn-delete-variant btn-sm"
-                                    data-id="{{ $variant->id }}"
-                                    onclick="deleteVariant(this)">
-                                    <i class="bi bi-trash"></i>
+                                <button
+                                  type="button"
+                                  class="btn btn-delete-variant btn-sm"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#universalDeleteModal"
+                                  data-id="{{ $variant->id }}"
+                                  data-type="variant"
+                                  data-name="variant #{{ $variant->id }}"
+                                  data-url="{{ route('delete_variant', $variant->id) }}">
+                                  <i class="bi bi-trash"></i>
                                 </button>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <p>No variants for were created.</p>
+                    @endforelse
                   </tbody>
                 </table>
               </div>
-              <button type="button" class="btn btn-save-variants"><i class="bi bi-save me-2"></i>Save Variants</button>
             </div>
           </article>
 
           <!-- Action Buttons -->
           <aside class="col-md-2 mb-4">
             <div class="d-flex flex-column h-100 gap-2">
-              <button type="submit" class="btn btn-update"><i class="bi bi-check-circle me-2"></i>Create Product</button>
-              <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"><i class="bi bi-trash me-2"></i>Delete Product</button>
+              <button type="submit" class="btn btn-update"><i class="bi bi-check-circle me-2"></i>Update Product</button>
+              <button
+                type="button"
+                class="btn btn-delete"
+                data-bs-toggle="modal"
+                data-bs-target="#universalDeleteModal"
+                data-id="{{ $product->id }}"
+                data-type="product"
+                data-name="product '{{ $product->name }}'"
+                data-url="{{ route('delete_product', $product->id) }}"> {{-- Не забудь создать маршрут --}}
+                <i class="bi bi-trash me-2"></i>Delete Product
+              </button>
             </div>
           </aside>
         </div>
@@ -263,9 +278,9 @@
           <form method="POST" action="{{ route('update_variant', $product->id) }}" id="variantForm">
               @csrf
               @method('PUT')
-            <div class="mb-3">
+            <div class="mb-3" id="sku-block">
                 <label for="variantStock" class="form-label">SKU</label>
-                <input type="number" class="form-control" id="variantSku"  disabled required>
+                <input type="number" class="form-control" id="variantSku" name="sku" readonly required>
             </div>
             <div class="mb-3">
               <label for="variantSize" class="form-label">Size</label>
@@ -281,7 +296,7 @@
             </div>
             <div class="mb-3">
               <label for="variantStock" class="form-label">Stock</label>
-              <input type="number" class="form-control" id="variantStock" min="0" name="sku" placeholder="Enter stock quantity" required>
+              <input type="number" class="form-control" id="variantStock" min="0" name="stock" placeholder="Enter stock quantity" required>
             </div>
             <div class="form-group mb-4">
               <label for="color" class="form-label">Color</label>
@@ -316,24 +331,29 @@
     </div>
   </div>
 
-  <!-- Delete Confirmation Modal -->
-  <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-gradient-primary text-white">
-          <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Confirmation</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to delete this product?
-        </div>
-        <div class="modal-footer">
+<!-- Универсальное модальное окно удаления -->
+<div class="modal fade" id="universalDeleteModal" tabindex="-1" aria-labelledby="universalDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-primary text-white">
+        <h5 class="modal-title" id="universalDeleteModalLabel">Delete Confirmation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="universalDeleteModalBody">
+        Are you sure you want to delete this item?
+      </div>
+      <div class="modal-footer">
+        <form method="POST" id="universalDeleteForm">
+          @csrf
+          @method('DELETE')
           <button type="button" class="btn btn-no" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-confirm-delete">Delete Product <i class="bi bi-trash ms-1"></i></button>
-        </div>
+          <button type="submit" class="btn btn-confirm">Delete <i class="bi bi-trash ms-1"></i></button>
+        </form>
       </div>
     </div>
   </div>
+</div>
+
 
 </main>
 <section class="banner text-center py-4">
@@ -480,6 +500,7 @@ updatePhotoColorsInput();
   });
 
     window.editVariant = function(button) {
+      document.getElementById('sku-block').style.display = 'block';
       document.getElementById('variantSku').value = button.dataset.sku;
       document.getElementById('variantSize').value = button.dataset.size;
       document.getElementById('variantColor').value = button.dataset.color;
@@ -489,28 +510,28 @@ updatePhotoColorsInput();
     };
 
     window.createVariant = function(button) {
+      document.getElementById('sku-block').style.display = 'none';
       document.getElementById('variantSku').value = button.dataset.sku;
       document.getElementById('variantSize').value = '';
       document.getElementById('variantColor').value ='';
       document.getElementById('variantStock').value = '';
-      document.getElementById('variantModalLabel').textContent = 'Edit Variant';
+      document.getElementById('variantModalLabel').textContent = 'Create Variant';
       new bootstrap.Modal(document.getElementById('variantModal')).show();
     };
 
-window.deleteVariant = function(button) {
-  const variantId = button.dataset.id;
+  const universalModal = document.getElementById('universalDeleteModal');
+  universalModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const itemName = button.getAttribute('data-name');
+    const actionUrl = button.getAttribute('data-url');
 
-  if (confirm('Are you sure you want to delete this variant?')) {
-    // Удалить строку из DOM
-    const row = document.getElementById('variant-row-' + variantId);
-    if (row) row.remove();
-    }
-};
+    const modalBody = universalModal.querySelector('#universalDeleteModalBody');
+    const deleteForm = universalModal.querySelector('#universalDeleteForm');
 
-  document.querySelector('.btn-save-variants').addEventListener('click', () => {
-    console.log('Saving variants:', variants);
-    alert('Variants saved successfully!');
+    modalBody.textContent = `Are you sure you want to delete ${itemName}?`;
+    deleteForm.setAttribute('action', actionUrl);
   });
+
 
 
 </script>
