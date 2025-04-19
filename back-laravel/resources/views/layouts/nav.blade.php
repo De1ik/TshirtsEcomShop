@@ -27,7 +27,7 @@
                         </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="./order/cart.html" aria-label="Cart"><i class="bi bi-cart"></i></a>
+                        <a class="nav-link" href="{{route('cart')}}" aria-label="Cart"><i class="bi bi-cart"></i></a>
                     </li>
                     @guest
                         <li class="nav-item">

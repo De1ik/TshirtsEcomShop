@@ -13,11 +13,13 @@ class CartController extends Controller
 
     public function index() {
         $user = Auth::user();
+
         $cart = Cart::with([
             'items.variant.product.activeDiscount',
             'items.variant.color'
         ])
-            ->where('user_id', $user->id);
+            ->where('user_id', $user->id)
+            ->first();
 
         return view('order.cart', compact('cart'));
     }

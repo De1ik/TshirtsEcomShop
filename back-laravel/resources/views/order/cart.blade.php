@@ -1,14 +1,17 @@
 @extends('layouts.layout')
 
+@section('title', 'Your Cart')
+
 @section('styles')
-    <link href="{{assert("css/cart.css")}}" rel="stylesheet">
+    <link href="{{ asset('css/cart.css') }}" rel="stylesheet">
 @endsection
+
 @section('content')
     <main class="container my-5">
         <!-- Breadcrumb Navigation -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Cart</li>
             </ol>
         </nav>
@@ -17,12 +20,12 @@
         <div class="row">
             <!-- Cart Items Section -->
             <section class="col-lg-8 col-md-7 mb-4">
-                @if($cart && $cart->items->count())
+                @if($cart && $cart->items && $cart->items->count())
                     @foreach($cart->items as $item)
                         <article class="cart-item d-flex align-items-center mb-3">
                             <a href="#">
-                                {{-- Placeholder image, replace with real product image if available --}}
-                                <img src="{{ asset('images/tshirt-noback/tshirt-logo-1.png') }}" alt="{{ $item->variant->product->name }}">
+                                <img src="{{ asset($item->variant->product->mainImage->image_url ?? 'images/tshirt-noback/tshirt-logo-1.png') }}"
+                                     alt="{{ $item->variant->product->name }}">
                             </a>
                             <div class="flex-grow-1 ms-3">
                                 <h6>{{ $item->variant->product->name }}</h6>
@@ -34,7 +37,7 @@
                                 <p>€{{ number_format($item->unit_price, 2) }}</p>
                             </div>
                             <div class="quantity-selector me-3 d-flex">
-                                <form action="{{route('cart.decrease', $item->id)}}" method="post" class="me-1">
+                                <form action="{{ route('cart.decrease', $item->id) }}" method="post" class="me-1">
                                     @csrf
                                     <button type="submit">-</button>
                                 </form>
@@ -61,17 +64,19 @@
                 $subtotal = 0;
                 $totalDiscount = 0;
 
-                foreach ($cart->items as $item) {
-                    $product = $item->variant->product;
-                    $discount = $product->activeDiscount;
+                if ($cart && $cart->items) {
+                    foreach ($cart->items as $item) {
+                        $product = $item->variant->product;
+                        $discount = $product->activeDiscount;
 
-                    $originalPrice = $item->unit_price;
-                    $finalPrice = $discount ? $discount->new_price : $originalPrice;
+                        $originalPrice = $item->unit_price;
+                        $finalPrice = $discount ? $discount->new_price : $originalPrice;
 
-                    $subtotal += $originalPrice * $item->quantity;
+                        $subtotal += $originalPrice * $item->quantity;
 
-                    if ($discount) {
-                        $totalDiscount += ($originalPrice - $finalPrice) * $item->quantity;
+                        if ($discount) {
+                            $totalDiscount += ($originalPrice - $finalPrice) * $item->quantity;
+                        }
                     }
                 }
 
@@ -79,6 +84,7 @@
                 $total = $subtotal - $totalDiscount + $delivery;
             @endphp
 
+                <!-- Order Summary Section -->
             <aside class="col-lg-4 col-md-5">
                 <div class="order-summary p-3 border">
                     <h5>Order Summary</h5>
