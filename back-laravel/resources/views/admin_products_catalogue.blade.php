@@ -147,7 +147,6 @@
                             @endif
                         </form>
                     </div>
-                    <span id="showingText"> Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results </span>
                     <form method="GET" action="{{ route('admin_default_catalogue') }}" id="sortForm">
                         <select name="sort" class="form-select d-inline-block w-auto ms-2" onchange="document.getElementById('sortForm').submit()">
                             <option value="">Sort by</option>
@@ -170,6 +169,7 @@
                             <input type="hidden" name="discount" value="1">
                         @endif
                     </form>
+                    <a href="{{route('create_product')}}"><button type="button" class="btn btn-search ms-2">Create</button></a>
                 </div>
 
 
@@ -200,15 +200,19 @@
                             </p>
                         </div>
                     </div>
-                    <a href="./admin_update_product.html" class="product-link"><i class="bi bi-pencil"></i></a>
+                    <a href="{{ route('update_product_index', $product->id) }}" class="product-link"><i class="bi bi-pencil"></i></a>
                 </article>
                 @endforeach
                 </section>
 
                 <!-- Compact Pagination Section -->
-                <div class="pagination-wrapper">
-                    {{ $products->links('pagination::bootstrap-5') }}
+                <div class="pagination-wrapper text-center">
+                    <p id="showingText">Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results</p>
+                    <div class="d-flex justify-content-center">
+                        {{ $products->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
+
             </section>
         </div>
     </main>

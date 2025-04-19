@@ -18,7 +18,6 @@ class Product extends Model
         'is_discount',
         'category',
         'gender',
-        'available_amnt',
     ];
 
     protected $casts = [

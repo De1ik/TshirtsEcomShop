@@ -14,7 +14,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Admin Panel Products</a></li>
+      <li class="breadcrumb-item"><a href="{{ route('admin_default_catalogue') }}">Admin Panel Products</a></li>
       <li class="breadcrumb-item active" aria-current="page">Create new product</li>
     </ol>
   </nav>
@@ -65,7 +65,7 @@
 
           <div class="form-group mb-3" id="product_name_field">
             <label for="productName" class="form-label">Name of Product</label>
-            <input type="text" name="name" class="form-control" id="productName" value="Test product" placeholder="Enter product name">
+            <input type="text" name="name" class="form-control" id="productName" placeholder="Enter product name">
           </div>
 
           <div class="row">
@@ -79,7 +79,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="price" class="form-label">Price</label>
-              <input type="number" name="price" class="form-control" id="price" value="100" placeholder="Enter price">
+              <input type="number" name="price" class="form-control" id="price" placeholder="Enter price">
             </div>
           </div>
 
@@ -95,7 +95,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="amount" class="form-label">Amount</label>
-              <input type="number" name="amount" class="form-control" id="amount" value="5" placeholder="Enter amount">
+              <input type="number" name="amount" class="form-control" id="amount" placeholder="Enter amount">
             </div>
           </div>
 
