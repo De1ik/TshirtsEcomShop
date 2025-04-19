@@ -58,15 +58,23 @@
                         $discount = 0;
                         $delivery = 5;
 
-                        foreach ($cart->items as $item) {
-                            $original = $item->unit_price;
-                            $activeDiscount = $item->variant->product->activeDiscount;
-                            $price = $activeDiscount ? $activeDiscount->new_price : $original;
+                        $items = isset($cart->items) ? $cart->items : $cart;
 
-                            $subtotal += $original * $item->quantity;
-                            if ($activeDiscount) {
-                                $discount += ($original - $price) * $item->quantity;
+                        foreach ($items as $item) {
+                            if (isset($item->unit_price)) {
+                                // Logged-in user
+                                $original = $item->unit_price;
+                                $discounted = $item->variant->product->activeDiscount?->new_price ?? $original;
+                                $quantity = $item->quantity;
+                            } else {
+                                // Guest user
+                                $original = $item['unit_price'];
+                                $discounted = $original; // Or fetch discount manually if needed
+                                $quantity = $item['quantity'];
                             }
+
+                            $subtotal += $original * $quantity;
+                            $discount += ($original - $discounted) * $quantity;
                         }
 
                         $total = $subtotal - $discount + $delivery;
@@ -122,6 +130,7 @@
         <p>ENJOY EVERY MOMENT!</p>
     </section>
 @endsection
+
 @section('scripts')
     <script>
         function setPayment(method) {
