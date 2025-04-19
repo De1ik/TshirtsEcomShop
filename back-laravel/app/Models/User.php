@@ -78,5 +78,10 @@ class User extends Authenticatable
 
         return null;
     }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
 }
 

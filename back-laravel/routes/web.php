@@ -31,6 +31,7 @@ Route::get('profile', [UserController::class, 'profile'])->middleware('auth')->n
 Route::post('profile', [UserController::class, 'update'])->middleware('auth')->name('profile.update');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('/cart/item/{id}/increase', [CartController::class, 'increaseQuantity'])->name('cart.increase');
 Route::post('/cart/item/{id}/decrease', [CartController::class, 'decreaseQuantity'])->name('cart.decrease');
 Route::post('/cart/item/{id}/remove', [CartController::class, 'removeItem'])->name('cart.remove');
