@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\PageCatalogueController;
 use App\Http\Controllers\AdminCreateProductController;
@@ -29,3 +31,12 @@ Route::post('/admin/create-product', [AdminCreateProductController::class, 'save
 Route::get('/admin/products-catalogue', [AdminProductsCatalogueController::class, 'default'])->name('admin_default_catalogue');
 Route::get('profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');
 Route::post('profile', [UserController::class, 'update'])->middleware('auth')->name('profile.update');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart/item/{id}/increase', [CartController::class, 'increaseQuantity'])->name('cart.increase');
+Route::post('/cart/item/{id}/decrease', [CartController::class, 'decreaseQuantity'])->name('cart.decrease');
+Route::post('/cart/item/{id}/remove', [CartController::class, 'removeItem'])->name('cart.remove');
+
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+

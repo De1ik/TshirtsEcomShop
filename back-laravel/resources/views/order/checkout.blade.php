@@ -1,0 +1,152 @@
+@extends('layouts.layout')
+
+@section('styles')
+    <link href="{{ asset('css/shipping.css') }}" rel="stylesheet">
+@endsection
+
+@section('content')
+    <main class="container my-5">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('cart') }}">Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Shipping</li>
+            </ol>
+        </nav>
+
+        <h2 class="mb-4">Shipping</h2>
+        <div class="row">
+            <form action="{{ route('checkout.store') }}" method="POST" class="d-flex flex-wrap">
+                @csrf
+
+                <!-- Shipping Form Section -->
+                <section class="col-lg-8 col-md-7 mb-4 pe-lg-4">
+                    <div class="shipping-form">
+                        <h5>Shipping Information</h5>
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="country" placeholder="Enter your country" value="{{ old('country') }}">
+                            @error('country') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="city" placeholder="Enter your town" value="{{ old('city') }}">
+                            @error('city') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="address" placeholder="Enter your address" value="{{ old('address') }}">
+                            @error('address') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="postcode" placeholder="Enter your postcode" value="{{ old('postcode') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="phone" placeholder="Enter your phone number" value="{{ old('phone') }}">
+                            @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Choose Payment Method:</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" value="cash" id="paymentCash" checked>
+                                <label class="form-check-label" for="paymentCash">Pay at Delivery (Cash)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" value="paypal" id="paymentPayPal">
+                                <label class="form-check-label" for="paymentPayPal">PayPal</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" value="google_pay" id="paymentGoogle">
+                                <label class="form-check-label" for="paymentGoogle">Google Pay</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" value="apple_pay" id="paymentApple">
+                                <label class="form-check-label" for="paymentApple">Apple Pay</label>
+                            </div>
+                            @error('payment_method') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Order Summary Aside -->
+                <aside class="col-lg-4 col-md-5">
+                    @php
+                        $subtotal = 0;
+                        $discount = 0;
+                        $delivery = 5;
+
+                        foreach ($cart->items as $item) {
+                            $original = $item->unit_price;
+                            $activeDiscount = $item->variant->product->activeDiscount;
+                            $price = $activeDiscount ? $activeDiscount->new_price : $original;
+
+                            $subtotal += $original * $item->quantity;
+                            if ($activeDiscount) {
+                                $discount += ($original - $price) * $item->quantity;
+                            }
+                        }
+
+                        $total = $subtotal - $discount + $delivery;
+                    @endphp
+
+                    <div class="order-summary p-3 border">
+                        <h5>Order Summary</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <p>Subtotal</p>
+                            <p>€{{ number_format($subtotal, 2) }}</p>
+                        </div>
+                        @if ($discount > 0)
+                            <div class="d-flex justify-content-between mb-2">
+                                <p>Discount</p>
+                                <p>-€{{ number_format($discount, 2) }}</p>
+                            </div>
+                        @endif
+                        <div class="d-flex justify-content-between mb-2">
+                            <p>Delivery Fee</p>
+                            <p>€{{ number_format($delivery, 2) }}</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <p class="total">Total</p>
+                            <p class="total">€{{ number_format($total, 2) }}</p>
+                        </div>
+
+                        <input type="hidden" name="payment_method" id="paymentMethod" value="">
+
+                        <button type="submit" onclick="setPayment('cash')" class="btn btn-primary d-block w-100 mb-2">
+                            Pay at Delivery (Cash)
+                        </button>
+
+                        <button type="submit" onclick="setPayment('google_pay')" class="btn btn-dark d-block w-100 mb-2">
+                            Pay with Google Pay
+                        </button>
+
+                        <button type="submit" onclick="setPayment('apple_pay')" class="btn btn-secondary d-block w-100 mb-2">
+                            Pay with Apple Pay
+                        </button>
+
+                        <button type="submit" onclick="setPayment('paypal')" class="btn btn-outline-primary d-block w-100">
+                            Pay with PayPal
+                        </button>
+                    </div>
+                </aside>
+            </form>
+        </div>
+    </main>
+
+    <!-- Banner Section -->
+    <section class="banner text-center py-4">
+        <p>ENJOY EVERY MOMENT!</p>
+    </section>
+@endsection
+@section('scripts')
+    <script>
+        function setPayment(method) {
+            document.getElementById('paymentMethod').value = method;
+        }
+    </script>
+@endsection
