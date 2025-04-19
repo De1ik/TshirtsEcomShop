@@ -138,35 +138,28 @@
         <!-- Orders Section -->
         <section class="orders-section container my-4">
             <h2>All Orders</h2>
+
             <div class="order-list">
-                <article class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
-                    <div class="order-details">
-                        <p><strong>Order #100</strong></p>
-                        <p>Status: Not Delivered</p>
-                        <p>Components: 4</p>
-                        <p>€75</p>
-                    </div>
-                    <div class="order-status text-end">
-                        <span class="status not-delivered d-block">Payment after delivery</span>
-                        <a href="../order/submitted_order.html">
-                            <button class="details-btn btn btn-primary">Details</button>
-                        </a>
-                    </div>
-                </article>
-                <article class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
-                    <div class="order-details">
-                        <p><strong>Order #101</strong></p>
-                        <p>Status: Not Delivered</p>
-                        <p>Components: 4</p>
-                        <p>€100</p>
-                    </div>
-                    <div class="order-status text-end">
-                        <span class="status delivered d-block">Paid successfully</span>
-                        <a href="#">
-                            <button class="details-btn btn btn-primary">Details</button>
-                        </a>
-                    </div>
-                </article>
+                @forelse($orders as $order)
+                    <article class="order-item d-flex justify-content-between align-items-center border p-3 mb-3">
+                        <div class="order-details">
+                            <p><strong>Order #{{ $order->id }}</strong></p>
+                            <p>Status: {{ ucfirst($order->status) }}</p>
+                            <p>Components: {{ $order->items->count() }}</p>
+                            <p>€{{ number_format($order->total_amount, 2) }}</p>
+                        </div>
+                        <div class="order-status text-end">
+                    <span class="status {{ $order->payment?->payment_status === 'paid' ? 'delivered' : 'not-delivered' }} d-block">
+                        {{ $order->payment?->payment_status === 'paid' ? 'Paid successfully' : 'Payment after delivery' }}
+                    </span>
+                            <a href="{{route('order.details', $order->id)}}">
+                                <button class="details-btn btn btn-primary">Details</button>
+                            </a>
+                        </div>
+                    </article>
+                @empty
+                    <p>No orders found.</p>
+                @endforelse
             </div>
         </section>
 

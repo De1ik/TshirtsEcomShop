@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 
 class Product extends Model
 {
@@ -57,8 +58,8 @@ class Product extends Model
     public function activeDiscount()
     {
         return $this->hasOne(DiscountProduct::class)
-                    ->whereDate('date_start', '<=', now())
-                    ->whereDate('date_end', '>=', now());
+            ->whereDate('date_start', '<=', now())
+            ->whereDate('date_end', '>=', now());
     }
 }
 

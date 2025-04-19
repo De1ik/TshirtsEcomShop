@@ -13,7 +13,8 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $shipping = $user->shippingInfo;
-        return view('users.profile', compact('user', 'shipping'));
+        $orders = $user->orders()->with('items')->latest()->get();
+        return view('users.profile', compact('user', 'shipping', 'orders'));
     }
 
     public function update(Request $request)
