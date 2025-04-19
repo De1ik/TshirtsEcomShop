@@ -21,8 +21,8 @@
                 <div class="order-items-container">
                     @foreach ($order->items as $item)
                         <article class="order-item d-flex align-items-center mb-3">
-                            <a href="{{ route('product.details', ['id' => $item->product->id]) }}">
-                                <img src="{{ $item->product->mainImageUrl() }}" alt="{{ $item->product->name }}">
+                            <a href="#">
+                                <img alt="some" src="{{ $item->variant->product->mainImage->image_url ?? asset('images/default.png') }}" />
                             </a>
                             <div class="flex-grow-1 ms-3">
                                 <h6>{{ $item->product->name }}</h6>
@@ -31,7 +31,9 @@
                                 <p>Color:
                                     <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $item->variant->color->hex_code ?? '#000' }}; border-radius: 50%; vertical-align: middle;"></span>
                                 </p>
-                                <p>€{{ number_format($item->price_by_one, 2) }}</p>
+                                <p>Quantity: {{ $item->quantity }}</p>
+                                <p>Price by one: €{{ number_format($item->price_by_one, 2) }}</p>
+                                <p><strong>Total: €{{ number_format($item->price_by_one * $item->quantity, 2) }}</strong></p>
                             </div>
                         </article>
                     @endforeach

@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageCatalogueController;
 use App\Http\Controllers\AdminCreateProductController;
 use App\Http\Controllers\AdminProductsCatalogueController;
@@ -40,3 +41,4 @@ Route::post('/cart/item/{id}/remove', [CartController::class, 'removeItem'])->na
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
+Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.details');

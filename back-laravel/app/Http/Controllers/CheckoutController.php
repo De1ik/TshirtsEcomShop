@@ -36,6 +36,8 @@ class CheckoutController extends Controller
             'payment_method' => 'required|in:cash,google_pay,apple_pay,paypal',
         ]);
 
+        $order = null;
+
         DB::transaction(function () use ($user, $request) {
             // 1. Save shipping info
             ShippingInfo::updateOrCreate(
@@ -98,6 +100,6 @@ class CheckoutController extends Controller
             Cart::findOrFail($cart->id)->delete();
         });
 
-        return redirect()->route('submitted.order')->with('success', 'Order placed using ' . $request->payment_method . '!');
+        return redirect()->route('order.details', $order->id)->with('success', 'Order placed using ' . $request->payment_method . '!');
     }
 }

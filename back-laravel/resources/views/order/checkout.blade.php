@@ -48,27 +48,6 @@
                             <input type="text" class="form-control" name="phone" placeholder="Enter your phone number" value="{{ old('phone') }}">
                             @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Choose Payment Method:</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" value="cash" id="paymentCash" checked>
-                                <label class="form-check-label" for="paymentCash">Pay at Delivery (Cash)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" value="paypal" id="paymentPayPal">
-                                <label class="form-check-label" for="paymentPayPal">PayPal</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" value="google_pay" id="paymentGoogle">
-                                <label class="form-check-label" for="paymentGoogle">Google Pay</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" value="apple_pay" id="paymentApple">
-                                <label class="form-check-label" for="paymentApple">Apple Pay</label>
-                            </div>
-                            @error('payment_method') <small class="text-danger">{{ $message }}</small> @enderror
-                        </div>
                     </div>
                 </section>
 
