@@ -8,6 +8,8 @@ use App\Http\Controllers\PageCatalogueController;
 use App\Http\Controllers\AdminCreateProductController;
 use App\Http\Controllers\AdminUpdateProductController;
 use App\Http\Controllers\AdminProductsCatalogueController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,3 +42,6 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.details');
+
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.details');
+Route::post('/product/{id}/review', [ReviewController::class, 'store'])->name('review.store');

@@ -155,7 +155,7 @@
         <div class="row">
           @foreach ($products as $product)
             <article class="col-lg-4 col-md-6 mb-4">
-              <a href="" class="product-card-link">
+              <a href="{{route('product.details', $product->id)}}" class="product-card-link">
                 <div class="product-card position-relative" data-price="{{ $product->price }}">
                     @php
                       $original = $product->price;
