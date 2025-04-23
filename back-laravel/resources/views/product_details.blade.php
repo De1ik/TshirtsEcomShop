@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Str; @endphp
 @extends('layouts.layout')
 
 @section('styles')
@@ -12,6 +13,12 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ $product->category->name ?? 'Category' }}</li>
             </ol>
         </nav>
+
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @elseif(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
 
 
         <div class="row">
@@ -41,9 +48,10 @@
                                 @endphp
 
                                 @if(!$selectedColor || $selectedColor === $imgColor)
-                                    <img src="{{ asset('storage/product-photos/' . ($img->image_url ?? 'default.png')) }}"
-                                         alt="{{ $product->name }}"
-                                         class="gallery-image">
+                                    <img
+                                        src="{{ asset('storage/product-photos/' . ($img->image_url ?? 'default.png')) }}"
+                                        alt="{{ $product->name }}"
+                                        class="gallery-image">
                                 @endif
                             @endforeach
                         </div>
@@ -61,9 +69,10 @@
                                 @endphp
 
                                 @if(!$selectedColor || $selectedColor === $imgColor)
-                                    <img src="{{ asset('storage/product-photos/' . ($img->image_url ?? 'default.png')) }}"
-                                         alt="Thumbnail"
-                                         class="thumbnail-image">
+                                    <img
+                                        src="{{ asset('storage/product-photos/' . ($img->image_url ?? 'default.png')) }}"
+                                        alt="Thumbnail"
+                                        class="thumbnail-image">
                                 @endif
                             @endforeach
                         </div>
@@ -90,10 +99,13 @@
                     @endif
                 </div>
 
-                <p class="mb-3">{{ $product->description }}</p>
+                <p class="mb-3">{{Str::limit($product->description, 80)}}</p>
 
                 <form action="{{ route('cart.add') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="color" value="{{ $selectedColor }}">
+                    <input type="hidden" name="size" value="{{ request('size') }}">
 
                     <div class="mb-3">
                         <h6>Select Color</h6>
@@ -101,18 +113,17 @@
                             <a href="{{ route('product.details', ['id' => $product->id, 'color' => strtolower($variant->color->name)]) }}"
                                class="color-option"
                                style="display: inline-block; width: 30px; height: 30px; background-color: {{ $variant->color->hex_code }};
-                  border: {{ request('color') === strtolower($variant->color->name) ? '2px solid black' : '1px solid #ccc' }};
-                  border-radius: 50%; margin-right: 8px;">
-                            </a>
+                           border: {{ request('color') === strtolower($variant->color->name) ? '2px solid black' : '1px solid #ccc' }};
+                           border-radius: 50%; margin-right: 8px;"></a>
                         @endforeach
                     </div>
 
                     <div class="mb-3">
                         <h6>Choose Size</h6>
                         <div class="d-flex flex-wrap">
-                            @foreach($product->variants->unique('size') as $variant)
+                            @foreach($availableSizes as $size)
                                 <label class="size-btn">
-                                    <input type="radio" name="size" value="{{ $variant->size }}" hidden> {{ $variant->size }}
+                                    <input type="radio" name="size" value="{{ $size }}" hidden> {{ $size }}
                                 </label>
                             @endforeach
                         </div>
@@ -121,7 +132,7 @@
                     <div class="d-flex align-items-center mb-3">
                         <div class="quantity-selector me-3">
                             <button type="button">-</button>
-                            <input type="text" value="1" readonly>
+                            <input type="text" value="1" name="quantity" readonly>
                             <button type="button">+</button>
                         </div>
                         <button class="add-to-cart btn btn-primary" type="submit">Add to Cart</button>
@@ -135,7 +146,14 @@
             <div class="col-lg-8 col-md-7">
                 <ul class="nav nav-tabs" id="productTabs">
                     <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#details">Product Details</button>
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#details">Product Details
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="size-tab" data-bs-toggle="tab" data-bs-target="#size" type="button"
+                                role="tab" aria-controls="size" aria-selected="false">
+                            Size Metrics
+                        </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">Reviews</button>
@@ -144,8 +162,11 @@
 
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="details">
-                        <p>{{ $product->long_description ?? 'No additional details.' }}</p>
+                        <p>{{ $product->description ?? 'No additional details.' }}</p>
                     </div>
+                    <figure class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="size-tab">
+                        <img src="{{ asset('images/sizes.png') }}" alt="Hoodie Sizing Chart">
+                    </figure>
                     <div class="tab-pane fade" id="reviews">
                         @auth
                             <form action="{{ route('review.store', $product->id) }}" method="POST" class="mb-4">
@@ -185,13 +206,21 @@
                 @foreach($similarProducts as $similar)
                     <a href="{{ route('product.details', $similar->id) }}" class="product-card-link">
                         <div class="product-card">
-                            <img src="{{ asset(optional($similar->mainImage)->image_url ? 'storage/product-photos/' . $similar->mainImage->image_url : 'images/default.png') }}" alt="{{ $similar->name }}">
+                            <img
+                                src="{{ asset(optional($similar->mainImage)->image_url ? 'storage/product-photos/' . $similar->mainImage->image_url : 'images/default.png') }}"
+                                alt="{{ $similar->name }}">
                             <h6>{{ $similar->name }}</h6>
                             <div class="star-rating" data-rating="{{ $similar->reviews_avg_rating ?? 0 }}"></div>
-                            <p class="price">€{{ number_format($similar->activeDiscount?->new_price ?? $similar->price, 2) }}</p>
+                            <p class="price">
+                                €{{ number_format($similar->activeDiscount?->new_price ?? $similar->price, 2) }}</p>
                         </div>
                     </a>
                 @endforeach
+                <div class="text-center mt-3">
+                    <a href="{{route('default_catalogue')}}">
+                        <button class="show-more">Show More</button>
+                    </a>
+                </div>
             </aside>
         </section>
     </main>

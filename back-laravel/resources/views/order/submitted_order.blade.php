@@ -21,8 +21,8 @@
                 <div class="order-items-container">
                     @foreach ($order->items as $item)
                         <article class="order-item d-flex align-items-center mb-3">
-                            <a href="#">
-                                <img alt="some" src="{{ $item->variant->product->mainImage->image_url ?? asset('images/default.png') }}" />
+                            <a href={{route('product.details', $item->product)}}>
+                                <img alt="some" src="{{ asset($item->variant->product->mainImage->image_url ? 'storage/product-photos/' . $item->variant->product->mainImage->image_url : 'images/tshirt-noback/tshirt-logo-1.png') }}" />
                             </a>
                             <div class="flex-grow-1 ms-3">
                                 <h6>{{ $item->product->name }}</h6>

@@ -178,7 +178,7 @@
                 <section id="product-list">
                 @foreach ($products as $product)
                 <article class="product-card" data-price="60">
-                    <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
+                    <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/product-photos/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
                     <div class="flex-grow-1">
                         <h6>{{ $product->name }}</h6>
                         <div class="product-details">

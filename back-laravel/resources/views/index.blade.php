@@ -41,7 +41,7 @@
             <div class="horizontal-carousel">
                 <div class="carousel-track" id="carouselTrack">
                     @foreach($products as $product)
-                    <a href="#">
+                    <a href="{{route('product.details', $product->id)}}">
                         <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/product-photos/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
                     </a>
                     @endforeach
@@ -57,7 +57,7 @@
             <div class="row">
                 @foreach($last_collection_products as $product)
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <a href="#" class="product-card-link">
+                    <a href="{{route('product.details', $product->id)}}" class="product-card-link">
                         <article class="product-card position-relative">
                             @php
                               $original = $product->price;

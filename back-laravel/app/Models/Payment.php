@@ -20,15 +20,6 @@ class Payment extends Model
         'payment_date' => 'date',
     ];
 
-    const METHOD_CARD = 'card';
-    const METHOD_PAYPAL = 'paypal';
-    const METHOD_CASH = 'cash';
-
-    const STATUS_PENDING = 'pending';
-    const STATUS_PAID = 'paid';
-    const STATUS_FAILED = 'failed';
-    const STATUS_REFUNDED = 'refunded';
-
     public function order()
     {
         return $this->belongsTo(Order::class);
