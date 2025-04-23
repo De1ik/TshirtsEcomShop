@@ -42,7 +42,7 @@
                 <div class="carousel-track" id="carouselTrack">
                     @foreach($products as $product)
                     <a href="#">
-                        <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
+                        <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/product-photos/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
                     </a>
                     @endforeach
                 </div>
@@ -68,7 +68,7 @@
                             @if ($discounted)
                               <div class="discount-badge">-{{ $discountPercent }}%</div>
                             @endif
-                            <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
+                            <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/product-photos/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
                             <h6>{{ $product->name }}</h6>
                             <div class="star-rating d-flex justify-content-center" data-rating="{{ round($product->reviews_avg_rating ?? 0, 1) }}" data-amount="{{ $product->reviews_count }}">
                                 <!-- Stars will be dynamically generated -->

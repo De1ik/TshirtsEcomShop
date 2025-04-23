@@ -16,21 +16,55 @@
 
         <div class="row">
             <!-- Product Gallery Section -->
+            @php
+                $knownColors = ['red', 'green', 'blue', 'white', 'black', 'yellow', 'purple', 'pink', 'gray', 'brown', 'orange'];
+
+                function extractColor($filename, $colors) {
+                    foreach ($colors as $color) {
+                        if (stripos($filename, $color) !== false) {
+                            return $color;
+                        }
+                    }
+                    return 'unknown';
+                }
+            @endphp
+
             <section class="col-lg-6 col-md-6 mb-4">
                 <div class="row">
-                    <div class="product-gallery position-relative">
-                        <div class="product-gallery-track d-flex overflow-hidden" id="productGalleryTrack">
+                    <!-- Main Product Gallery -->
+                    <div class="product-gallery">
+                        <div class="product-gallery-track" id="productGalleryTrack">
                             @foreach($product->images as $img)
-                                <img src="{{ asset($img->image_url) }}" alt="{{ $product->name }}" class="gallery-image">
+                                @php
+                                    $filename = pathinfo($img->image_url, PATHINFO_FILENAME);
+                                    $imgColor = extractColor($filename, $knownColors);
+                                @endphp
+
+                                @if(!$selectedColor || $selectedColor === $imgColor)
+                                    <img src="{{ asset('storage/product-photos/' . ($img->image_url ?? 'default.png')) }}"
+                                         alt="{{ $product->name }}"
+                                         class="gallery-image">
+                                @endif
                             @endforeach
                         </div>
                         <button type="button" class="product-gallery-btn prev" id="productPrevBtn">←</button>
                         <button type="button" class="product-gallery-btn next" id="productNextBtn">→</button>
                     </div>
+
+                    <!-- Thumbnails -->
                     <div class="col-12 mt-3">
                         <div class="thumbnail-gallery d-flex justify-content-center gap-2">
                             @foreach($product->images as $img)
-                                <img src="{{ asset($img->image_url) }}" alt="Thumbnail">
+                                @php
+                                    $filename = pathinfo($img->image_url, PATHINFO_FILENAME);
+                                    $imgColor = extractColor($filename, $knownColors);
+                                @endphp
+
+                                @if(!$selectedColor || $selectedColor === $imgColor)
+                                    <img src="{{ asset('storage/product-photos/' . ($img->image_url ?? 'default.png')) }}"
+                                         alt="Thumbnail"
+                                         class="thumbnail-image">
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -64,9 +98,12 @@
                     <div class="mb-3">
                         <h6>Select Color</h6>
                         @foreach($product->variants->unique('color_id') as $variant)
-                            <label class="color-option" style="background-color: {{ $variant->color->hex_code }}">
-                                <input type="radio" name="color_id" value="{{ $variant->color->id }}" hidden>
-                            </label>
+                            <a href="{{ route('product.details', ['id' => $product->id, 'color' => strtolower($variant->color->name)]) }}"
+                               class="color-option"
+                               style="display: inline-block; width: 30px; height: 30px; background-color: {{ $variant->color->hex_code }};
+                  border: {{ request('color') === strtolower($variant->color->name) ? '2px solid black' : '1px solid #ccc' }};
+                  border-radius: 50%; margin-right: 8px;">
+                            </a>
                         @endforeach
                     </div>
 
@@ -148,7 +185,7 @@
                 @foreach($similarProducts as $similar)
                     <a href="{{ route('product.details', $similar->id) }}" class="product-card-link">
                         <div class="product-card">
-                            <img src="{{ asset($similar->mainImage->image_url ?? 'images/default.png') }}" alt="{{ $similar->name }}">
+                            <img src="{{ asset(optional($similar->mainImage)->image_url ? 'storage/product-photos/' . $similar->mainImage->image_url : 'images/default.png') }}" alt="{{ $similar->name }}">
                             <h6>{{ $similar->name }}</h6>
                             <div class="star-rating" data-rating="{{ $similar->reviews_avg_rating ?? 0 }}"></div>
                             <p class="price">€{{ number_format($similar->activeDiscount?->new_price ?? $similar->price, 2) }}</p>

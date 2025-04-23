@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function show($id) {
-        $product = Product::with(['variants.color', 'variants.size', 'mainImage', 'images', 'activeDiscount', 'reviews'])
+    public function show(Request $request, $id) {
+        $selectedColor = $request->query('color');
+
+        $product = Product::with(['variants.color', 'mainImage', 'images', 'activeDiscount', 'reviews'])
             ->findOrFail($id);
 
         // Fix: use 'category' instead of 'category_id'
@@ -17,6 +19,7 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        return view('product_details', compact('product', 'similarProducts'));
+
+        return view('product_details', compact('product', 'similarProducts', 'selectedColor'));
     }
 }
