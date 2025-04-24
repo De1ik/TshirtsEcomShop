@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -46,91 +47,107 @@ class CheckoutController extends Controller
         ]);
 
         $order = null;
+        Log::info("Before try");
+        try {
+            DB::transaction(function () use ($request, &$order) {
+                $deliveryFee = 5;
+                $subtotal = 0;
+                $discountTotal = 0;
 
-        DB::transaction(function () use ($request, &$order) {
-            $deliveryFee = 5;
-            $subtotal = 0;
-            $discountTotal = 0;
+                Log::info("Creating user or using Auth user...");
+                $user = Auth::check()
+                    ? Auth::user()
+                    : User::firstOrCreate(
+                        ['email' => $request->email],
+                        [
+                            'password_hash' => Hash::make(Str::random(16)),
+                            'role' => 'guest'
+                        ]
+                    );
 
-            if (!Auth::check()) {
-                $randomPassword = Str::random(16);
-
-                $user = User::firstOrCreate(
-                    ['email' => $request->email],
-                    [
-                        'password_hash' => Hash::make($randomPassword),
-                        'role' => 'guest'
-                    ]
-                );
-            } else {
-                $user = Auth::user();
-            }
-
-
-            $order = Order::create([
-                'user_id' => $user->id, // nullable
-                'order_date' => Carbon::today(),
-                'delivery_fee' => $deliveryFee,
-                'total_amount' => 0,
-                'status' => 'pending',
-            ]);
-
-            $cart = Cart::with(['items.variant.product.activeDiscount'])
-                ->where('user_id', $user->id)
-                ->first();
-
-            $items = $cart ? $cart->items : collect(session()->get('cart', []));
-
-            foreach ($items as $item) {
-                if (isset($item->variant)) {
-                    $variant = $item->variant;
-                    $product = $variant->product;
-                    $price = $variant->product->activeDiscount?->new_price ?? $item->unit_price;
-                    $quantity = $item->quantity;
-                } else {
-                    // Session-based cart
-                    $variant = ProductVariant::with('product')->findOrFail($item['variant_id']);
-                    $product = $variant->product;
-                    $price = $variant->product->activeDiscount?->new_price ?? $item['unit_price'];
-                    $quantity = $item['quantity'];
+                if (!Auth::check()) {
+                    session()->put('guest_email', $request->email);
                 }
 
 
-                $subtotal += $price * $quantity;
-                $discountTotal += ($product->price - $price) * $quantity;
+                Log::info("User ID: " . $user->id);
 
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'variant_id' => $variant->id,
-                    'quantity' => $quantity,
-                    'price_by_one' => $price,
+                Log::info("Creating order...");
+                $order = Order::create([
+                    'user_id' => $user->id, // nullable
+                    'order_date' => Carbon::today(),
+                    'delivery_fee' => $deliveryFee,
+                    'total_amount' => 0,
+                    'status' => 'pending',
                 ]);
 
-                $variant->amount -= $quantity;
-                $variant->save();
-            }
+                $cart = Cart::with(['items.variant.product.activeDiscount'])
+                    ->where('user_id', $user->id)
+                    ->first();
 
-            $order->total_amount = $subtotal + $deliveryFee;
-            $order->save();
+                $items = $cart ? $cart->items : collect(session()->get('cart', []));
 
-            if ($user->password != null) {
-                ShippingInfo::updateOrCreate(
-                    ['user_id' => Auth::id()],
-                    $request->only(['country', 'city', 'address', 'phone', 'postcode'])
-                );
-            }
+                foreach ($items as $item) {
+                    if (isset($item->variant)) {
+                        $variant = $item->variant;
+                        $product = $variant->product;
+                        $price = $variant->product->activeDiscount?->new_price ?? $item->unit_price;
+                        $quantity = $item->quantity;
+                    } else {
+                        // Session-based cart
+                        $variant = ProductVariant::with('product')->findOrFail($item['variant_id']);
+                        $product = $variant->product;
+                        $price = $variant->product->activeDiscount?->new_price ?? $item['unit_price'];
+                        $quantity = $item['quantity'];
+                    }
 
-            Payment::create([
-                'order_id' => $order->id,
-                'payment_method' => $request->payment_method,
-                'payment_status' => 'pending',
-            ]);
 
-            Cart::where('user_id', $user->id)->delete();
-            session()->forget('cart');
-        });
+                    $subtotal += $price * $quantity;
+                    $discountTotal += ($product->price - $price) * $quantity;
 
-        return redirect()->route('order.details', ['id' => $order->id])->with('success', 'Order successfully placed!');
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'variant_id' => $variant->id,
+                        'quantity' => $quantity,
+                        'price_by_one' => $price,
+                    ]);
+
+                    $variant->amount -= $quantity;
+                    $variant->save();
+                }
+
+                $order->total_amount = $subtotal + $deliveryFee;
+                $order->save();
+
+                if ($user->password != null) {
+                    ShippingInfo::updateOrCreate(
+                        ['user_id' => Auth::id()],
+                        $request->only(['country', 'city', 'address', 'phone', 'postcode'])
+                    );
+                }
+
+                $paidMethods = ['card', 'paypal', 'google_pay', 'apple_pay'];
+
+                Payment::create([
+                    'order_id' => $order->id,
+                    'payment_method' => $request->payment_method,
+                    'payment_status' => in_array($request->payment_method, $paidMethods) ? 'paid' : 'pending',
+                ]);
+
+                Cart::where('user_id', $user->id)->delete();
+                session()->forget('cart');
+            });
+        } catch (\Exception $e) {
+            Log::error('Checkout error: ' . $e->getMessage());
+            return redirect()->route('checkout')->with('error', 'Something went wrong during checkout.');
+        }
+
+        if (!$order) {
+            return redirect()->route('checkout')->with('error', 'Something went wrong while creating the order.');
+        }
+
+        return redirect()->route('order.details', ['id' => $order->id])
+            ->with('success', 'Order successfully placed!');
     }
 }
