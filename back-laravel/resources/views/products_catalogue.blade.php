@@ -26,101 +26,103 @@
              <input type="hidden" name="discount" value="1">
           @endif
           <div class="filter-sidebar">
-            <h5>FILTERS</h5>
+            <div class="d-flex justify-content-between align-items-center">
+              <h5>FILTERS</h5>
+              <button type="button" class="hidden-btn btn-link p-0 filter-toggle" aria-expanded="true">
+                <i class="bi bi-chevron-down"></i>
+              </button>
+            </div>
             <hr>
+            <div class="filter-content">
+              {{-- Gender --}}
+              <div class="mb-4">
+                <h6>Gender</h6>
+                @foreach ($genders as $gender)
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="gender"
+                      id="gender-{{ $gender }}"
+                      value="{{ $gender }}"
+                      {{ request('gender') == $gender ? 'checked' : '' }}
+                    >
+                    <label class="form-check-label" for="gender-{{ $gender }}">{{ ucfirst($gender) }}</label>
+                  </div>
+                @endforeach
+              </div>
 
-            {{-- Gender --}}
-            <div class="mb-4">
-              <h6>Gender</h6>
-              @foreach ($genders as $gender)
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="gender"
-                    id="gender-{{ $gender }}"
-                    value="{{ $gender }}"
-                    {{ request('gender') == $gender ? 'checked' : '' }}
-                  >
-                  <label class="form-check-label" for="gender-{{ $gender }}">{{ ucfirst($gender) }}</label>
+              {{-- Category --}}
+              <div class="mb-4">
+                <h6>Category</h6>
+                <select class="form-select" name="category">
+                  <option value="">All Categories</option>
+                  @foreach ($categories as $category)
+                    <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
+                      {{ ucfirst($category) }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              {{-- Collection --}}
+              <div class="mb-4">
+                <h6>STYLE</h6>
+                <select class="form-select" name="collection">
+                  <option value="">All Collections</option>
+                  @foreach ($collections as $id => $name)
+                      <option value="{{ $id }}" {{ request('collection') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                  @endforeach
+                </select>
+              </div>
+
+              {{-- Price --}}
+              <div class="mb-4">
+                <h6>PRICE</h6>
+                <div>
+                  <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€{{ request('min_price', $minPrice) }}</span></label>
+                  <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}">
                 </div>
-              @endforeach
-            </div>
-
-            {{-- Category --}}
-            <div class="mb-4">
-              <h6>Category</h6>
-              <select class="form-select" name="category">
-                <option value="">All Categories</option>
-                @foreach ($categories as $category)
-                  <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
-                    {{ ucfirst($category) }}
-                  </option>
-                @endforeach
-              </select>
-            </div>
-
-            {{-- Collection --}}
-            <div class="mb-4">
-              <h6>STYLE</h6>
-              <select class="form-select" name="collection">
-                <option value="">All Collections</option>
-                @foreach ($collections as $id => $name)
-                    <option value="{{ $id }}" {{ request('collection') == $id ? 'selected' : '' }}>{{ $name }}</option>
-                @endforeach
-              </select>
-            </div>
-
-            {{-- Price --}}
-            <div class="mb-4">
-              <h6>PRICE</h6>
-              <div>
-                <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€{{ request('min_price', $minPrice) }}</span></label>
-                <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}">
+                <div>
+                  <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€{{ request('max_price', $maxPrice) }}</span></label>
+                  <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}">
+                </div>
+                <div class="price-range-labels">
+                  <p>Range from €{{ $minPrice }} to €{{ $maxPrice }}</p>
+                </div>
               </div>
-              <div>
-                <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€{{ request('max_price', $maxPrice) }}</span></label>
-                <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}">
-              </div>
-              <div class="price-range-labels">
-                <p>Range from €{{ $minPrice }} to €{{ $maxPrice }}</p>
-              </div>
-            </div>
 
-            {{-- Size — пока без name --}}
-            <div class="mb-4">
-              <h6>SIZE</h6>
-              <div class="d-flex flex-wrap">
-                <div class="form-group mb-3">
-                  <div class="size-selector">
-                    @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $size)
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          name="sizes[]"
-                          id="size-{{ $size }}"
-                          value="{{ $size }}"
-                          {{ in_array($size, request()->get('sizes', [])) ? 'checked' : '' }}
-                        >
-                        <label class="form-check-label size-label" for="size-{{ $size }}">{{ $size }}</label>
-                      </div>
-                    @endforeach
+              {{-- Size  --}}
+              <div class="mb-4">
+                <h6>SIZE</h6>
+                <div class="d-flex flex-wrap">
+                  <div class="form-group mb-3">
+                    <div class="size-selector">
+                      @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $size)
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="sizes[]"
+                            id="size-{{ $size }}"
+                            value="{{ $size }}"
+                            {{ in_array($size, request()->get('sizes', [])) ? 'checked' : '' }}
+                          >
+                          <label class="form-check-label size-label" for="size-{{ $size }}">{{ $size }}</label>
+                        </div>
+                      @endforeach
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {{-- Submit --}}
+              <button type="submit" class="btn btn-dark">APPLY FILTER</button>
+              <a href="{{ route('default_catalogue') }}" class="btn btn-dark clear-filter">CLEAR FILTERS</a>
             </div>
-
-
-
-
-            {{-- Submit --}}
-            <button type="submit" class="btn btn-dark">APPLY FILTER</button>
-            <a href="{{ route('default_catalogue') }}" class="btn btn-dark clear-filter">CLEAR FILTERS</a>
           </div>
         </form>
       </aside>
-
 
       <section class="col-lg-9 col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -136,7 +138,7 @@
                 <option value="release_asc" {{ request('sort') === 'release_asc' ? 'selected' : '' }}>Release: Oldest to Newest</option>
               </select>
 
-              {{-- Сохраняем текущие фильтры, чтобы не сбрасывались при сортировке --}}
+              {{-- save current filters for sorting --}}
               <input type="hidden" name="category" value="{{ request('category') }}">
               <input type="hidden" name="gender" value="{{ request('gender') }}">
               <input type="hidden" name="collection" value="{{ request('collection') }}">
@@ -153,7 +155,7 @@
         </div>
 
         <div class="row">
-          @foreach ($products as $product)
+          @forelse ($products as $product)
             <article class="col-lg-4 col-md-6 mb-4">
               <a href="{{route('product.details', $product->id)}}" class="product-card-link">
                 <div class="product-card position-relative" data-price="{{ $product->price }}">
@@ -182,7 +184,11 @@
                 </div>
               </a>
             </article>
-          @endforeach
+          @empty
+            <div class="col-12 text-center">
+              <p>No products yet</p>
+            </div>
+          @endforelse
         </div>
 
         <div class="pagination-wrapper">
@@ -236,7 +242,6 @@
       const minPriceValue = document.getElementById('minPriceValue');
       const maxPriceValue = document.getElementById('maxPriceValue');
       const productCards = document.querySelectorAll('.product-card');
-//       const showingText = document.getElementById('showingText');
 
       function updatePriceRange() {
         let minPrice = parseInt(minPriceInput.value);
@@ -261,26 +266,23 @@
         const minPrice = parseInt(minPriceInput.value);
         const maxPrice = parseInt(maxPriceInput.value);
         let visibleProducts = 0;
-
-//         productCards.forEach(card => {
-//           const price = parseInt(card.getAttribute('data-price'));
-//           if (price >= minPrice && price <= maxPrice) {
-//             card.style.display = 'flex';
-//             visibleProducts++;
-//           } else {
-//             card.style.display = 'none';
-//           }
-//         });
-
-//         if (showingText) {
-//           showingText.textContent = `Showing 1-${visibleProducts} products`;
-//         }
       }
 
       updatePriceRange();
 
       minPriceInput.addEventListener('input', updatePriceRange);
       maxPriceInput.addEventListener('input', updatePriceRange);
+
+      // Filter Toggle
+      const filterToggle = document.querySelector('.filter-toggle');
+      const filterContent = document.querySelector('.filter-content');
+      filterToggle.addEventListener('click', () => {
+        const isExpanded = filterToggle.getAttribute('aria-expanded') === 'true';
+        filterToggle.setAttribute('aria-expanded', !isExpanded);
+        filterContent.style.display = isExpanded ? 'none' : 'block';
+        filterToggle.querySelector('i').classList.toggle('bi-chevron-down', isExpanded);
+        filterToggle.querySelector('i').classList.toggle('bi-chevron-up', !isExpanded);
+      });
     });
   </script>
 @endsection

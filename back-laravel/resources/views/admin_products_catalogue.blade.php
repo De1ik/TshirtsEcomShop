@@ -130,10 +130,10 @@
 
                             </div>
 
-                            <input class="form-control search-bar me-2" type="search" id="searchInput" name="search" placeholder="Search for products..." value="{{ request('search') }}">
+                            <input class="form-control search-bar me-2" type="search" id="searchInputAdmin" name="search-admin" placeholder="Search for products..." value="{{ request('search-admin') }}">
                             <button type="submit" class="btn btn-search">Search</button>
 
-                            {{-- Сохраняем текущие фильтры, чтобы не сбрасывались при поиске --}}
+                            {{-- Save current filters --}}
                             <input type="hidden" name="category" value="{{ request('category') }}">
                             <input type="hidden" name="gender" value="{{ request('gender') }}">
                             <input type="hidden" name="collection" value="{{ request('collection') }}">

@@ -16,8 +16,8 @@ class AdminProductsCatalogueController extends Controller
                         ->withCount('reviews');
 
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
+        if ($request->filled('search-admin')) {
+            $search = $request->input('search-admin');
 
             if ($request->boolean('search_by_id') && is_numeric($search)) {
                 $query->where('id', $search);

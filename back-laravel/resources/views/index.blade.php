@@ -97,80 +97,82 @@
 @endsection
 @section('scripts')
 <script>
-    // Horizontal Carousel
-    const carouselTrack = document.getElementById('carouselTrack');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+    document.addEventListener('DOMContentLoaded', function() {
+        const carouselTrack = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const products = carouselTrack.querySelectorAll('a');
+        const productWidth = products[0].offsetWidth; // Assuming all images have the same width
+        const visibleCount = Math.round(carouselTrack.offsetWidth / productWidth);
+        let currentIndex = 0;
 
-    let imageWidth = window.innerWidth <= 767 ? 100 : 50; // в процентах
-    let visibleImages = window.innerWidth <= 767 ? 1 : 2;
+        // Clone the first and last few elements to create the infinite effect
+        const cloneFirst = Array.from(products).slice(0, visibleCount).map(node => node.cloneNode(true));
+        const cloneLast = Array.from(products).slice(-visibleCount).map(node => node.cloneNode(true));
 
-    // Clone elements
-    const originalLinks = Array.from(carouselTrack.getElementsByTagName('a'));
-    const firstClones = [];
-    const lastClones = [];
+        cloneFirst.forEach(clone => carouselTrack.appendChild(clone));
+        cloneLast.forEach(clone => carouselTrack.prepend(clone));
 
-    for (let i = 0; i < visibleImages; i++) {
-        const firstClone = originalLinks[i].cloneNode(true);
-        const lastClone = originalLinks[originalLinks.length - 1 - i].cloneNode(true);
-        firstClones.push(firstClone);
-        lastClones.unshift(lastClone);
+        // Adjust the initial position to the cloned last elements
+        carouselTrack.style.transform = `translateX(-${visibleCount * productWidth}px)`;
+
+        function scrollTo(index, smooth = true) {
+            carouselTrack.style.scrollBehavior = smooth ? 'smooth' : 'auto';
+            carouselTrack.style.transform = `translateX(-${(visibleCount + index) * productWidth}px)`;
+            currentIndex = index;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            scrollTo(currentIndex + 1);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            scrollTo(currentIndex - 1);
+        });
+
+        carouselTrack.addEventListener('transitionend', () => {
+            if (currentIndex >= products.length) {
+                carouselTrack.style.scrollBehavior = 'auto';
+                carouselTrack.style.transform = `translateX(-${visibleCount * productWidth}px)`;
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                carouselTrack.style.scrollBehavior = 'auto';
+                carouselTrack.style.transform = `translateX(-${(products.length + visibleCount) * productWidth}px)`;
+                currentIndex = products.length - 1;
+            }
+    });
+
+    // Make the carousel responsive
+    function updateCarousel() {
+        const newVisibleCount = Math.round(carouselTrack.offsetWidth / productWidth);
+        const newCloneFirst = Array.from(products).slice(0, newVisibleCount).map(node => node.cloneNode(true));
+        const newCloneLast = Array.from(products).slice(-newVisibleCount).map(node => node.cloneNode(true));
+
+        // Remove old clones
+        const existingClones = carouselTrack.querySelectorAll('.carousel-track > a.clone');
+        existingClones.forEach(clone => carouselTrack.removeChild(clone));
+
+        // Append new clones
+        newCloneFirst.forEach(clone => {
+            const clonedElement = clone.cloneNode(true);
+            clonedElement.classList.add('clone');
+            carouselTrack.appendChild(clonedElement);
+        });
+        newCloneLast.forEach(clone => {
+            const clonedElement = clone.cloneNode(true);
+            clonedElement.classList.add('clone');
+            carouselTrack.prepend(clonedElement);
+        });
+
+        // Recalculate visibleCount and adjust position
+        visibleCount = newVisibleCount;
+        carouselTrack.style.scrollBehavior = 'auto';
+        carouselTrack.style.transform = `translateX(-${(visibleCount + currentIndex) * productWidth}px)`;
     }
 
-    // add clones to the DOM
-    firstClones.forEach(clone => carouselTrack.appendChild(clone));
-    lastClones.forEach(clone => carouselTrack.insertBefore(clone, carouselTrack.firstChild));
-
-    // update the links of all elements
-    const allLinks = carouselTrack.getElementsByTagName('a');
-    let currentIndex = visibleImages;
-
-    // update slider
-    function updateCarousel(transition = true) {
-        if (transition) {
-            carouselTrack.style.transition = 'transform 0.5s ease-in-out';
-        } else {
-            carouselTrack.style.transition = 'none';
-        }
-        carouselTrack.style.transform = `translateX(-${currentIndex * imageWidth}%)`;
-    }
-
-    // Buttons
-    nextBtn.addEventListener('click', () => {
-        currentIndex++;
-        updateCarousel();
-
-        if (currentIndex === allLinks.length - visibleImages) {
-            // Переход на начало после клонированного блока
-            setTimeout(() => {
-                currentIndex = visibleImages;
-                updateCarousel(false);
-            }, 500);
-        }
+    window.addEventListener('resize', updateCarousel);
+    updateCarousel(); // Initial call to set up based on initial width
     });
-
-    prevBtn.addEventListener('click', () => {
-        currentIndex--;
-        updateCarousel();
-
-        if (currentIndex === 0) {
-            // Go to the end after clone element
-            setTimeout(() => {
-                currentIndex = allLinks.length - 2 * visibleImages;
-                updateCarousel(false);
-            }, 500);
-        }
-    });
-
-
-    window.addEventListener('resize', () => {
-        imageWidth = window.innerWidth <= 767 ? 100 : 50;
-        visibleImages = window.innerWidth <= 767 ? 1 : 2;
-        updateCarousel(false);
-    });
-
-    // start point
-    updateCarousel(false);
 
 
     // Star Rating Generator
