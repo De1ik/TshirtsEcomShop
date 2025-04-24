@@ -73,7 +73,6 @@
                     @php
                         $subtotal = 0;
                         $discount = 0;
-                        $delivery = 5;
 
                         $items = isset($cart->items) ? $cart->items : $cart;
 
@@ -86,13 +85,18 @@
                             } else {
                                 // Guest user
                                 $original = $item['unit_price'];
-                                $discounted = $original; // Or fetch discount manually if needed
+                                $discounted = $original;
                                 $quantity = $item['quantity'];
                             }
 
                             $subtotal += $original * $quantity;
                             $discount += ($original - $discounted) * $quantity;
                         }
+                        $delivery = match($delivery_method ?? 'courier') {
+                            'packeta' => 4,
+                            'mail' => 3,
+                            default => 5,
+                        };
 
                         $total = $subtotal - $discount + $delivery;
                     @endphp
@@ -110,7 +114,7 @@
                             </div>
                         @endif
                         <div class="d-flex justify-content-between mb-2">
-                            <p>Delivery Fee</p>
+                            <p>Delivery Fee ({{ ucfirst($delivery_method) }})</p>
                             <p>€{{ number_format($delivery, 2) }}</p>
                         </div>
                         <hr>
@@ -121,19 +125,19 @@
 
                         <input type="hidden" name="payment_method" id="paymentMethod" value="">
 
-                        <button type="button" onclick="submitWithPayment('cash')" class="btn btn-primary d-block w-100 mb-2">
+                        <button type="submit" onclick="submitWithPayment('cash')" class="btn btn-primary d-block w-100 mb-2">
                             Pay at Delivery (Cash)
                         </button>
 
-                        <button type="button" onclick="submitWithPayment('google_pay')" class="btn btn-dark d-block w-100 mb-2">
+                        <button type="submit" onclick="submitWithPayment('google_pay')" class="btn btn-dark d-block w-100 mb-2">
                             Pay with Google Pay
                         </button>
 
-                        <button type="button" onclick="submitWithPayment('apple_pay')" class="btn btn-secondary d-block w-100 mb-2">
+                        <button type="submit" onclick="submitWithPayment('apple_pay')" class="btn btn-secondary d-block w-100 mb-2">
                             Pay with Apple Pay
                         </button>
 
-                        <button type="button" onclick="submitWithPayment('paypal')" class="btn btn-outline-primary d-block w-100">
+                        <button type="submit" onclick="submitWithPayment('paypal')" class="btn btn-outline-primary d-block w-100">
                             Pay with PayPal
                         </button>
                     </div>

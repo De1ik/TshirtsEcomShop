@@ -35,40 +35,44 @@
                             $unitPrice = $isArray ? $item['unit_price'] : $item->unit_price;
                         @endphp
 
-                        <article class="cart-item d-flex align-items-center mb-3">
-                            <a href="{{route('product.details', $productId)}}">
-                                <img src="{{ asset($image ? 'storage/product-photos/' . $image : 'images/default.png') }}" alt="{{ $productName }}">
-                            </a>
-                            <div class="flex-grow-1 ms-3">
-                                <h6>{{ $productName }}</h6>
-                                <p class="product-id">ID: <span class="product-id-value">{{ $productId }}</span></p>
-                                <p>Size: {{ $size }}</p>
-                                <p>Color:
-                                    <span
-                                        style="display: inline-block; width: 15px; height: 15px; background-color: {{ $colorHex }}; border-radius: 50%; vertical-align: middle;"></span>
-                                </p>
-                                <p>€{{ number_format($unitPrice, 2) }}</p>
+                        <article class="cart-item d-flex mb-3">
+                            <div class="item-details d-flex">
+                                <a href="{{route('product.details', $productId)}}">
+                                    <img src="{{ asset($image ? 'storage/product-photos/' . $image : 'images/default.png') }}" alt="{{ $productName }}">
+                                </a>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6>{{ $productName }}</h6>
+                                    <p class="product-id">ID: <span class="product-id-value">{{ $productId }}</span></p>
+                                    <p>Size: {{ $size }}</p>
+                                    <p>Color:
+                                        <span
+                                            class="cart-image-color-span" style="background-color: {{ $colorHex }};"></span>
+                                    </p>
+                                    <p>€{{ number_format($unitPrice, 2) }}</p>
+                                </div>
                             </div>
-
-                            @if(!$isArray)
-                                <div class="quantity-selector me-3 d-flex">
-                                    <form action="{{ route('cart.decrease', $item->id) }}" method="post" class="me-1">
+                            <div class="item-actions mt-2">
+                                <div class="quantity-selector d-flex">
+                                    <form action="{{ route('cart.decrease', $item->id) }}" method="POST" class="me-1">
                                         @csrf
-                                        <button type="submit">-</button>
+                                        @method('PATCH')
+                                        <button type="submit" class="quantity-btn">-</button>
                                     </form>
                                     <input type="text" value="{{ $quantity }}" readonly>
                                     <form action="{{ route('cart.increase', $item->id) }}" method="POST" class="ms-1">
                                         @csrf
-                                        <button type="submit">+</button>
+                                        @method('PATCH')
+                                        <button type="submit" class="quantity-btn">+</button>
                                     </form>
                                 </div>
-                                <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                                <form action="{{ route('cart.remove', $item->id) }}" method="POST" class="remove-form">
                                     @csrf
-                                    <button class="remove-btn btn btn-link" type="submit">
+                                    @method('DELETE')
+                                    <button type="submit" class="remove-btn btn btn-link">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-                            @endif
+                            </div>
                         </article>
                     @endforeach
                 @else
@@ -96,11 +100,10 @@
                     }
                 }
 
-                $delivery = 5;
-                $total = $subtotal - $totalDiscount + $delivery;
+                $total = $subtotal - $totalDiscount;
             @endphp
 
-                <!-- Order Summary Section -->
+            @if($cart && $cart->items && $cart->items->count())
             <aside class="col-lg-4 col-md-5">
                 <div class="order-summary p-3 border">
                     <h5>Order Summary</h5>
@@ -116,12 +119,6 @@
                             <p>-€{{ number_format($totalDiscount, 2) }}</p>
                         </div>
                     @endif
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <p>Delivery Fee</p>
-                        <p>€{{ number_format($delivery, 2) }}</p>
-                    </div>
-
                     <hr>
 
                     <div class="d-flex justify-content-between mb-3">
@@ -129,10 +126,29 @@
                         <p class="total">€{{ number_format($total, 2) }}</p>
                     </div>
 
-                    <a href="{{ route('checkout') }}" class="go-to-shipping btn btn-primary d-block text-center">Go to
-                        Shipping</a>
+                    <form action="{{ route('checkout') }}" method="GET">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Choose Delivery Method:</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="delivery_method" id="courier" value="courier" checked>
+                                <label class="form-check-label" for="courier">Courier</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="delivery_method" id="packeta" value="packeta">
+                                <label class="form-check-label" for="packeta">Packeta</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="delivery_method" id="mail" value="mail">
+                                <label class="form-check-label" for="mail">Mail</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="go-to-shipping btn btn-primary d-block w-100">Go to Shipping</button>
+                    </form>
+
                 </div>
             </aside>
+            @endif
         </div>
     </main>
 

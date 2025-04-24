@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (Auth::check()) {
             $shipping_info = auth()->user()->shippingInfo;
@@ -31,7 +31,9 @@ class CheckoutController extends Controller
             $cart = session()->get('cart', []);
         }
 
-        return view('order.checkout', compact('cart', 'shipping_info'));
+        $delivery_method = session('delivery_option', 'courier');
+
+        return view('order.checkout', compact('cart', 'shipping_info', 'delivery_method'));
     }
 
     public function store(Request $request)
@@ -79,6 +81,7 @@ class CheckoutController extends Controller
                     'delivery_fee' => $deliveryFee,
                     'total_amount' => 0,
                     'status' => 'pending',
+                    'delivery_option' => session('delivery_option', 'courier'),
                 ]);
 
                 $cart = Cart::with(['items.variant.product.activeDiscount'])

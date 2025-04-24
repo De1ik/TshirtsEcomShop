@@ -21,7 +21,7 @@ class OrderController extends Controller
             'items.variant.product.mainImage',
             'items.variant.color',
             'payment',
-        ])->where('user_id', Auth::id())->findOrFail($id);
+        ])->where('user_id', $user->id)->findOrFail($id);
 
         $shipping = $order->user?->shippingInfo ?? new Fluent([
             'country' => '',
