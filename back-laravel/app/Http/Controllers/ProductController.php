@@ -14,7 +14,7 @@ class ProductController extends Controller
 
         $similarProducts = Product::where('category', $product->category)
             ->where('id', '!=', $product->id)
-            ->take(4)
+            ->take(2)
             ->get();
 
         $knownColors = ['red', 'green', 'blue', 'white', 'black', 'yellow', 'purple', 'pink', 'gray', 'brown', 'orange'];

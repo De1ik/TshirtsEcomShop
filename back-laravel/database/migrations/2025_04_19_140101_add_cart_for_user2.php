@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         $cartId = DB::table('carts')->insertGetId([
-            'user_id' => 10,
+            'user_id' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

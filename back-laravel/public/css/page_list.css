@@ -59,6 +59,13 @@
     font-weight: 500;
     transition: background-color 0.3s ease;
 }
+.hidden-btn {
+    background-color: transparent;
+    color: #53403C;
+    font-weight: 500;
+    border-color: transparent;
+    transition: background-color 0.3s ease;
+}
 .filter-sidebar .btn:hover {
     background-color: #7a5c58;
 }
@@ -75,28 +82,22 @@
 .filter-sidebar .clear-filter:hover {
     background-color: #cd6b59;
 }
+/* Filter Toggle Button */
+.filter-toggle {
+    color: #53403C;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.filter-toggle:hover {
+    color: #7a5c58;
+}
+.filter-toggle i {
+    font-size: 1.2rem;
+}
+.filter-content {
+    transition: all 0.3s ease;
+}
 /* Updated Size Filter */
-/*.filter-sidebar .size-inp {*/
-/*    background-color: #fff;*/
-/*    border: 1px solid #53403C;*/
-/*    color: #53403C;*/
-/*    border-radius: 50%;*/
-/*    font-size: 0.85rem;*/
-/*    width: 40px;*/
-/*    height: 40px;*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    margin: 5px;*/
-/*    transition: all 0.3s ease;*/
-/*}*/
-/*.filter-sidebar .size-inp:hover,*/
-/*.filter-sidebar .size-inp.active {*/
-/*    background-color: #53403C;*/
-/*    color: #fff;*/
-/*    border-color: #53403C;*/
-/*}*/
-
 .size-selector .form-check-input {
     display: none;
 }
@@ -258,6 +259,3 @@
     border-color: #e0e0e0;
     pointer-events: none;
 }
-
-
-

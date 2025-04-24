@@ -21,7 +21,7 @@
                         <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin Products List</a>
                     </li>
                 </ul>
-                        <form method="GET" action="{{ route('admin_default_catalogue') }}" id="searchForm" class="d-flex align-items-center">
+                        <form method="GET" action="{{ route('default_catalogue') }}" id="searchForm" class="d-flex align-items-center">
                             <input class="form-control search-bar me-2" type="search" id="searchInput" name="search" placeholder="Search for products..." value="{{ request('search') }}">
                             <button type="submit" class="btn btn-search">Search</button>
                         </form>
