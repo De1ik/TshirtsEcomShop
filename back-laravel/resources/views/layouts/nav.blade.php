@@ -14,11 +14,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('default_catalogue', ['discount' => 1]) }}">On Sale</a>
                     </li>
+                    @auth
+                        @if(Auth::user()->role === 'admin')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('default_catalogue', ['collection' => $latestCollection->id]) }}">New Collections</a>
+                            </li>
+                        @endif
+                    @endauth
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('default_catalogue', ['collection' => $latestCollection->id]) }}">New Collections</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin Products List</a>
                     </li>
                 </ul>
                         <form method="GET" action="{{ route('default_catalogue') }}" id="searchForm" class="d-flex align-items-center">
