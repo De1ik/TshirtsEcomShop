@@ -15,6 +15,7 @@ class ShippingInfo extends Model
         'country',
         'city',
         'address',
+        'postcode'
     ];
 
     public function user()

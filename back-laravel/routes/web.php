@@ -47,3 +47,5 @@ Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.details
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.details');
 Route::post('/product/{id}/review', [ReviewController::class, 'store'])->name('review.store');
+
+Route::post('/cart/update-delivery', [CartController::class, 'updateDeliveryMethod'])->name('cart.update-delivery');

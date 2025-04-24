@@ -15,9 +15,15 @@
         </nav>
 
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @elseif(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
 
@@ -25,15 +31,6 @@
             <!-- Product Gallery Section -->
             @php
                 $knownColors = ['red', 'green', 'blue', 'white', 'black', 'yellow', 'purple', 'pink', 'gray', 'brown', 'orange'];
-
-                function extractColor($filename, $colors) {
-                    foreach ($colors as $color) {
-                        if (stripos($filename, $color) !== false) {
-                            return $color;
-                        }
-                    }
-                    return 'unknown';
-                }
             @endphp
 
             <section class="col-lg-6 col-md-6 mb-4">
@@ -105,7 +102,7 @@
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="color" value="{{ $selectedColor }}">
-                    <input type="hidden" name="size" value="{{ request('size') }}">
+                    <input type="hidden" id="variant-stock" name="stock" value="{{ $selectedVariant?->amount ?? 1 }}">
 
                     <div class="mb-3">
                         <h6>Select Color</h6>
@@ -122,8 +119,20 @@
                         <h6>Choose Size</h6>
                         <div class="d-flex flex-wrap">
                             @foreach($availableSizes as $size)
-                                <label class="size-btn">
-                                    <input type="radio" name="size" value="{{ $size }}" hidden> {{ $size }}
+                                @php
+                                    $variant = $variantsOfColor->firstWhere('size', $size);
+                                    $isChecked = $selectedSize === $size;
+                                @endphp
+                                <label class="size-btn {{ $isChecked ? 'active' : '' }}"
+                                       data-stock="{{ $variant?->amount ?? 1 }}">
+                                    <input
+                                        type="radio"
+                                        name="size"
+                                        value="{{ $size }}"
+                                        hidden
+                                        {{ $isChecked ? 'checked' : '' }}
+                                    >
+                                    {{ $size }}
                                 </label>
                             @endforeach
                         </div>
@@ -131,9 +140,9 @@
 
                     <div class="d-flex align-items-center mb-3">
                         <div class="quantity-selector me-3">
-                            <button type="button">-</button>
-                            <input type="text" value="1" name="quantity" readonly>
-                            <button type="button">+</button>
+                            <button type="button" id="decreaseQty">-</button>
+                            <input type="text" value="1" name="quantity" id="quantityInput" readonly>
+                            <button type="button" id="increaseQty">+</button>
                         </div>
                         <button class="add-to-cart btn btn-primary" type="submit">Add to Cart</button>
                     </div>
@@ -249,15 +258,39 @@
             });
         });
 
-        // Quantity Selector
-        const quantityInput = document.querySelector('.quantity-selector input');
-        document.querySelector('.quantity-selector button:first-child').addEventListener('click', () => {
-            let value = parseInt(quantityInput.value);
-            if (value > 1) quantityInput.value = value - 1;
+        let maxStock = parseInt(document.getElementById('variant-stock')?.value || 1);
+
+        document.querySelectorAll('.size-btn input[type=radio]').forEach(input => {
+            input.addEventListener('change', function () {
+                const parentLabel = this.closest('.size-btn');
+                const newStock = parseInt(parentLabel.dataset.stock || 1);
+                document.getElementById('variant-stock').value = newStock;
+                maxStock = newStock;
+
+                // reset quantity if over max
+                const qtyInput = document.getElementById('quantityInput');
+                if (parseInt(qtyInput.value) > maxStock) {
+                    qtyInput.value = maxStock;
+                }
+            });
         });
-        document.querySelector('.quantity-selector button:last-child').addEventListener('click', () => {
+
+        const quantityInput = document.getElementById('quantityInput');
+        const increaseBtn = document.getElementById('increaseQty');
+        const decreaseBtn = document.getElementById('decreaseQty');
+
+        increaseBtn.addEventListener('click', () => {
             let value = parseInt(quantityInput.value);
-            quantityInput.value = value + 1;
+            if (value < maxStock) {
+                quantityInput.value = value + 1;
+            }
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
         });
 
         // Product Gallery Slider

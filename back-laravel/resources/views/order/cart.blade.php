@@ -24,21 +24,49 @@
                 @if($cart && $cart->items && $cart->items->count())
                     @foreach($cart->items ?? $cart as $item)
                         @php
-                            $isArray = is_array($item);
-                            $product = $isArray ? Product::find($item['product_id']) : $item->variant->product;
-                            $image = $isArray ? $item['image_url'] : $product->mainImage->image_url ?? 'images/tshirt-noback/tshirt-logo-1.png';
-                            $productId = $isArray ? $item['product_id'] : $product->id;
-                            $productName = $isArray ? $item['product_name'] : $product->name;
-                            $colorHex = $isArray ? $item['color_hex'] : ($item->variant->color->hex_code ?? '#000');
-                            $size = $isArray ? $item['size'] : $item->variant->size;
-                            $quantity = $isArray ? $item['quantity'] : $item->quantity;
-                            $unitPrice = $isArray ? $item['unit_price'] : $item->unit_price;
+
+                            $isArray     = is_array($item);
+                            $product     = $isArray
+                                ? App\Models\Product::find($item['product_id'])
+                                : $item->variant->product;
+
+                            if (! $isArray) {
+                                $variant    = $item->variant;
+                                $allImages  = $product->images;
+                                $colorName  = strtolower($variant->color->name);
+                                $imageModel = $allImages->first(function($img) use($colorName) {
+                                    $filename = pathinfo($img->image_url, PATHINFO_FILENAME);
+                                    return Str::contains(strtolower($filename), $colorName);
+                                });
+
+                                $imageUrl   = $imageModel
+                                    ? $imageModel->image_url
+                                    : optional($product->mainImage)->image_url;
+                                $colorHex   = $variant->color->hex_code;
+                                $colorLabel = $variant->color->name;
+                                $size       = $variant->size;
+                            } else {
+                                $imageUrl   = $item['image_url'];
+                                $colorHex   = $item['color_hex'];
+                                $colorLabel = $item['color_name'] ?? null;
+                                $size       = $item['size'];
+                            }
+
+                            $productId   = $product->id;
+                            $productName = $product->name;
+                            $quantity    = $isArray ? $item['quantity'] : $item->quantity;
+                            $unitPrice   = $isArray ? $item['unit_price'] : $item->unit_price;
                         @endphp
+
 
                         <article class="cart-item d-flex mb-3">
                             <div class="item-details d-flex">
-                                <a href="{{route('product.details', $productId)}}">
-                                    <img src="{{ asset($image ? 'storage/product-photos/' . $image : 'images/default.png') }}" alt="{{ $productName }}">
+                                <a href="{{ route('product.details', $productId) }}">
+                                    <img
+                                        src="{{ asset($imageUrl
+            ? 'storage/product-photos/' . $imageUrl
+            : 'images/default.png') }}"
+                                        alt="{{ $productName }}">
                                 </a>
                                 <div class="flex-grow-1 ms-3">
                                     <h6>{{ $productName }}</h6>
@@ -100,7 +128,17 @@
                     }
                 }
 
-                $total = $subtotal - $totalDiscount;
+                $delivery_method = session('delivery_method', 'courier');
+
+                $delivery = match($delivery_method) {
+                    'packeta' => 4,
+                    'mail' => 3,
+                    default => 5,
+                };
+
+                session(['delivery_fee' => $delivery]);
+
+                $total = $subtotal - $totalDiscount + $delivery;
             @endphp
 
             @if($cart && $cart->items && $cart->items->count())
@@ -121,28 +159,41 @@
                     @endif
                     <hr>
 
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <p>Delivery Fee</p>
+                        <p>€{{ number_format($delivery, 2) }}</p>
+                    </div>
+
+                    <hr>
+
                     <div class="d-flex justify-content-between mb-3">
                         <p class="total">Total</p>
                         <p class="total">€{{ number_format($total, 2) }}</p>
                     </div>
 
-                    <form action="{{ route('checkout') }}" method="GET">
+                    <form action="{{ route('cart.update-delivery') }}" method="POST" id="delivery-form">
+                        @csrf
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Choose Delivery Method:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="delivery_method" id="courier" value="courier" checked>
-                                <label class="form-check-label" for="courier">Courier</label>
+                                <input class="form-check-input delivery-method" type="radio" name="delivery_method" id="courier" value="courier" onchange="this.form.submit()" {{ $delivery_method === 'courier' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="courier">Courier (€5)</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="delivery_method" id="packeta" value="packeta">
-                                <label class="form-check-label" for="packeta">Packeta</label>
+                                <input class="form-check-input delivery-method" type="radio" name="delivery_method" id="packeta" value="packeta" onchange="this.form.submit()" {{ $delivery_method === 'packeta' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="packeta">Packeta (€4)</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="delivery_method" id="mail" value="mail">
-                                <label class="form-check-label" for="mail">Mail</label>
+                                <input class="form-check-input delivery-method" type="radio" name="delivery_method" id="mail" value="mail" onchange="this.form.submit()" {{ $delivery_method === 'mail' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="mail">Mail (€3)</label>
                             </div>
                         </div>
+                    </form>
 
+                    <form action="{{ route('checkout') }}" method="GET">
+                        <input type="hidden" name="delivery_fee" value="{{ $delivery }}">
+                        <input type="hidden" name="delivery_method" value="{{ $delivery_method }}">
                         <button type="submit" class="go-to-shipping btn btn-primary d-block w-100">Go to Shipping</button>
                     </form>
 

@@ -19,6 +19,16 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('profile.update') }}">
                 @csrf
                 <div class="row g-3">
@@ -109,10 +119,10 @@
                     {{-- Zip Code --}}
                     <div class="col-md-6">
                         <div class="form-group position-relative">
-                            <input type="text" class="form-control" id="zip_code" name="zip_code"
-                                   value="{{ old('zip_code', $shipping?->zip_code) }}" placeholder="Zip Code" readonly>
+                            <input type="text" class="form-control" id="postcode" name="postcode"
+                                   value="{{ old('postcode', $shipping?->postcode) }}" placeholder="Postcode" readonly>
                             <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
-                                    onclick="toggleEdit('zip_code')">
+                                    onclick="toggleEdit('postcode')">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </div>

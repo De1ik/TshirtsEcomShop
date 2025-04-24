@@ -17,10 +17,10 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || !Gate::allows('admin')) {
-            abort(403, 'Unauthorized.');
+        if (Gate::allows('admin')) {
+            return $next($request);
         }
 
-        return $next($request);
+        return redirect()->route('home')->with('error', 'Unauthorized access.');
     }
 }

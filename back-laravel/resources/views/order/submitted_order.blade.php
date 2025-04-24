@@ -70,6 +70,10 @@
                         <p>Delivery Fee</p>
                         <p>€{{ number_format($order->delivery_fee, 2) }}</p>
                     </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <p>Status</p>
+                        <p>{{ ucfirst($order->status) }}</p>
+                    </div>
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <p class="total">Total</p>

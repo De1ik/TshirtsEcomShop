@@ -202,4 +202,12 @@ class CartController extends Controller
     protected function saveSessionCart(array $cart) {
         session()->put('cart', $cart);
     }
+
+    protected function updateDeliveryMethod(Request $request)
+    {
+        $deliveryMethod = $request->input('delivery_method', 'courier');
+        session(['delivery_method' => $deliveryMethod]);
+
+        return redirect()->route('cart');
+    }
 }

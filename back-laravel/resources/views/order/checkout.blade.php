@@ -17,8 +17,16 @@
 
         <h2 class="mb-4">Shipping</h2>
         <div class="row">
-            <form action="{{ route('checkout.store') }}" method="POST" class="d-flex flex-wrap">
+            <form action="{{ route('checkout.store') }}" method="POST" class="d-flex flex-wrap" id="checkout_form">
                 @csrf
+
+                <input
+                    type="hidden"
+                    name="payment_method"
+                    id="paymentMethod"
+                    value=""
+                >
+                @error('payment_method') <small class="text-danger">{{ $message }}</small> @enderror
 
                 <!-- Shipping Form Section -->
                 <section class="col-lg-8 col-md-7 mb-4 pe-lg-4">
@@ -33,7 +41,8 @@
                             </div>
                         @else
                             <div class="mb-3">
-                                <input type="email" class="form-control" name="email" value="{{ auth()->user()->email }}" disabled>
+                                <input type="email" class="form-control" name="email" value="{{ auth()->user()->email }}" readonly>
+                                @error('email') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                         @endguest
 
@@ -57,7 +66,8 @@
 
                         <div class="mb-3">
                             <input type="text" class="form-control" name="postcode" placeholder="Enter your postcode"
-                                   value="{{ old('postcode') }}">
+                                   value="{{ old('postcode', $shipping_info->postcode ?? '') }}">
+                            @error('postcode') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="mb-3">
@@ -98,7 +108,7 @@
                             default => 5,
                         };
 
-                        $total = $subtotal - $discount + $delivery;
+                        $total = $subtotal - $discount + $delivery_fee;
                     @endphp
 
                     <div class="order-summary p-3 border">
@@ -115,7 +125,7 @@
                         @endif
                         <div class="d-flex justify-content-between mb-2">
                             <p>Delivery Fee ({{ ucfirst($delivery_method) }})</p>
-                            <p>€{{ number_format($delivery, 2) }}</p>
+                            <p>€{{ number_format($delivery_fee, 2) }}</p>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between mb-3">
@@ -123,21 +133,35 @@
                             <p class="total">€{{ number_format($total, 2) }}</p>
                         </div>
 
-                        <input type="hidden" name="payment_method" id="paymentMethod" value="">
-
-                        <button type="submit" onclick="submitWithPayment('cash')" class="btn btn-primary d-block w-100 mb-2">
+                        <button
+                            type="button"
+                            onclick="submitWithPayment('cash')"
+                            class="btn btn-primary d-block w-100 mb-2 payment-btn"
+                        >
                             Pay at Delivery (Cash)
                         </button>
 
-                        <button type="submit" onclick="submitWithPayment('google_pay')" class="btn btn-dark d-block w-100 mb-2">
+                        <button
+                            type="button"
+                            onclick="submitWithPayment('google_pay')"
+                            class="btn btn-dark d-block w-100 mb-2 payment-btn"
+                        >
                             Pay with Google Pay
                         </button>
 
-                        <button type="submit" onclick="submitWithPayment('apple_pay')" class="btn btn-secondary d-block w-100 mb-2">
+                        <button
+                            type="button"
+                            onclick="submitWithPayment('apple_pay')"
+                            class="btn btn-secondary d-block w-100 mb-2 payment-btn"
+                        >
                             Pay with Apple Pay
                         </button>
 
-                        <button type="submit" onclick="submitWithPayment('paypal')" class="btn btn-outline-primary d-block w-100">
+                        <button
+                            type="button"
+                            onclick="submitWithPayment('paypal')"
+                            class="btn btn-outline-primary d-block w-100 payment-btn"
+                        >
                             Pay with PayPal
                         </button>
                     </div>
@@ -155,7 +179,12 @@
 @section('scripts')
     <script>
         function submitWithPayment(method) {
-            document.getElementById('paymentMethod').value = method;
+            const paymentInput = document.getElementById('paymentMethod');
+            paymentInput.value = method;
+
+            document.querySelectorAll('.payment-btn').forEach(btn => btn.disabled = true);
+
+            document.getElementById('checkout_form').submit();
         }
     </script>
 @endsection

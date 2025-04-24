@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use app\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -26,7 +28,15 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('admin', function (User $user): bool {
-            return $user->role === 'admin';
+            Log::info('User role: ', ['role' => $user->role]);
+
+            $isAdmin = $user->role instanceof Role
+                ? $user->role === Role::ADMIN
+                : $user->role === Role::ADMIN->value;
+
+            Log::info('Is admin: ', ['is_admin' => $isAdmin]);
+
+            return $isAdmin;
         });
     }
 }

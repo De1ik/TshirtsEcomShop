@@ -127,7 +127,7 @@
       <section class="col-lg-9 col-md-8">
           <div class="catalogue-header mb-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h3>Our T-Shirts</h3>
+                  <h3>Our Products</h3>
                   <span id="showingText">Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results</span>
               </div>
               <div class="sort-select">

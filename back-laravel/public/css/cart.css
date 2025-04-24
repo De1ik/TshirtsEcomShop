@@ -114,6 +114,14 @@
     align-items: center;
 }
 
+.cart-image-color-span {
+    border-radius: 50%;
+    vertical-align: middle;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+}
+
 /* Responsive Design for Small Displays */
 @media (max-width: 576px) {
     .cart-item {
