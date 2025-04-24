@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
@@ -23,12 +25,28 @@ class CartController extends Controller
                 ->where('user_id', $user->id)
                 ->first();
         } else {
-            $cart = $this->getSessionCart();
-        }
+            $sessionItems = $this->getSessionCart();
 
+            $cart = new \stdClass();
+            $cart->items = collect();
+
+            foreach ($sessionItems as $sessionItem) {
+                $variant = ProductVariant::with('product.activeDiscount', 'color')->find($sessionItem['variant_id']);
+                if ($variant) {
+                    $cart->items->push((object)[
+                        'id' => $sessionItem['variant_id'],
+                        'variant' => $variant,
+                        'quantity' => $sessionItem['quantity'],
+                        'unit_price' => $sessionItem['unit_price'],
+                        'total_price' => $sessionItem['unit_price'] * $sessionItem['quantity'],
+                    ]);
+                }
+            }
+        }
 
         return view('order.cart', compact('cart'));
     }
+
 
     public function increaseQuantity($id)
     {
@@ -50,9 +68,44 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        $variantId = $request->input('variant_id');
+        Log::info("Attempting to add to cart");
+
+        $productId = $request->input('product_id');
+        $colorName = strtolower($request->input('color'));
+        $size = $request->input('size');
         $quantity = $request->input('quantity', 1);
-        $variant = ProductVariant::with('product', 'color')->findOrFail($variantId);
+
+        $product = Product::with('variants.color')->findOrFail($productId);
+        Log::info("Attempting to add to cart", [
+            'product_id' => $productId,
+            'color' => $colorName,
+            'size' => $size,
+            'requested_quantity' => $quantity
+        ]);
+
+
+        $variant = $product->variants->first(function ($variant) use ($colorName, $size) {
+            return strtolower($variant->color->name) === $colorName && $variant->size === $size;
+        });
+
+        if (!$variant) {
+            Log::warning("Variant not found", ['color' => $colorName, 'size' => $size]);
+            return redirect()->back()->with('error', 'Variant with selected size and color does not exist.');
+        }
+
+        Log::info("Found variant", [
+            'variant_id' => $variant->id,
+            'amount' => $variant->stock
+        ]);
+
+        if ($variant->amount < $quantity) {
+            Log::warning("Not enough stock", [
+                'variant_id' => $variant->id,
+                'amount' => $variant->stock,
+                'requested_quantity' => $quantity
+            ]);
+            return redirect()->back()->with('error', 'We do not have enough stock for this variant.');
+        }
 
         if (Auth::check()) {
             $user = Auth::user();
@@ -77,7 +130,7 @@ class CartController extends Controller
             }
         } else {
             $cart = $this->getSessionCart();
-            $key = (string) $variantId;
+            $key = (string) $variant->id;
 
             if (isset($cart[$key])) {
                 $cart[$key]['quantity'] += $quantity;

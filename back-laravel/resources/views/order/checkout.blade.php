@@ -25,27 +25,44 @@
                     <div class="shipping-form">
                         <h5>Shipping Information</h5>
 
+                        @guest
+                            <div class="mb-3">
+                                <input type="email" class="form-control" name="email" placeholder="Enter your email"
+                                       value="{{ old('email','') }}">
+                                @error('email') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                        @else
+                            <div class="mb-3">
+                                <input type="email" class="form-control" name="email" value="{{ auth()->user()->email }}" disabled>
+                            </div>
+                        @endguest
+
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="country" placeholder="Enter your country" value="{{ old('country') }}">
+                            <input type="text" class="form-control" name="country" placeholder="Enter your country"
+                                   value="{{ old('country', $shipping_info->country ?? '') }}">
                             @error('country') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="city" placeholder="Enter your town" value="{{ old('city') }}">
+                            <input type="text" class="form-control" name="city" placeholder="Enter your town"
+                                   value="{{ old('city', $shipping_info->city ?? '') }}">
                             @error('city') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="address" placeholder="Enter your address" value="{{ old('address') }}">
+                            <input type="text" class="form-control" name="address" placeholder="Enter your address"
+                                   value="{{ old('address', $shipping_info->address ?? '') }}">
                             @error('address') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="postcode" placeholder="Enter your postcode" value="{{ old('postcode') }}">
+                            <input type="text" class="form-control" name="postcode" placeholder="Enter your postcode"
+                                   value="{{ old('postcode') }}">
                         </div>
 
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="phone" placeholder="Enter your phone number" value="{{ old('phone') }}">
+                            <input type="text" class="form-control" name="phone" placeholder="Enter your phone number"
+                                   value="{{ old('phone', $shipping_info->phone ?? '') }}">
                             @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                     </div>
@@ -104,19 +121,19 @@
 
                         <input type="hidden" name="payment_method" id="paymentMethod" value="">
 
-                        <button type="submit" onclick="setPayment('cash')" class="btn btn-primary d-block w-100 mb-2">
+                        <button type="button" onclick="submitWithPayment('cash')" class="btn btn-primary d-block w-100 mb-2">
                             Pay at Delivery (Cash)
                         </button>
 
-                        <button type="submit" onclick="setPayment('google_pay')" class="btn btn-dark d-block w-100 mb-2">
+                        <button type="button" onclick="submitWithPayment('google_pay')" class="btn btn-dark d-block w-100 mb-2">
                             Pay with Google Pay
                         </button>
 
-                        <button type="submit" onclick="setPayment('apple_pay')" class="btn btn-secondary d-block w-100 mb-2">
+                        <button type="button" onclick="submitWithPayment('apple_pay')" class="btn btn-secondary d-block w-100 mb-2">
                             Pay with Apple Pay
                         </button>
 
-                        <button type="submit" onclick="setPayment('paypal')" class="btn btn-outline-primary d-block w-100">
+                        <button type="button" onclick="submitWithPayment('paypal')" class="btn btn-outline-primary d-block w-100">
                             Pay with PayPal
                         </button>
                     </div>
@@ -133,7 +150,7 @@
 
 @section('scripts')
     <script>
-        function setPayment(method) {
+        function submitWithPayment(method) {
             document.getElementById('paymentMethod').value = method;
         }
     </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use app\Enums\Role;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,35 +20,55 @@ class AuthController extends Controller
 
     public function store() {
         $validated = request()->validate([
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:8'
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
         ]);
 
-        $user = User::create(
-            [
-                'email' => $validated['email'],
-                'password_hash' => Hash::make($validated['password'])
-            ]
-        );
+        $existingUser = User::where('email', $validated['email'])->first();
 
-        return redirect()->route('login');
+        if ($existingUser) {
+            if ($existingUser->role === \App\Enums\Role::GUEST) {
+                $existingUser->update([
+                    'password_hash' => Hash::make($validated['password']),
+                    'role' => \App\Enums\Role::USER
+                ]);
+            } else {
+                return redirect()->route('register')->withErrors([
+                    'email' => 'This email is already taken.',
+                ]);
+            }
+        } else {
+            // Create a new user if the email doesn't exist
+            User::create([
+                'email' => $validated['email'],
+                'password_hash' => Hash::make($validated['password']),
+                'role' => \App\Enums\Role::USER
+            ]);
+        }
+
+        return redirect()->route('login')->with('success', 'Account created successfully. Please log in.');
     }
 
     public function authenticate() {
-        $validated = request()->validate(
-            [
-                'email' => 'required|email',
-                'password' => 'required|min:8'
-            ]
-        );
+        $validated = request()->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8'
+        ]);
 
-        if (auth()->attempt($validated)) {
+        $user = User::where('email', $validated['email'])->first();
+
+        // Check if user exists and is not a guest
+        if ($user && $user->role === 'guest') {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Guest accounts cannot be used to log in.',
+            ]);
+        }
+
+        if ($user && Hash::check($validated['password'], $user->password_hash)) {
+            auth()->login($user);
             request()->session()->regenerate();
 
-            $this->mergeSessionCartIntoDatabase(auth()->user());
-
-            // ✅ Transfer guest orders
-            $this->transferGuestOrdersToUser(auth()->user());
+            $this->mergeSessionCartIntoDatabase($user);
 
             return redirect('/');
         }
@@ -55,17 +76,6 @@ class AuthController extends Controller
         return redirect()->route('login')->withErrors([
             'email' => 'No matching users found with the provided email and password.',
         ]);
-    }
-
-    protected function transferGuestOrdersToUser($user) {
-        $userOrderIds = session()->get('guest_orders', []);
-
-        if (!empty($userOrderIds)) {
-            Order::whereIn('id', $userOrderIds)
-                ->whereNull('user_id')
-                ->update(['user_id' => $user->id]);
-            session()->forget('guest_orders');
-        }
     }
 
     protected function mergeSessionCartIntoDatabase($user) {

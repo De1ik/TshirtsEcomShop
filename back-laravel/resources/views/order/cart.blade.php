@@ -1,3 +1,4 @@
+@php use App\Models\Product; @endphp
 @extends('layouts.layout')
 
 @section('title', 'Your Cart')
@@ -21,38 +22,53 @@
             <!-- Cart Items Section -->
             <section class="col-lg-8 col-md-7 mb-4">
                 @if($cart && $cart->items && $cart->items->count())
-                    @foreach($cart->items as $item)
+                    @foreach($cart->items ?? $cart as $item)
+                        @php
+                            $isArray = is_array($item);
+                            $product = $isArray ? Product::find($item['product_id']) : $item->variant->product;
+                            $image = $isArray ? $item['image_url'] : $product->mainImage->image_url ?? 'images/tshirt-noback/tshirt-logo-1.png';
+                            $productId = $isArray ? $item['product_id'] : $product->id;
+                            $productName = $isArray ? $item['product_name'] : $product->name;
+                            $colorHex = $isArray ? $item['color_hex'] : ($item->variant->color->hex_code ?? '#000');
+                            $size = $isArray ? $item['size'] : $item->variant->size;
+                            $quantity = $isArray ? $item['quantity'] : $item->quantity;
+                            $unitPrice = $isArray ? $item['unit_price'] : $item->unit_price;
+                        @endphp
+
                         <article class="cart-item d-flex align-items-center mb-3">
-                            <a href="#">
-                                <img src="{{ asset($item->variant->product->mainImage->image_url ?? 'images/tshirt-noback/tshirt-logo-1.png') }}"
-                                     alt="{{ $item->variant->product->name }}">
+                            <a href="{{route('product.details', $productId)}}">
+                                <img src="{{ asset($image ? 'storage/product-photos/' . $image : 'images/default.png') }}" alt="{{ $productName }}">
                             </a>
                             <div class="flex-grow-1 ms-3">
-                                <h6>{{ $item->variant->product->name }}</h6>
-                                <p class="product-id">ID: <span class="product-id-value">{{ $item->variant->product->id }}</span></p>
-                                <p>Size: {{ $item->variant->size }}</p>
+                                <h6>{{ $productName }}</h6>
+                                <p class="product-id">ID: <span class="product-id-value">{{ $productId }}</span></p>
+                                <p>Size: {{ $size }}</p>
                                 <p>Color:
-                                    <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $item->variant->color->hex_code ?? '#000' }}; border-radius: 50%; vertical-align: middle;"></span>
+                                    <span
+                                        style="display: inline-block; width: 15px; height: 15px; background-color: {{ $colorHex }}; border-radius: 50%; vertical-align: middle;"></span>
                                 </p>
-                                <p>€{{ number_format($item->unit_price, 2) }}</p>
+                                <p>€{{ number_format($unitPrice, 2) }}</p>
                             </div>
-                            <div class="quantity-selector me-3 d-flex">
-                                <form action="{{ route('cart.decrease', $item->id) }}" method="post" class="me-1">
+
+                            @if(!$isArray)
+                                <div class="quantity-selector me-3 d-flex">
+                                    <form action="{{ route('cart.decrease', $item->id) }}" method="post" class="me-1">
+                                        @csrf
+                                        <button type="submit">-</button>
+                                    </form>
+                                    <input type="text" value="{{ $quantity }}" readonly>
+                                    <form action="{{ route('cart.increase', $item->id) }}" method="POST" class="ms-1">
+                                        @csrf
+                                        <button type="submit">+</button>
+                                    </form>
+                                </div>
+                                <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit">-</button>
+                                    <button class="remove-btn btn btn-link" type="submit">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </form>
-                                <input type="text" value="{{ $item->quantity }}" readonly>
-                                <form action="{{ route('cart.increase', $item->id) }}" method="POST" class="ms-1">
-                                    @csrf
-                                    <button type="submit">+</button>
-                                </form>
-                            </div>
-                            <form action="{{ route('cart.remove', $item->id) }}" method="POST">
-                                @csrf
-                                <button class="remove-btn btn btn-link" type="submit">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                            @endif
                         </article>
                     @endforeach
                 @else
@@ -113,7 +129,8 @@
                         <p class="total">€{{ number_format($total, 2) }}</p>
                     </div>
 
-                    <a href="{{ route('checkout') }}" class="go-to-shipping btn btn-primary d-block text-center">Go to Shipping</a>
+                    <a href="{{ route('checkout') }}" class="go-to-shipping btn btn-primary d-block text-center">Go to
+                        Shipping</a>
                 </div>
             </aside>
         </div>

@@ -41,8 +41,8 @@
             <div class="horizontal-carousel">
                 <div class="carousel-track" id="carouselTrack">
                     @foreach($products as $product)
-                    <a href="#">
-                        <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
+                    <a href="{{route('product.details', $product->id)}}">
+                        <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/product-photos/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
                     </a>
                     @endforeach
                 </div>
@@ -57,7 +57,7 @@
             <div class="row">
                 @foreach($last_collection_products as $product)
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <a href="#" class="product-card-link">
+                    <a href="{{route('product.details', $product->id)}}" class="product-card-link">
                         <article class="product-card position-relative">
                             @php
                               $original = $product->price;
@@ -68,7 +68,7 @@
                             @if ($discounted)
                               <div class="discount-badge">-{{ $discountPercent }}%</div>
                             @endif
-                            <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
+                            <img src="{{ asset(optional($product->mainImage)->image_url ? 'storage/product-photos/' . $product->mainImage->image_url : 'images/default.png') }}" alt="{{ $product->name }}">
                             <h6>{{ $product->name }}</h6>
                             <div class="star-rating d-flex justify-content-center" data-rating="{{ round($product->reviews_avg_rating ?? 0, 1) }}" data-amount="{{ $product->reviews_count }}">
                                 <!-- Stars will be dynamically generated -->
