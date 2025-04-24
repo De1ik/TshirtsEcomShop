@@ -225,6 +225,9 @@
 .carousel-btn.next {
     right: 10px;
 }
+.carousel-track > a.clone {
+    display: none;
+}
 /* Responsive Adjustments */
 @media (max-width: 991px) {
     .hero-section {
@@ -275,15 +278,9 @@
         height: 30px;
         font-size: 1rem;
     }
-}
 
-/* Updated CSS for cloned elements (optional, for clarity) */
-.carousel-track > a.clone {
-    display: none; /* Initially hide the clones if needed, JS will handle positioning */
-}
-
-@media (max-width: 767px) {
     .carousel-track > a.clone {
         display: none;
     }
 }
+
