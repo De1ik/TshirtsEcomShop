@@ -1,4 +1,4 @@
-@php use App\Models\Product; @endphp
+@php use App\Models\Product;use Illuminate\Support\Str; @endphp
 @extends('layouts.layout')
 
 @section('title', 'Your Cart')
@@ -74,7 +74,8 @@
                                     <p>Size: {{ $size }}</p>
                                     <p>Color:
                                         <span
-                                            class="cart-image-color-span" style="background-color: {{ $colorHex }};"></span>
+                                            class="cart-image-color-span"
+                                            style="background-color: {{ $colorHex }};"></span>
                                     </p>
                                     <p>€{{ number_format($unitPrice, 2) }}</p>
                                 </div>
@@ -142,63 +143,70 @@
             @endphp
 
             @if($cart && $cart->items && $cart->items->count())
-            <aside class="col-lg-4 col-md-5">
-                <div class="order-summary p-3 border">
-                    <h5>Order Summary</h5>
+                <aside class="col-lg-4 col-md-5">
+                    <div class="order-summary p-3 border">
+                        <h5>Order Summary</h5>
 
-                    <div class="d-flex justify-content-between mb-2">
-                        <p>Subtotal</p>
-                        <p>€{{ number_format($subtotal, 2) }}</p>
-                    </div>
-
-                    @if ($totalDiscount > 0)
                         <div class="d-flex justify-content-between mb-2">
-                            <p>Discount</p>
-                            <p>-€{{ number_format($totalDiscount, 2) }}</p>
+                            <p>Subtotal</p>
+                            <p>€{{ number_format($subtotal, 2) }}</p>
                         </div>
-                    @endif
-                    <hr>
 
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <p>Delivery Fee</p>
-                        <p>€{{ number_format($delivery, 2) }}</p>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between mb-3">
-                        <p class="total">Total</p>
-                        <p class="total">€{{ number_format($total, 2) }}</p>
-                    </div>
-
-                    <form action="{{ route('cart.update-delivery') }}" method="POST" id="delivery-form">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Choose Delivery Method:</label>
-                            <div class="form-check">
-                                <input class="form-check-input delivery-method" type="radio" name="delivery_method" id="courier" value="courier" onchange="this.form.submit()" {{ $delivery_method === 'courier' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="courier">Courier (€5)</label>
+                        @if ($totalDiscount > 0)
+                            <div class="d-flex justify-content-between mb-2">
+                                <p>Discount</p>
+                                <p>-€{{ number_format($totalDiscount, 2) }}</p>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input delivery-method" type="radio" name="delivery_method" id="packeta" value="packeta" onchange="this.form.submit()" {{ $delivery_method === 'packeta' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="packeta">Packeta (€4)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input delivery-method" type="radio" name="delivery_method" id="mail" value="mail" onchange="this.form.submit()" {{ $delivery_method === 'mail' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="mail">Mail (€3)</label>
-                            </div>
+                        @endif
+                        <hr>
+
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <p>Delivery Fee</p>
+                            <p>€{{ number_format($delivery, 2) }}</p>
                         </div>
-                    </form>
 
-                    <form action="{{ route('checkout') }}" method="GET">
-                        <input type="hidden" name="delivery_fee" value="{{ $delivery }}">
-                        <input type="hidden" name="delivery_method" value="{{ $delivery_method }}">
-                        <button type="submit" class="go-to-shipping btn btn-primary d-block w-100">Go to Shipping</button>
-                    </form>
+                        <hr>
 
-                </div>
-            </aside>
+                        <div class="d-flex justify-content-between mb-3">
+                            <p class="total">Total</p>
+                            <p class="total">€{{ number_format($total, 2) }}</p>
+                        </div>
+
+                        <form action="{{ route('cart.update-delivery') }}" method="POST" id="delivery-form">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Choose Delivery Method:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input delivery-method" type="radio" name="delivery_method"
+                                           id="courier" value="courier"
+                                           onchange="this.form.submit()" {{ $delivery_method === 'courier' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="courier">Courier (€5)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input delivery-method" type="radio" name="delivery_method"
+                                           id="packeta" value="packeta"
+                                           onchange="this.form.submit()" {{ $delivery_method === 'packeta' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="packeta">Packeta (€4)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input delivery-method" type="radio" name="delivery_method"
+                                           id="mail" value="mail"
+                                           onchange="this.form.submit()" {{ $delivery_method === 'mail' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="mail">Mail (€3)</label>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form action="{{ route('checkout') }}" method="GET">
+                            <input type="hidden" name="delivery_fee" value="{{ $delivery }}">
+                            <input type="hidden" name="delivery_method" value="{{ $delivery_method }}">
+                            <button type="submit" class="go-to-shipping btn btn-primary d-block w-100">Go to Shipping
+                            </button>
+                        </form>
+
+                    </div>
+                </aside>
             @endif
         </div>
     </main>

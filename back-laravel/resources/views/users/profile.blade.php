@@ -10,11 +10,6 @@
         <section class="profile-section container">
             <h2>Profile</h2>
 
-            @php
-                $user = Auth::user();
-                $shipping = $user->shippingInfo;
-            @endphp
-
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
