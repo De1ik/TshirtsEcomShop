@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -17,38 +18,35 @@ class ProductController extends Controller
             ->take(2)
             ->get();
 
-        $knownColors = ['red', 'green', 'blue', 'white', 'black', 'yellow', 'purple', 'pink', 'gray', 'brown', 'orange'];
+        $firstVariant = $product->variants->first();
 
-        $imageColors = [];
-        foreach ($product->images as $img) {
-            $filename = pathinfo($img->image_url, PATHINFO_FILENAME);
-            foreach ($knownColors as $color) {
-                if (stripos($filename, $color) !== false) {
-                    $imageColors[] = strtolower($color);
-                    break;
-                }
-            }
-        }
+        $selectedColor = $request->query('color') ?? strtolower(optional($firstVariant->color)->name);
+        $selectedSize = $request->query('size') ?? $firstVariant->size ?? null;
 
-        $imageColors = array_unique($imageColors);
-        $selectedColor = $request->query('color') ?? ($imageColors[0] ?? null);
-        $selectedSize = $request->query('size');
-
-        $availableVariants = $product->variants->filter(function ($variant) use ($selectedColor) {
+        $variantsOfColor = $product->variants->filter(function ($variant) use ($selectedColor) {
             return strtolower($variant->color->name) === $selectedColor;
         });
 
-        $availableSizes = $availableVariants->pluck('size')->unique();
+        $sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+        $availableSizes = $variantsOfColor
+            ->filter(fn($v) => $v->amount > 0)
+            ->pluck('size')
+            ->unique()
+            ->sortBy(fn($size) => array_search($size, $sizeOrder) !== false ? array_search($size, $sizeOrder) : 999);
 
-        $selectedVariant = null;
-        if ($selectedColor && $selectedSize) {
-            $selectedVariant = $product->variants->first(function ($variant) use ($selectedColor, $selectedSize) {
-                return strtolower($variant->color->name) === $selectedColor && $variant->size === $selectedSize;
-            });
-        }
+        $selectedVariant = $variantsOfColor->first(function ($v) use ($selectedSize) {
+            return $v->size === $selectedSize;
+        });
 
-        return view('product_details', compact('product', 'similarProducts', 'selectedColor', 'availableSizes', 'selectedVariant'));
+        return view('product_details', compact(
+            'product',
+            'similarProducts',
+            'selectedColor',
+            'selectedSize',
+            'availableSizes',
+            'selectedVariant',
+            'variantsOfColor'
+        ));
     }
-
 
 }

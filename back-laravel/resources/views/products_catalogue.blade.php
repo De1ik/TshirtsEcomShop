@@ -125,34 +125,36 @@
       </aside>
 
       <section class="col-lg-9 col-md-8">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3>Our T-Shirts</h3>
-          <div class="sort-select">
-            <span id="showingText"> Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results </span>
-            <form method="GET" action="{{ route('default_catalogue') }}" id="sortForm">
-              <select name="sort" class="form-select d-inline-block w-auto ms-2" onchange="document.getElementById('sortForm').submit()">
-                <option value="">Sort by</option>
-                <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-                <option value="release_desc" {{ request('sort') === 'release_desc' ? 'selected' : '' }}>Release: Newest to Oldest</option>
-                <option value="release_asc" {{ request('sort') === 'release_asc' ? 'selected' : '' }}>Release: Oldest to Newest</option>
-              </select>
+          <div class="catalogue-header mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h3>Our Products</h3>
+                  <span id="showingText">Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results</span>
+              </div>
+              <div class="sort-select">
+                  <form method="GET" action="{{ route('default_catalogue') }}" id="sortForm">
+                      <select name="sort" class="form-select d-inline-block w-auto" onchange="document.getElementById('sortForm').submit()">
+                          <option value="">Sort by</option>
+                          <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                          <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                          <option value="release_desc" {{ request('sort') === 'release_desc' ? 'selected' : '' }}>Release: Newest to Oldest</option>
+                          <option value="release_asc" {{ request('sort') === 'release_asc' ? 'selected' : '' }}>Release: Oldest to Newest</option>
+                      </select>
 
-              {{-- save current filters for sorting --}}
-              <input type="hidden" name="category" value="{{ request('category') }}">
-              <input type="hidden" name="gender" value="{{ request('gender') }}">
-              <input type="hidden" name="collection" value="{{ request('collection') }}">
-              <input type="hidden" name="minPrice" value="{{ request('minPrice') }}">
-              <input type="hidden" name="maxPrice" value="{{ request('maxPrice') }}">
-              @foreach (request('sizes', []) as $size)
-                <input type="hidden" name="sizes[]" value="{{ $size }}">
-              @endforeach
-              @if(request('discount') == 1)
-                  <input type="hidden" name="discount" value="1">
-              @endif
-            </form>
+                      {{-- save current filters for sorting --}}
+                      <input type="hidden" name="category" value="{{ request('category') }}">
+                      <input type="hidden" name="gender" value="{{ request('gender') }}">
+                      <input type="hidden" name="collection" value="{{ request('collection') }}">
+                      <input type="hidden" name="minPrice" value="{{ request('minPrice') }}">
+                      <input type="hidden" name="maxPrice" value="{{ request('maxPrice') }}">
+                      @foreach (request('sizes', []) as $size)
+                          <input type="hidden" name="sizes[]" value="{{ $size }}">
+                      @endforeach
+                      @if(request('discount') == 1)
+                          <input type="hidden" name="discount" value="1">
+                      @endif
+                  </form>
+              </div>
           </div>
-        </div>
 
         <div class="row">
           @forelse ($products as $product)

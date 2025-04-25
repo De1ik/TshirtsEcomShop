@@ -17,9 +17,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('default_catalogue', ['collection' => $latestCollection->id]) }}">New Collections</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin Products List</a>
-                    </li>
+                    @auth
+                        @can('admin')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin Products List</a>
+                            </li>
+                        @endcan
+                    @endauth
                 </ul>
                         <form method="GET" action="{{ route('default_catalogue') }}" id="searchForm" class="d-flex align-items-center">
                             <input class="form-control search-bar me-2" type="search" id="searchInput" name="search" placeholder="Search for products..." value="{{ request('search') }}">

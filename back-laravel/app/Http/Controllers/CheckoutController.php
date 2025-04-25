@@ -15,11 +15,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (Auth::check()) {
             $shipping_info = auth()->user()->shippingInfo;
@@ -31,30 +32,52 @@ class CheckoutController extends Controller
             $cart = session()->get('cart', []);
         }
 
-        return view('order.checkout', compact('cart', 'shipping_info'));
+        $delivery_method = $request->input('delivery_method', session('delivery_method', 'courier'));
+        $delivery_fee = (float) $request->input('delivery_fee', session('delivery_fee', 5));
+
+        session(['delivery_method' => $delivery_method, 'delivery_fee' => $delivery_fee]);
+
+        return view('order.checkout', compact('cart', 'shipping_info', 'delivery_method', 'delivery_fee'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'country' => 'required|string',
-            'city' => 'required|string',
-            'address' => 'required|string',
-            'postcode' => 'nullable|string',
-            'phone' => 'required|string',
+        $validator = Validator::make($request->all(), [
+            'email'          => 'required|email',
+            'country'        => 'required|string',
+            'city'           => 'required|string',
+            'address'        => 'required|string',
+            'postcode'       => 'nullable|string|max:20|regex:/^[0-9]*$/',
+            'phone'          => 'required|string|max:20|regex:/^\+?[0-9]*$/',
             'payment_method' => 'required|in:cash,google_pay,apple_pay,paypal',
         ]);
 
+        if ($validator->fails()) {
+            // Логування помилок валідації
+            Log::warning('Checkout validation failed', $validator->errors()->toArray());
+
+            // Повернення назад з повідомленнями та old input
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = $validator->validated();
+        Log::info('✅ Checkout validation passed', $data);
+
         $order = null;
-        Log::info("Before try");
+        Log::info("⚙️ Checkout started...");
+
         try {
             DB::transaction(function () use ($request, &$order) {
-                $deliveryFee = 5;
+                $deliveryFee = (float) session('delivery_fee', 5);
+                $deliveryOption = session('delivery_method', 'courier');
+
                 $subtotal = 0;
                 $discountTotal = 0;
 
-                Log::info("Creating user or using Auth user...");
+                Log::info("📦 Creating or fetching user...");
                 $user = Auth::check()
                     ? Auth::user()
                     : User::firstOrCreate(
@@ -70,22 +93,31 @@ class CheckoutController extends Controller
                 }
 
 
-                Log::info("User ID: " . $user->id);
+                Log::info("✅ User ID: {$user->id}");
 
-                Log::info("Creating order...");
+                $paidMethods = ['paypal', 'google_pay', 'apple_pay'];
+                $orderStatus = in_array($request->payment_method, $paidMethods) ? 'processing' : 'pending';
+
+                Log::info("📄 Creating order...");
                 $order = Order::create([
-                    'user_id' => $user->id, // nullable
+                    'user_id' => $user->id,
                     'order_date' => Carbon::today(),
                     'delivery_fee' => $deliveryFee,
                     'total_amount' => 0,
-                    'status' => 'pending',
+                    'status' => $orderStatus,
+                    'delivery_option' => $deliveryOption,
                 ]);
 
-                $cart = Cart::with(['items.variant.product.activeDiscount'])
-                    ->where('user_id', $user->id)
-                    ->first();
+                $cart = Auth::check()
+                    ? Cart::with(['items.variant.product.activeDiscount'])->where('user_id', $user->id)->first()
+                    : session()->get('cart', []);
 
-                $items = $cart ? $cart->items : collect(session()->get('cart', []));
+                // Валідація кошика
+                if (!$cart || (is_object($cart) && $cart->items->isEmpty()) || (is_array($cart) && count($cart) === 0)) {
+                    throw new \Exception('Cart is empty or not found.');
+                }
+
+                $items = isset($cart->items) ? $cart->items : collect($cart);
 
                 foreach ($items as $item) {
                     if (isset($item->variant)) {
@@ -94,13 +126,27 @@ class CheckoutController extends Controller
                         $price = $variant->product->activeDiscount?->new_price ?? $item->unit_price;
                         $quantity = $item->quantity;
                     } else {
-                        // Session-based cart
-                        $variant = ProductVariant::with('product')->findOrFail($item['variant_id']);
+                        $variant = ProductVariant::with('product')->find($item['variant_id']);
+                        if (!$variant) {
+                            throw new \Exception('Product variant not found: ' . $item['variant_id']);
+                        }
                         $product = $variant->product;
                         $price = $variant->product->activeDiscount?->new_price ?? $item['unit_price'];
                         $quantity = $item['quantity'];
                     }
 
+                    // Перевірка кількості в наявності
+                    if ($variant->amount < $quantity) {
+                        throw new \Exception("❌ Not enough stock for variant ID {$variant->id} (requested: $quantity, available: {$variant->amount})");
+                    }
+
+
+                    Log::info("Stock before: variant {$variant->id} has {$variant->amount}");
+
+                    $variant->decrement('amount', $quantity);
+
+                    $newAmount = ProductVariant::find($variant->id)->amount;
+                    Log::info("Stock after: variant {$variant->id} has {$newAmount}");
 
                     $subtotal += $price * $quantity;
                     $discountTotal += ($product->price - $price) * $quantity;
@@ -112,22 +158,17 @@ class CheckoutController extends Controller
                         'quantity' => $quantity,
                         'price_by_one' => $price,
                     ]);
-
-                    $variant->amount -= $quantity;
-                    $variant->save();
                 }
 
                 $order->total_amount = $subtotal + $deliveryFee;
                 $order->save();
 
-                if ($user->password != null) {
-                    ShippingInfo::updateOrCreate(
-                        ['user_id' => Auth::id()],
-                        $request->only(['country', 'city', 'address', 'phone', 'postcode'])
-                    );
-                }
+                Log::info("💸 Subtotal: $subtotal, Discount: $discountTotal, Delivery: $deliveryFee");
 
-                $paidMethods = ['card', 'paypal', 'google_pay', 'apple_pay'];
+                ShippingInfo::updateOrCreate(
+                    ['user_id' => $user->id],
+                    $request->only(['country', 'city', 'address', 'phone', 'postcode'])
+                );
 
                 Payment::create([
                     'order_id' => $order->id,
@@ -135,19 +176,21 @@ class CheckoutController extends Controller
                     'payment_status' => in_array($request->payment_method, $paidMethods) ? 'paid' : 'pending',
                 ]);
 
-                Cart::where('user_id', $user->id)->delete();
+                if (Auth::check()) {
+                    Cart::where('user_id', $user->id)->delete();
+                }
                 session()->forget('cart');
             });
+            if (!$order || !$order->id) {
+                throw new \Exception('Order creation failed.');
+            }
+
+            return redirect()->route('order.details', ['id' => $order->id])
+                ->with('success', 'Order successfully placed!');
+
         } catch (\Exception $e) {
-            Log::error('Checkout error: ' . $e->getMessage());
-            return redirect()->route('checkout')->with('error', 'Something went wrong during checkout.');
+            Log::error('❗Checkout error: ' . $e->getMessage());
+            return redirect()->route('checkout')->with('error', 'Something went wrong during checkout. Please try again.');
         }
-
-        if (!$order) {
-            return redirect()->route('checkout')->with('error', 'Something went wrong while creating the order.');
-        }
-
-        return redirect()->route('order.details', ['id' => $order->id])
-            ->with('success', 'Order successfully placed!');
     }
 }

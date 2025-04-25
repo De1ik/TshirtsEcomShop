@@ -45,7 +45,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'gender' => \App\Enums\Gender::class,
-        'role' => \App\Enums\Role::class
+        'role' => Role::class
     ];
 
 

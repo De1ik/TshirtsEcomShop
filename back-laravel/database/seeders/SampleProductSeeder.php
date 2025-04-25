@@ -515,12 +515,12 @@ EOT,
         // Добавим изображения
         $product->images()->createMany([
             [
-                'image_url' => 'Bomborito_bandito-gray-back.png',
+                'image_url' => 'Bomborito_bandito-grey-back.png',
                 'color_id' => $colorGrey->id,
                 'is_main' => true,
             ],
             [
-                'image_url' => 'Bomborito_bandito-gray-front.png',
+                'image_url' => 'Bomborito_bandito-grey-front.png',
                 'color_id' => $colorGrey->id,
                 'is_main' => false,
             ],
@@ -571,12 +571,12 @@ EOT,
         // Добавим изображения
         $product->images()->createMany([
             [
-                'image_url' => 'bombardiro_crocodilo-gray-back.png',
+                'image_url' => 'bombardiro_crocodilo-grey-back.png',
                 'color_id' => $colorGrey->id,
                 'is_main' => true,
             ],
             [
-                'image_url' => 'bombardiro_crocodilo-gray-front.png',
+                'image_url' => 'bombardiro_crocodilo-grey-front.png',
                 'color_id' => $colorGrey->id,
                 'is_main' => false,
             ],

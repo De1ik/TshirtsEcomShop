@@ -330,3 +330,13 @@
     background-color: #7a5c58;
     color: #fff;
 }
+
+.stock-message {
+    display: none;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+.stock-message.show {
+    display: block;
+}

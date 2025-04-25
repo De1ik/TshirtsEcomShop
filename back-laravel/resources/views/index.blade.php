@@ -103,7 +103,7 @@
         const nextBtn = document.getElementById('nextBtn');
         const products = carouselTrack.querySelectorAll('a');
         const productWidth = products[0].offsetWidth; // Assuming all images have the same width
-        const visibleCount = Math.round(carouselTrack.offsetWidth / productWidth);
+        let visibleCount = Math.round(carouselTrack.offsetWidth / productWidth);
         let currentIndex = 0;
 
         // Clone the first and last few elements to create the infinite effect

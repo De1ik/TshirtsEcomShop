@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -21,6 +22,8 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
+        Log::info('Updating user profile', ['user_id' => $user->id, 'request_data' => $request->all()]);
+
         $validatedUser = $request->validate([
             'first_name' => 'nullable|string|max:255',
             'last_name'  => 'nullable|string|max:255',
@@ -28,12 +31,14 @@ class UserController extends Controller
         ]);
 
         $validatedShipping = $request->validate([
-            'phone'    => 'nullable|string|max:20',
+            'phone'    => 'nullable|string|max:20|regex:/^\+?[0-9]*$/',
             'country'  => 'nullable|string|max:100',
             'city'     => 'nullable|string|max:100',
             'address'  => 'nullable|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
+            'postcode' => 'nullable|string|max:20|regex:/^[0-9]*$/',
         ]);
+
+        Log::info('Validated data', ['user' => $validatedUser, 'shipping' => $validatedShipping]);
 
         $user->update($validatedUser);
 
