@@ -44,10 +44,10 @@ class CheckoutController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email'          => 'required|email',
-            'country'        => 'required|string',
+            'country'        => 'required|string', // regex: dont use numbers
             'city'           => 'required|string',
             'address'        => 'required|string',
-            'postcode'       => 'nullable|string|max:20|regex:/^[0-9]*$/',
+            'postcode'       => 'required|string|max:20|regex:/^[0-9]*$/',
             'phone'          => 'required|string|max:20|regex:/^\+?[0-9]*$/',
             'payment_method' => 'required|in:cash,google_pay,apple_pay,paypal',
         ]);

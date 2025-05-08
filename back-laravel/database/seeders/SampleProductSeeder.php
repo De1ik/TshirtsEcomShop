@@ -1208,7 +1208,7 @@ EOT,
 
         // 22
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'Frigo Camelo',
             'description' => <<<EOT
 Cool as a fridge, wild as a camel — the “Frigo Camelo” hoodie is where surreal design meets street-style comfort. With a playful name and clean white aesthetic, this hoodie is perfect for women who love to blend humor, fashion, and a little chaos into their daily wear.
@@ -1255,7 +1255,7 @@ EOT,
 
         // 23
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'La Vaca Saturno Saturnite',
             'description' => <<<EOT
 Prepare for liftoff with “La Vaca Saturno Saturnite” — a hoodie that’s part streetwear, part intergalactic art piece. With a name inspired by cosmic cows and planetary orbits, this design delivers surreal humor and bold originality, making it a standout piece for style astronauts and dreamers alike.
@@ -1300,7 +1300,7 @@ EOT,
 
         // 24
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'Brri Brri Bicus Dicus Bombicus',
             'description' => <<<EOT
 Turn up the volume on your style with “Brri Brri Bicus Dicus Bombicus” — a hoodie that sounds like a beat drop and feels like pure confidence. Designed for women who love rhythm, color, and standing out, this vibrant hoodie is bursting with personality. With yellow and orange options that radiate energy, it's your go-to for lighting up any room.
@@ -1358,7 +1358,7 @@ EOT,
 
         // 25
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'Chimpansini Capuchini',
             'description' => <<<EOT
 Swing into smooth style with “Chimpansini Capuchini” — a hoodie brewed for comfort and flavored with fun. Whether you’re monkeying around or sipping something strong, this piece delivers café culture with jungle energy. The name alone sets the tone, and the rich colorways (crisp white and mocha brown) do the rest.
@@ -1414,7 +1414,7 @@ EOT,
 
         // 26
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'Gorillo Watermellondrillo',
             'description' => <<<EOT
 Unleash the wild and juicy with “Gorillo Watermellondrillo” — a hoodie that punches through the ordinary with tropical power and primate swagger. Blending gorilla strength with watermelon cool, this piece is made for those who turn sidewalks into jungles and outfits into statements.
@@ -1459,7 +1459,7 @@ EOT,
 
         // 27
         $product = Product::create([
-            'collection_id' => $collection->id,
+            'collection_id' => $collection2->id,
             'name' => 'T-shirt 1',
             'description' => <<<EOT
 Meet your new go-to essential: “T-shirt 1” from IgestShop — a clean, no-fuss staple made for effortless everyday wear. Available in classic black and white, plus bold orange and cool blue, this tee adapts to your vibe, whether you're layering it up or wearing it solo.
@@ -1540,7 +1540,7 @@ EOT,
 
         // 28
         $product = Product::create([
-            'collection_id' => $collection->id,
+            'collection_id' => $collection2->id,
             'name' => 'T-shirt 2',
             'description' => <<<EOT
 Redefine everyday fashion with “T-shirt 2” — a high-end essential for women who blend confidence with creativity. This elevated tee pairs premium materials with bold style, available in classic black, clean white, and standout orange to match your mood and message.
@@ -1609,7 +1609,7 @@ EOT,
 
         // 29
         $product = Product::create([
-            'collection_id' => $collection->id,
+            'collection_id' => $collection2->id,
             'name' => 'T-shirt 3',
             'description' => <<<EOT
 Elevate your everyday essentials with “T-shirt 3” — a refined piece designed for men who value premium quality and timeless style. With a sleek color palette of deep black and cool blue, this tee delivers minimalist energy with maximum impact.
@@ -1664,7 +1664,7 @@ EOT,
 
         // 30
         $product = Product::create([
-            'collection_id' => $collection->id,
+            'collection_id' => $collection2->id,
             'name' => 'T-shirt 4',
             'description' => <<<EOT
 Keep it classic with a fresh twist in “T-shirt 4” — a versatile staple crafted for women who blend simplicity with sharp style. Available in timeless black and crisp white, this tee is all about effortless elegance and comfort you can count on.
@@ -1720,7 +1720,7 @@ EOT,
 
         // 31
         $product = Product::create([
-            'collection_id' => $collection->id,
+            'collection_id' => $collection2->id,
             'name' => 'T-shirt 5',
             'description' => <<<EOT
 Keep it bold, simple, and super affordable with “T-shirt 5” — the everyday essential that doesn’t compromise on style. Made for guys who like easy choices and bold colors, this tee comes in energetic orange and cool blue, perfect for casual days and laid-back vibes.
