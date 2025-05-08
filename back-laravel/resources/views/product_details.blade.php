@@ -40,8 +40,7 @@
                         <div class="product-gallery-track" id="productGalleryTrack">
                             @foreach($product->images as $img)
                                 @php
-                                    $filename = pathinfo($img->image_url, PATHINFO_FILENAME);
-                                    $imgColor = extractColor($filename, $knownColors);
+                                    $imgColor = strtolower($img->color->name ?? '');
                                 @endphp
 
                                 @if(!$selectedColor || $selectedColor === $imgColor)

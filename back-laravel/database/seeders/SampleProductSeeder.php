@@ -1540,7 +1540,7 @@ EOT,
 
         // 28
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'T-shirt 2',
             'description' => <<<EOT
 Redefine everyday fashion with “T-shirt 2” — a high-end essential for women who blend confidence with creativity. This elevated tee pairs premium materials with bold style, available in classic black, clean white, and standout orange to match your mood and message.
@@ -1609,7 +1609,7 @@ EOT,
 
         // 29
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'T-shirt 3',
             'description' => <<<EOT
 Elevate your everyday essentials with “T-shirt 3” — a refined piece designed for men who value premium quality and timeless style. With a sleek color palette of deep black and cool blue, this tee delivers minimalist energy with maximum impact.
@@ -1664,7 +1664,7 @@ EOT,
 
         // 30
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'T-shirt 4',
             'description' => <<<EOT
 Keep it classic with a fresh twist in “T-shirt 4” — a versatile staple crafted for women who blend simplicity with sharp style. Available in timeless black and crisp white, this tee is all about effortless elegance and comfort you can count on.
@@ -1720,7 +1720,7 @@ EOT,
 
         // 31
         $product = Product::create([
-            'collection_id' => $collection2->id,
+            'collection_id' => $collection->id,
             'name' => 'T-shirt 5',
             'description' => <<<EOT
 Keep it bold, simple, and super affordable with “T-shirt 5” — the everyday essential that doesn’t compromise on style. Made for guys who like easy choices and bold colors, this tee comes in energetic orange and cool blue, perfect for casual days and laid-back vibes.
