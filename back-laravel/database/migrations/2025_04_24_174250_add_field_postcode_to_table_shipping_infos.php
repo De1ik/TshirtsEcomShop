@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shipping_info', function (Blueprint $table) {
+        Schema::table('shipping_infos', function (Blueprint $table) {
             $table->dropColumn('postcode');
         });
     }

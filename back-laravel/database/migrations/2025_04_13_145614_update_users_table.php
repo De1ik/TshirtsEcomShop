@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -11,28 +12,37 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE users ALTER COLUMN first_name DROP NOT NULL');
-        DB::statement('ALTER TABLE users ALTER COLUMN last_name DROP NOT NULL');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('first_name')->nullable()->change();
+            $table->string('last_name')->nullable()->change();
+        });
 
-        // Make gender nullable
-        DB::statement('ALTER TABLE users ALTER COLUMN gender DROP NOT NULL');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('gender');
+            $table->dropColumn('role');
+        });
 
-        // Set default value for role to 'users'
-        DB::statement("ALTER TABLE users ALTER COLUMN role SET DEFAULT 'users'");
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->enum('role', ['user', 'admin'])->default('user');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        DB::statement('ALTER TABLE users ALTER COLUMN first_name SET NOT NULL');
-        DB::statement('ALTER TABLE users ALTER COLUMN last_name SET NOT NULL');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('first_name')->nullable(false)->change();
+            $table->string('last_name')->nullable(false)->change();
+        });
 
-        // Revert: make gender not nullable
-        DB::statement('ALTER TABLE users ALTER COLUMN gender SET NOT NULL');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('gender');
+            $table->dropColumn('role');
+        });
 
-        // Remove default for role
-        DB::statement("ALTER TABLE users ALTER COLUMN role DROP DEFAULT");
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('gender', ['male', 'female'])->nullable(false);
+            $table->enum('role', ['user', 'admin'])->nullable();
+        });
     }
 };

@@ -10,8 +10,13 @@ class ProductController extends Controller
 {
     public function show(Request $request, $id)
     {
-        $product = Product::with(['variants.color', 'mainImage', 'images', 'activeDiscount', 'reviews'])
-            ->findOrFail($id);
+        $product = Product::with([
+            'variants.color',
+            'mainImage',
+            'images.color',
+            'activeDiscount',
+            'reviews'
+        ])->findOrFail($id);
 
         $similarProducts = Product::where('category', $product->category)
             ->where('id', '!=', $product->id)

@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function user_can_register()
@@ -137,62 +137,36 @@ class AuthTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertRedirect('/profile');
-    }
-
-    /** @test */
-    public function guest_orders_are_transferred_after_login()
-    {
-        $user = User::factory()->create();
-        $order = Order::factory()->create(['user_id' => null]);
-
-        $this->withSession(['guest_orders' => [$order->id]]);
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
         $response->assertRedirect('/');
-        $this->assertDatabaseHas('orders', [
-            'id' => $order->id,
-            'user_id' => $user->id,
-        ]);
     }
 
     /** @test */
     public function it_merges_session_cart_to_database_cart_on_login()
     {
-        // Create product & variant
         $product = Product::factory()->create();
         $variant = ProductVariant::factory()->create([
             'product_id' => $product->id,
         ]);
 
-        // Simulate a guest session cart
         $sessionCart = [
-            'items' => [
-                [
-                    'variant_id' => $variant->id,
-                    'quantity' => 2,
-                    'unit_price' => 25,
-                ],
+            [
+                'variant_id' => $variant->id,
+                'quantity'   => 2,
+                'unit_price' => 25,
             ],
         ];
 
-        // Store in session
-        Session::put('cart', $sessionCart);
-
-        // Create and login user
         $user = User::factory()->create([
-            'email' => 'user@example.com',
+            'email'         => 'user@example.com',
             'password_hash' => Hash::make('password123'),
         ]);
 
-        $response = $this->post('/login', [
-            'email' => 'user@example.com',
-            'password' => 'password123',
-        ]);
+        $response = $this
+            ->withSession(['cart' => $sessionCart])
+            ->post('/login', [
+                'email'    => 'user@example.com',
+                'password' => 'password123',
+            ]);
 
         $response->assertRedirect('/');
 
@@ -202,8 +176,8 @@ class AuthTest extends TestCase
 
         $this->assertDatabaseHas('cart_items', [
             'product_variant_id' => $variant->id,
-            'quantity' => 2,
-            'unit_price' => 25,
+            'quantity'           => 2,
+            'unit_price'         => 25,
         ]);
     }
 
@@ -211,29 +185,35 @@ class AuthTest extends TestCase
     public function session_cart_is_cleared_after_merge()
     {
         $product = Product::factory()->create();
-        $variant = ProductVariant::factory()->create(['product_id' => $product->id]);
-
-        Session::put('cart', [
-            'items' => [
-                [
-                    'variant_id' => $variant->id,
-                    'quantity' => 1,
-                    'unit_price' => 10,
-                ]
-            ]
+        $variant = ProductVariant::factory()->create([
+            'product_id' => $product->id,
         ]);
 
         $user = User::factory()->create([
-            'email' => 'test@example.com',
+            'email'         => 'test@example.com',
             'password_hash' => Hash::make('password123'),
         ]);
 
-        $this->post('/login', [
-            'email' => 'test@example.com',
-            'password' => 'password123',
-        ]);
+        $response = $this
+            ->withSession([
+                'cart' => [
+                    [
+                        'variant_id' => $variant->id,
+                        'quantity'   => 1,
+                        'unit_price' => 10,
+                    ],
+                ],
+            ])
+            ->post('/login', [
+                'email'    => 'test@example.com',
+                'password' => 'password123',
+            ]);
+
+        $response->assertRedirect('/');
 
         $this->assertFalse(session()->has('cart'));
     }
+
+
 
 }

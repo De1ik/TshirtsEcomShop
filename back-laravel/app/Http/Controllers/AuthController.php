@@ -38,7 +38,6 @@ class AuthController extends Controller
                 ]);
             }
         } else {
-            // Create a new user if the email doesn't exist
             User::create([
                 'email' => $validated['email'],
                 'password_hash' => Hash::make($validated['password']),
