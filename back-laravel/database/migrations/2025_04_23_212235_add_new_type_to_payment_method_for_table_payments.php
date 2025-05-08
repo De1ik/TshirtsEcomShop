@@ -12,15 +12,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // PostgreSQL specific: drop the check constraint
-        DB::statement("ALTER TABLE payments DROP CONSTRAINT IF EXISTS payments_payment_method_check");
+        $driver = DB::getDriverName();
 
-        // Re-add the constraint with updated enum values
-        DB::statement("
-            ALTER TABLE payments
-            ADD CONSTRAINT payments_payment_method_check
-            CHECK (payment_method IN ('card', 'paypal', 'cash', 'google_pay', 'apple_pay'))
-        ");
+        if ($driver === 'pgsql') {
+            DB::statement("ALTER TABLE payments DROP CONSTRAINT IF EXISTS payments_payment_method_check");
+
+            DB::statement("
+                ALTER TABLE payments
+                ADD CONSTRAINT payments_payment_method_check
+                CHECK (payment_method IN ('card', 'paypal', 'cash', 'google_pay', 'apple_pay'))
+            ");
+        } elseif ($driver === 'mysql') {
+            DB::statement("
+                ALTER TABLE payments
+                MODIFY payment_method ENUM('card', 'paypal', 'cash', 'google_pay', 'apple_pay') NOT NULL
+            ");
+        }
     }
 
     /**
@@ -28,13 +35,21 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Revert back to the original constraint if needed
-        DB::statement("ALTER TABLE payments DROP CONSTRAINT IF EXISTS payments_payment_method_check");
+        $driver = DB::getDriverName();
 
-        DB::statement("
-            ALTER TABLE payments
-            ADD CONSTRAINT payments_payment_method_check
-            CHECK (payment_method IN ('card', 'paypal', 'cash'))
-        ");
+        if ($driver === 'pgsql') {
+            DB::statement("ALTER TABLE payments DROP CONSTRAINT IF EXISTS payments_payment_method_check");
+
+            DB::statement("
+                ALTER TABLE payments
+                ADD CONSTRAINT payments_payment_method_check
+                CHECK (payment_method IN ('card', 'paypal', 'cash'))
+            ");
+        } elseif ($driver === 'mysql') {
+            DB::statement("
+                ALTER TABLE payments
+                MODIFY payment_method ENUM('card', 'paypal', 'cash') NOT NULL
+            ");
+        }
     }
 };
