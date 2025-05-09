@@ -53,7 +53,6 @@ class ProductDetailsTest extends TestCase
     /** @test */
     public function it_respects_color_and_size_query_parameters()
     {
-        view()->share('latestCollection', collect());
 
         $product = Product::factory()->create(['category' => 'hoodie']);
         $variant = ProductVariant::factory()->create([
@@ -88,10 +87,6 @@ class ProductDetailsTest extends TestCase
     /** @test */
     public function it_sorts_available_sizes_in_defined_order()
     {
-        view()->share('latestCollection', (object)[
-            'id'   => 0,
-            'name' => '',
-        ]);
 
         $product = Product::factory()->create(['category' => 'tshirt']);
         $black   = Color::factory()->create(['name' => 'Black']);
@@ -122,11 +117,6 @@ class ProductDetailsTest extends TestCase
     /** @test */
     public function it_picks_two_similar_products_of_same_category_excluding_self()
     {
-        view()->share('latestCollection', (object)[
-            'id'   => 0,
-            'name' => '',
-        ]);
-
         $subject = Product::factory()->create(['category' => 'hoodie']);
         $subjectVariant = ProductVariant::factory()->create([
             'product_id' => $subject->id,
