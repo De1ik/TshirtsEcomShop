@@ -19,10 +19,6 @@ class CartControllerTest extends TestCase
 
     public function test_cart_page_shows_for_authenticated_user()
     {
-        view()->share('latestCollection', (object)[
-            'id'   => 0,
-            'name' => '',
-        ]);
 
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -37,7 +33,6 @@ class CartControllerTest extends TestCase
     /** @test */
     public function test_increase_quantity_of_cart_item()
     {
-        view()->share('latestCollection', collect());
 
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -65,7 +60,6 @@ class CartControllerTest extends TestCase
     /** @test */
     public function test_decrease_quantity_removes_item_if_quantity_is_one()
     {
-        view()->share('latestCollection', collect());
 
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -89,7 +83,6 @@ class CartControllerTest extends TestCase
 
     public function test_remove_cart_item()
     {
-        view()->share('latestCollection', collect());
 
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -110,10 +103,6 @@ class CartControllerTest extends TestCase
     /** @test */
     public function test_cart_page_shows_for_guest_user_with_session_cart()
     {
-        view()->share('latestCollection', (object)[
-            'id'   => 0,
-            'name' => '',
-        ]);
 
         $variant = ProductVariant::factory()->create([
             'amount' => 5,
@@ -197,10 +186,6 @@ class CartControllerTest extends TestCase
     /** @test */
     public function test_session_cart_merges_into_database_cart()
     {
-        view()->share('latestCollection', (object)[
-            'id'   => 0,
-            'name' => '',
-        ]);
 
         $user = User::factory()->create([
             'password_hash' => Hash::make('password123'),
