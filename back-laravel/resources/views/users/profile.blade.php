@@ -56,7 +56,6 @@
                         <input type="email" class="form-control" value="{{ $user->email }}" readonly>
                         <button type="button" class="edit-btn position-absolute top-0 end-0 mt-1 me-1"
                                 onclick="toggleEdit('email')">
-                            <i class="bi bi-pencil"></i>
                         </button>
                     </div>
 
