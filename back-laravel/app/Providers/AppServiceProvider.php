@@ -21,7 +21,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $latestCollection = Collection::orderByDesc('release_date')->first();
-        View::share('latestCollection', $latestCollection);
     }
 }
