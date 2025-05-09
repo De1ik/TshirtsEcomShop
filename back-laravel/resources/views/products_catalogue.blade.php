@@ -14,8 +14,18 @@
   <main class="container my-5">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Products</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+
+        @if(request()->category === 'hoodie')
+            <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('default_catalogue') }}">All Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Hoodie</li>
+        @elseif(request()->category === 'tshirt')
+            <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('default_catalogue') }}">All Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">T-shirts</li>
+        @else
+            <li class="breadcrumb-item active" aria-current="page">All Categories</li>
+        @endif
+
       </ol>
     </nav>
 
@@ -78,18 +88,18 @@
 
               {{-- Price --}}
               <div class="mb-4">
-                <h6>PRICE</h6>
-                <div>
-                  <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€{{ request('min_price', $minPrice) }}</span></label>
-                  <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}">
-                </div>
-                <div>
-                  <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€{{ request('max_price', $maxPrice) }}</span></label>
-                  <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}">
-                </div>
-                <div class="price-range-labels">
-                  <p>Range from €{{ $minPrice }} to €{{ $maxPrice }}</p>
-                </div>
+                    <h6>PRICE</h6>
+                    <div>
+                        <label for="minPrice" class="form-label">Min. Price: <span id="minPriceValue">€{{ number_format(request('min-price', $minPrice), 2) }}</span></label>
+                        <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}" step="0.01">
+                    </div>
+                    <div>
+                        <label for="maxPrice" class="form-label">Max. Price: <span id="maxPriceValue">€{{ number_format(request('max-price', $maxPrice), 2) }}</span></label>
+                        <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}" step="0.01">
+                    </div>
+                    <div class="price-range-labels">
+                        <p>Range from €{{ number_format($minPrice, 2) }} to €{{ number_format($maxPrice, 2) }}</p>
+                    </div>
               </div>
 
               {{-- Size  --}}
@@ -176,7 +186,7 @@
                     <!-- Stars will be dynamically generated -->
                   </div>
                   <p class="price">
-                    @if ($product->is_discount)
+                    @if ($discounted)
                         €{{ $discounted }}
                       <span class="discount">€{{ $product->price }}</span>
                     @else
@@ -209,7 +219,7 @@
 
 @section('scripts')
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Size Button Toggle
       document.querySelectorAll('.size-btn').forEach(button => {
@@ -238,42 +248,55 @@
         ratingElement.innerHTML = starsHTML;
       });
 
-      // Price Range Filter
-      const minPriceInput = document.getElementById('minPrice');
-      const maxPriceInput = document.getElementById('maxPrice');
-      const minPriceValue = document.getElementById('minPriceValue');
-      const maxPriceValue = document.getElementById('maxPriceValue');
-      const productCards = document.querySelectorAll('.product-card');
 
-      function updatePriceRange() {
-        let minPrice = parseInt(minPriceInput.value);
-        let maxPrice = parseInt(maxPriceInput.value);
+    // Price Range Filter
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const minPriceValue = document.getElementById('minPriceValue');
+    const maxPriceValue = document.getElementById('maxPriceValue');
+    const productCards = document.querySelectorAll('.product-card');
+    const showingText = document.getElementById('showingText');
 
-        if (minPrice > maxPrice) {
-          minPriceInput.value = maxPrice;
-          minPrice = maxPrice;
-        }
-        if (maxPrice < minPrice) {
-          maxPriceInput.value = minPrice;
-          maxPrice = minPrice;
-        }
+    // Update displayed values and ensure min <= max
+    function updatePriceRange() {
+     let minPrice = parseFloat(minPriceInput.value);
+     let maxPrice = parseFloat(maxPriceInput.value);
 
-        minPriceValue.textContent = `€${minPrice}`;
-        maxPriceValue.textContent = `€${maxPrice}`;
+     // Ensure minPrice is not greater than maxPrice
+     if (minPrice > maxPrice) {
+         minPriceInput.value = maxPrice;
+         minPrice = maxPrice;
+     }
+     // Ensure maxPrice is not less than minPrice
+     if (maxPrice < minPrice) {
+         maxPriceInput.value = minPrice;
+         maxPrice = minPrice;
+     }
 
-        applyFilters();
-      }
+     // Update displayed values with two decimal places
+     minPriceValue.textContent = `€${minPrice.toFixed(2)}`;
+     maxPriceValue.textContent = `€${maxPrice.toFixed(2)}`;
+    }
 
-      function applyFilters() {
-        const minPrice = parseInt(minPriceInput.value);
-        const maxPrice = parseInt(maxPriceInput.value);
-        let visibleProducts = 0;
-      }
+    // Apply filters based on price range
+    function applyFilters() {
+     const minPrice = parseFloat(minPriceInput.value);
+     const maxPrice = parseFloat(maxPriceInput.value);
+    }
 
-      updatePriceRange();
+    // Initialize price range values
+    updatePriceRange();
 
-      minPriceInput.addEventListener('input', updatePriceRange);
-      maxPriceInput.addEventListener('input', updatePriceRange);
+    // Add event listeners for price range inputs
+    minPriceInput.addEventListener('input', () => {
+     updatePriceRange();
+     applyFilters();
+    });
+
+    maxPriceInput.addEventListener('input', () => {
+     updatePriceRange();
+     applyFilters();
+    });
 
       // Filter Toggle
       const filterToggle = document.querySelector('.filter-toggle');

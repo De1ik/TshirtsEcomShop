@@ -37,13 +37,12 @@ class AdminUpdateProductController extends Controller
             'activeDiscount'
         ])->findOrFail($id);
 
-
-
-
         $collections = Collection::all();
         $colors = Color::all();
 
-        // Категории статичные (если не хранятся в БД)
+        $usedColorIds = $product->variants->pluck('color_id')->unique();
+        $usedColors = Color::whereIn('id', $usedColorIds)->get();
+
         $categories = [
             ['id' => 1, 'name' => 'tshirts'],
             ['id' => 2, 'name' => 'hoodie'],
@@ -54,35 +53,21 @@ class AdminUpdateProductController extends Controller
             'categories',
             'collections',
             'colors',
+            'usedColors'
         ));
     }
-//     public function update(Request $request, $id)
-//     {
-//         $product = Product::findOrFail($id);
-//
-//         $validated = $request->validate([
-//             'name' => 'required|string|max:255',
-//             'price' => 'required|numeric|min:0',
-//             'description' => 'required|string',
-//             // добавь другие поля по необходимости
-//         ]);
-//
-//         $product->update($validated);
-//
-//         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
-//     }
+
+
     public function update_product(Request $request, $id)
     {
 //         dd($request->all());
 
-
         try {
-            // ✅ Валидация данных
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
                 'category' => 'required|string',
-                'collection' => 'required|exists:collections,id',
+                'collection' => 'required|string',
                 'description' => 'nullable|string',
                 'gender' => 'required|in:male,female,unisex',
                 'discount-price' => 'nullable|numeric|min:0',
@@ -95,19 +80,46 @@ class AdminUpdateProductController extends Controller
             return back()->with('error', 'Something went wrong. Check logs');
         }
 
+        if ($validated['collection'] === 'new') {
+            $request->validate([
+                'new_collection_name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    function ($attribute, $value, $fail) {
+                        $exists = Collection::whereRaw('LOWER(name) = ?', [strtolower($value)])->exists();
+                        if ($exists) {
+                            $fail('A collection with this name already exists.');
+                        }
+                    }
+                ]
+            ]);
+
+            $collection = Collection::create([
+                'name' => $request->input('new_collection_name'),
+            ]);
+
+            $collection_id = $collection->id;
+        } else {
+            $collection = Collection::find($validated['collection']);
+            if (!$collection) {
+                return back()->withErrors(['collection' => 'Selected collection not found.'])->withInput();
+            }
+
+            $collection_id = $collection->id;
+        }
+
         $product = Product::findOrFail($id);
 
-        // ✅ Обновление базовых полей
         $product->update([
             'name' => $validated['name'],
             'category' => $validated['category'],
             'price' => $validated['price'],
-            'collection_id' => $validated['collection'],
+            'collection_id' => $collection_id,
             'gender' => $validated['gender'],
             'description' => $validated['description'],
         ]);
 
-        // ✅ Обработка скидки
         if ($request->has('enableDiscount')) {
             $product->update([
                 'is_discount' => true,
@@ -130,16 +142,12 @@ class AdminUpdateProductController extends Controller
             $product->discount()->delete();
         }
 
-        // ✅ Обработка изображений
         if ($request->filled('photo_colors')) {
             $photoColors = json_decode($request->input('photo_colors'), true);
 
-            // Получаем относительные пути уже существующих изображений (без base64)
-            // Оставляем только относительные пути из src
             $existingUrls = collect($photoColors)
                 ->filter(fn($item) => !Str::startsWith($item['src'], 'data:image'))
                 ->map(function ($item) {
-                    // Получаем путь из полного URL
                     $fullPath = parse_url($item['src'], PHP_URL_PATH); // /storage/product-photos/filename.jpg
                     Log::info('📝 Full Path ' . $fullPath);
                     return Str::replaceFirst('/storage/', '', $fullPath); // product-photos/filename.jpg
@@ -147,53 +155,6 @@ class AdminUpdateProductController extends Controller
                 ->toArray();
 
             Log::info('📝 Existing relative URLs:', $existingUrls);
-
-
-
-
-            // Удаляем изображения, которых больше нет в списке
-            foreach ($product->images as $image) {
-                if (!in_array($image->image_url, $existingUrls)) {
-                    Storage::disk('public')->delete($image->image_url);
-                    $image->delete();
-                }
-            }
-
-            $hasMainImage = $product->images()->where('is_main', true)->exists();
-            $addedFirstBase64 = false;
-
-            // Обрабатываем и сохраняем новые фото (base64)
-            foreach ($photoColors as $photo) {
-                if (Str::startsWith($photo['src'], 'data:image')) {
-                    preg_match('/data:image\/(\w+);base64,/', $photo['src'], $matches);
-                    $extension = $matches[1] ?? 'jpg';
-                    $base64Str = substr($photo['src'], strpos($photo['src'], ',') + 1);
-                    $binaryData = base64_decode($base64Str);
-
-                    $filename = Str::uuid() . '.' . $extension;
-                    $path = "product-photos/{$filename}";
-                    Storage::disk('public')->put($path, $binaryData);
-
-                    // Найти или создать цвет
-                    $color = Color::find($photo['color']);
-                    if (!$color) {
-                        Log::warning("⚠️ Color not found for ID: {$photo['color']}");
-                        continue;
-                    }
-
-                    $isMain = !$hasMainImage && !$addedFirstBase64;
-                    if ($isMain) {
-                        $addedFirstBase64 = true;
-                    }
-
-                    // Сохраняем изображение
-                    $product->images()->create([
-                        'image_url' => $path,
-                        'color_id' => $color->id,
-                        'is_main' => $isMain,
-                    ]);
-                }
-            }
         }
 
         return redirect()->back()->with('success', 'Product updated successfully!');
@@ -204,7 +165,6 @@ class AdminUpdateProductController extends Controller
     {
 //         dd($request->all());
         try {
-            // ✅ Валидация данных
             $validated = $request->validate([
                 'stock' => 'required|integer|min:0',
                 'size' => 'in:XS,S,M,L,XL,XXL',
@@ -256,10 +216,8 @@ class AdminUpdateProductController extends Controller
             return back()->with('success', 'Variant ' . $validated['sku'] . ' was successfully updated with amount ' . $validated['stock']);
         }
 
-         // 2. Найти продукт
          $product = Product::findOrFail($id);
 
-         // 3. Проверить, существует ли такой вариант (по размеру и цвету)
          $existingVariant = $product->variants()
              ->where('size', $validated['size'])
              ->where('color_id', $color_id)
@@ -271,7 +229,7 @@ class AdminUpdateProductController extends Controller
              $product->variants()->create([
                  'size' => $validated['size'],
                  'color_id' => $color_id,
-                 'amount' => $validated['stock'], // 'sku' — это количество
+                 'amount' => $validated['stock'],
              ]);
 
              return back()->with('success', 'New product variant created.');
@@ -283,9 +241,18 @@ class AdminUpdateProductController extends Controller
     {
         try {
             $variant = ProductVariant::findOrFail($id);
+            $product = $variant->product;
+
             $variant->delete();
 
-            return redirect()->back()->with('success', 'Variant ' . $id . ' deleted successfully.');
+            if ($product->variants()->count() === 0) {
+                $product->delete();
+                return redirect()->route('admin_default_catalogue')
+                    ->with('success', 'Last variant deleted. Product ' . $product->id . ' was also removed.');
+            }
+
+            return redirect()->back()
+                ->with('success', 'Variant ' . $id . ' deleted successfully.');
         } catch (\Exception $e) {
             Log::error('❌ Error deleting variant: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to delete variant.');
@@ -304,4 +271,57 @@ class AdminUpdateProductController extends Controller
             return redirect()->route('admin_default_catalogue')->with('error', 'Failed to delete variant.');
         }
     }
+
+    public function delete_image(ProductImage $image)
+    {
+        try {
+            Storage::disk('public')->delete('product-photos/' . $image->image_url);
+
+            $image->delete();
+
+            return back()->with('success', 'New product variant created.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Failed to delete image.');
+
+        }
+    }
+
+    public function upload_image(Request $request, Product $product)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'productPhoto' => 'required|array',
+                'productPhoto.*' => 'required|file|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'color-id' => 'required|exists:colors,id',
+            ]);
+
+            // Check if the product already has a main image
+            $hasMainImage = $product->images()->where('is_main', true)->exists();
+            $addedFirstBase64 = false;
+
+            // Get the color ID from the request
+            $colorId = $request->input('color-id');
+
+            // Handle multiple image uploads
+            if ($request->hasFile('productPhoto')) {
+                foreach ($request->file('productPhoto') as $index => $photo) {
+                    $filename = Str::uuid() . '.' . $photo->getClientOriginalExtension();
+                    $photo->storeAs('product-photos', $filename, 'public');
+
+                    $product->images()->create([
+                        'image_url' => $filename,
+                        'color_id' => $colorId,
+                        'is_main' => !$hasMainImage && $index === 0,
+                    ]);
+                }
+            }
+
+            return back()->with('success', 'Product images uploaded successfully.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Failed to upload images: ' . $e->getMessage());
+        }
+    }
+
+
 }

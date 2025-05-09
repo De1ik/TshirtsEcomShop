@@ -14,6 +14,17 @@
     <!-- Main Content -->
     <main class="container my-5">
         <h2 class="mb-4">Product List</h2>
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @elseif(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
         <div class="row">
             <!-- Filter Sidebar -->
        <aside class="col-lg-3 col-md-4 mb-4">
@@ -69,18 +80,18 @@
 
              {{-- Price --}}
              <div class="mb-4">
-               <h6>PRICE</h6>
-               <div>
-                 <label for="minPrice" class="form-label">Min Price: <span id="minPriceValue">€{{ request('min_price', $minPrice) }}</span></label>
-                 <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}">
-               </div>
-               <div>
-                 <label for="maxPrice" class="form-label">Max Price: <span id="maxPriceValue">€{{ request('max_price', $maxPrice) }}</span></label>
-                 <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}">
-               </div>
-               <div class="price-range-labels">
-                 <p>Range from €{{ $minPrice }} to €{{ $maxPrice }}</p>
-               </div>
+                <h6>PRICE</h6>
+                    <div>
+                        <label for="minPrice" class="form-label">Min. Price: <span id="minPriceValue">€{{ number_format(request('min-price', $minPrice), 2) }}</span></label>
+                        <input type="range" class="form-range" id="minPrice" name="min-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('min-price', $minPrice) }}" step="0.01">
+                    </div>
+                    <div>
+                        <label for="maxPrice" class="form-label">Max. Price: <span id="maxPriceValue">€{{ number_format(request('max-price', $maxPrice), 2) }}</span></label>
+                        <input type="range" class="form-range" id="maxPrice" name="max-price" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ request('max-price', $maxPrice) }}" step="0.01">
+                    </div>
+                    <div class="price-range-labels">
+                        <p>Range from €{{ number_format($minPrice, 2) }} to €{{ number_format($maxPrice, 2) }}</p>
+                    </div>
              </div>
 
              {{-- Size — пока без name --}}
@@ -156,7 +167,7 @@
                             <option value="release_asc" {{ request('sort') === 'release_asc' ? 'selected' : '' }}>Release: Oldest to Newest</option>
                         </select>
 
-                        {{-- Сохраняем текущие фильтры, чтобы не сбрасывались при сортировке --}}
+
                         <input type="hidden" name="category" value="{{ request('category') }}">
                         <input type="hidden" name="gender" value="{{ request('gender') }}">
                         <input type="hidden" name="collection" value="{{ request('collection') }}">
@@ -235,65 +246,52 @@
             });
         });
 
-        // Price Range Filter
-        const minPriceInput = document.getElementById('minPrice');
-        const maxPriceInput = document.getElementById('maxPrice');
-        const minPriceValue = document.getElementById('minPriceValue');
-        const maxPriceValue = document.getElementById('maxPriceValue');
-        const productCards = document.querySelectorAll('.product-card');
-        const showingText = document.getElementById('showingText');
+    // Price Range Filter
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const minPriceValue = document.getElementById('minPriceValue');
+    const maxPriceValue = document.getElementById('maxPriceValue');
+    const productCards = document.querySelectorAll('.product-card');
+    const showingText = document.getElementById('showingText');
 
-        // Update displayed values and ensure min <= max
-        function updatePriceRange() {
-            let minPrice = parseInt(minPriceInput.value);
-            let maxPrice = parseInt(maxPriceInput.value);
+    // Update displayed values and ensure min <= max
+    function updatePriceRange() {
+     let minPrice = parseFloat(minPriceInput.value);
+     let maxPrice = parseFloat(maxPriceInput.value);
 
-            // Ensure minPrice is not greater than maxPrice
-            if (minPrice > maxPrice) {
-                minPriceInput.value = maxPrice;
-                minPrice = maxPrice;
-            }
-            // Ensure maxPrice is not less than minPrice
-            if (maxPrice < minPrice) {
-                maxPriceInput.value = minPrice;
-                maxPrice = minPrice;
-            }
+     // Ensure minPrice is not greater than maxPrice
+     if (minPrice > maxPrice) {
+         minPriceInput.value = maxPrice;
+         minPrice = maxPrice;
+     }
+     // Ensure maxPrice is not less than minPrice
+     if (maxPrice < minPrice) {
+         maxPriceInput.value = minPrice;
+         maxPrice = minPrice;
+     }
 
-            // Update displayed values
-            minPriceValue.textContent = `€${minPrice}`;
-            maxPriceValue.textContent = `€${maxPrice}`;
-        }
+     // Update displayed values with two decimal places
+     minPriceValue.textContent = `€${minPrice.toFixed(2)}`;
+     maxPriceValue.textContent = `€${maxPrice.toFixed(2)}`;
+    }
 
-        // Apply filters based on price range
-        function applyFilters() {
-            const minPrice = parseInt(minPriceInput.value);
-            const maxPrice = parseInt(maxPriceInput.value);
-            let visibleProducts = 0;
+    // Apply filters based on price range
+    function applyFilters() {
+     const minPrice = parseFloat(minPriceInput.value);
+     const maxPrice = parseFloat(maxPriceInput.value);
+    }
 
-            productCards.forEach(card => {
-                const price = parseInt(card.getAttribute('data-price'));
-                if (price >= minPrice && price <= maxPrice) {
-                    card.style.display = 'flex';
-                    visibleProducts, visibleProducts++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+    // Initialize price range values
+    updatePriceRange();
 
-        }
+    // Add event listeners for price range inputs
+    minPriceInput.addEventListener('input', () => {
+     updatePriceRange();
+    });
 
-        // Initialize price range values
-        updatePriceRange();
-
-        // Add event listeners for price range inputs
-        minPriceInput.addEventListener('input', () => {
-            updatePriceRange();
-            // applyFilters();
-        });
-
-        maxPriceInput.addEventListener('input', () => {
-            updatePriceRange();
-            // applyFilters();
-        });
+    maxPriceInput.addEventListener('input', () => {
+     updatePriceRange();
+     applyFilters();
+    });
 </script>
 @endsection

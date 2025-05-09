@@ -28,6 +28,9 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::delete('/products/delete/variant/{id}', [AdminUpdateProductController::class, 'delete_variant'])->name('delete_variant');
     Route::delete('/products/delete/product/{id}', [AdminUpdateProductController::class, 'delete_product'])->name('delete_product');
 
+    Route::post('/products/{product}/images', [AdminUpdateProductController::class, 'upload_image'])->name('upload_product_images');
+    Route::delete('/products/images/{image}', [AdminUpdateProductController::class, 'delete_image'])->name('delete_product_image');
+
     Route::get('/products-catalogue', [AdminProductsCatalogueController::class, 'default'])->name('admin_default_catalogue');
 });
 

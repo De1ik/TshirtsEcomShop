@@ -15,12 +15,15 @@
                         <a class="nav-link" href="{{ route('default_catalogue', ['discount' => 1]) }}">On Sale</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('default_catalogue', ['collection' => $latestCollection->id]) }}">New Collections</a>
+                        <a class="nav-link" href="{{ route('default_catalogue', ['category' => 'hoodie']) }}">Hoodie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('default_catalogue', ['category' => 'tshirt']) }}">T-shirts</a>
                     </li>
                     @auth
                         @can('admin')
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin Products List</a>
+                                <a class="nav-link" href="{{ route('admin_default_catalogue') }}">Admin</a>
                             </li>
                         @endcan
                     @endauth

@@ -28,9 +28,9 @@ body {
     overflow: hidden;
     transition: transform 0.3s ease;
 }
-.create-product-form:hover {
-    transform: translateY(-5px);
-}
+/*.create-product-form:hover {*/
+/*    transform: translateY(-5px);*/
+/*}*/
 .card-header.bg-gradient-primary {
     background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
     border-radius: 15px 15px 0 0;
@@ -79,8 +79,27 @@ body {
     width: 100%;
 }
 
+.color-label {
+    font-size: 0.9rem;
+    color: #333;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    display: inline-block;
+}
+
 /* Buttons */
-.btn-update, .btn-add-variant, .btn-save-variants, .btn-confirm {
+.btn-images {
+    background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+.btn-add-variant, .btn-confirm {
     background: linear-gradient(90deg, #53403C 0%, #7a5c58 100%);
     color: #fff;
     border: none;
@@ -90,8 +109,22 @@ body {
     font-size: 0.9rem;
     transition: all 0.3s ease;
 }
-.btn-update:hover, .btn-add-variant:hover, .btn-save-variants:hover, .btn-confirm:hover {
+.btn-images:hover, .btn-add-variant:hover, .btn-confirm:hover{
     background: linear-gradient(90deg, #7a5c58 0%, #53403C 100%);
+    transform: translateY(-2px);
+}
+.btn-update, .btn-save-variants {
+    background: linear-gradient(90deg, #44704c 0%, #57b549 100%);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.4s ease;
+}
+.btn-update:hover, .btn-save-variants:hover {
+    background: linear-gradient(90deg, #57b549 0%, #44704c 100%);
     transform: translateY(-2px);
 }
 .btn-delete, .btn-delete-variant {
