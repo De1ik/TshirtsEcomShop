@@ -59,7 +59,7 @@ class AuthController extends Controller
         // Check if user exists and is not a guest
         if ($user && $user->role === 'guest') {
             return redirect()->route('login')->withErrors([
-                'email' => 'Guest accounts cannot be used to log in.',
+                'email' => 'You not registered yet.',
             ]);
         }
 
@@ -84,25 +84,19 @@ class AuthController extends Controller
             return;
         }
 
+        if ($user->cart()->exists()) {
+            return;
+        }
+
         $cart = $user->cart()->firstOrCreate([]);
 
         foreach ($sessionCart as $item) {
-            $existingItem = $cart->items()
-                ->where('product_variant_id', $item['variant_id'])
-                ->first();
-
-            if ($existingItem) {
-                $existingItem->quantity += $item['quantity'];
-                $existingItem->total_price = $existingItem->quantity * $existingItem->unit_price;
-                $existingItem->save();
-            } else {
                 $cart->items()->create([
                     'product_variant_id' => $item['variant_id'],
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'total_price' => $item['quantity'] * $item['unit_price'],
                 ]);
-            }
         }
 
         session()->forget('cart');
