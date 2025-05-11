@@ -4,11 +4,12 @@
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    margin: 40px 0;
+    margin: 0 auto;
     max-width: 500px;
     min-height: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .login-section h1 {
     font-weight: 700;
@@ -66,31 +67,35 @@
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 767px) {
     .login-section {
-        max-width: 300px;
+        padding: 12px;
+        margin: 0 auto;
+        max-width: 90%;
+        min-height: auto;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .login-section h1 {
+        font-size: 1.2rem;
+    }
+    .login-section .form-control {
+        font-size: 0.7rem;
+        padding: 5px;
+    }
+    .login-section .btn-sign-in {
+        padding: 4px;
+        font-size: 0.75rem;
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 400px) {
     .login-section {
-        padding: 20px;
-        margin: 30px 15px; /* Adjusted margin for smaller screens */
-    }
-    .login-section h1 {
-        font-size: 1.5rem;
-    }
-    .login-section .form-control {
-        font-size: 0.8rem;
+        max-width: 92%;
         padding: 8px;
-    }
-    .login-section .btn-sign-in {
-        padding: 6px;
-        font-size: 0.85rem;
-    }
-    .banner {
-        font-size: 1.2rem;
-        padding: 15px;
+        margin: 0 auto;
+        top: 50%;
+        transform: translateY(-50%);
     }
 }
 
@@ -98,7 +103,9 @@
     .login-section {
         max-width: 600px;
         padding: 40px;
-        margin-bottom: 150px;
+        margin: 0 auto;
+        top: 50%;
+        transform: translateY(-50%);
     }
     .login-section h1 {
         font-size: 2.5rem;

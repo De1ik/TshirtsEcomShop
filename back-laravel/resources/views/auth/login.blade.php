@@ -40,11 +40,12 @@
             </div>
         </section>
 
-        <!-- Banner -->
-        <section class="banner">
-            <div class="container">
-                <p>ENJOY EVERY MOMENT!</p>
-            </div>
-        </section>
     </main>
+
+    <!-- Banner -->
+    <section class="banner">
+        <div class="container">
+            <p>ENJOY EVERY MOMENT!</p>
+        </div>
+    </section>
 @endsection

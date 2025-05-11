@@ -62,17 +62,6 @@ main {
     font-size: 1.2rem;
 }
 
-/* Banner */
-.banner {
-    background-color: #53403C;
-    color: #fff;
-    text-align: center;
-    padding: 2vw 1vw;
-    font-size: clamp(1.2rem, 2.5vw, 2.5rem);
-    font-weight: 600;
-    width: 100%;
-    margin-top: auto;
-}
 
 /* Minimalistic Footer */
 .footer {
@@ -102,4 +91,23 @@ main {
 .footer img {
     margin: 0 5px;
     height: 20px;
+}
+
+.banner {
+    background-color: #53403C;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1.5rem);
+    font-weight: 600;
+    width: 100%;
+    margin-top: 20px; /* Add explicit spacing to separate from login section */
+}
+
+@media (max-width: 767px) {
+    .banner {
+        padding: 0.6rem; /* Further reduce padding */
+        font-size: clamp(0.7rem, 1.6vw, 1.1rem); /* Smaller text for small screens */
+        margin-top: 15px; /* Adjust spacing for smaller screens */
+    }
 }
